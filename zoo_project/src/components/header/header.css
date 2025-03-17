@@ -1,0 +1,73 @@
+/* Header.css */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #000000; /* Dark green background */
+  color: white;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ffffff;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+}
+
+.logo-image {
+  height: 150px;
+  width: auto;
+  margin-right: 10px;
+}
+
+.brand-name {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  font-size: 60px;
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua",
+    "Palatino", "Times New Roman", Times, serif;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.1;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-item {
+  color: white;
+  text-decoration: none;
+  font-size: 20px;
+  font-family: "Inter";
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+}
+.nav-item:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 5px;
+}
+
+.ticket-icon {
+  margin-right: 5px;
+}
+
+.login-button {
+  background-color: #6a9c89; /* Teal button color */
+  color: white;
+  padding: 16px 30px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 22px;
+}
+
+.login-button:hover {
+  background-color: #238b7e;
+  font-size: 22px;
+}
