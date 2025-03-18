@@ -7,7 +7,7 @@ const db_connection = mysql.createConnection({
   user: "root", // your database username
   password: "Root231.", // your database password
   database: "nature_kingdom", // your database name
-});
+}); //must change password for each pull
 
 // Check the database connection
 db_connection.connect((err) => {
