@@ -1,0 +1,69 @@
+.info-bar {
+  display: flex;
+  background-color: #000000;
+  color: white;
+  border-top: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  height: 150px; /* Reduced height to match the image */
+  justify-content: space-between; /* Distributes space between items */
+  width: 100%;
+  font-size: 30px;
+}
+.hours-primary {
+  font-size: 25px;
+  font-weight: 600;
+  display: block;
+}
+
+.hours-secondary {
+  font-size: 25px;
+  font-weight: 600;
+  display: block;
+}
+
+.hours-info {
+  padding: 0 20px;
+  border-right: 1px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: "Inria Serif";
+  font-size: 15px;
+  flex: 1;
+}
+
+.hours-info p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.info-link {
+  padding: 0 20px;
+  border-right: 1px solid #ffffff;
+  text-decoration: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: "Inria Serif";
+  flex: 1;
+}
+
+/* Remove border from last item */
+.info-link:last-child {
+  border-right: none;
+}
+
+.info-link:hover {
+  background-color: #000000;
+  text-decoration: underline;
+  text-decoration-thickness: 5px;
+  text-underline-offset: 8px; /* This creates the gap between text and underline */
+}
+
+.icon {
+  font-size: 20px;
+}
