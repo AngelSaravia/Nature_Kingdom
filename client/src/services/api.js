@@ -1,11 +1,10 @@
-import axios from "axios";
+// Define API base URL
+const API_BASE_URL = "http://localhost:5004";
 
-// Define API_BASE_URL at the top of your file
-const API_BASE_URL = "http://localhost:5001";
-
+// Create axios instance with default config
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 5000, // Increase timeout to 5 seconds
+  timeout: 10000, // 10 seconds timeout
   headers: {
     "Content-Type": "application/json",
   },
@@ -14,17 +13,14 @@ const apiClient = axios.create({
 // Registration service
 export const registerUser = async (userData) => {
   try {
-    // Make sure to set the content type to application/json
-    const response = await apiClient.post("/signup", userData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await apiClient.post("/signup", userData);
     return response.data;
   } catch (error) {
     console.error("API Error:", error);
     throw error;
   }
 };
+
+// You can add more API services here as needed
 
 export default apiClient;

@@ -1,7 +1,7 @@
 // src/pages/sign_up/sign_up.jsx
 import React from "react";
 
-import RegistrationForm from "../../components/registration";
+import Registration from "../../components/registration";
 import "./sign_up.css";
 
 function Sign_up() {
@@ -13,7 +13,7 @@ function Sign_up() {
           Join Nature Kingdom to get access to special events, discounts, and
           more!
         </p>
-        <RegistrationForm />
+        <Registration />
       </div>
     </div>
   );
