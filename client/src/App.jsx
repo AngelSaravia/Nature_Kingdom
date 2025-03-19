@@ -9,6 +9,7 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import Header from "./components/header/header";
 import Footer from "./components/footer/footer";
 import HomePage from "./pages/home/home";
+import Membership from "./pages/membership/membership";
 import Sign_up from "./pages/signup/sign_up";
 import Login from "./pages/login/login";
 import EmployeeLogin from "./pages/employee/employee_login";
@@ -106,6 +107,7 @@ function App() {
                 }
               />
               <Route path="/signup" element={<Sign_up />} />
+              <Route path="/membership" element={<Membership />} />
               <Route path="/login" element={<Login />} />
               <Route path="/employee_login" element={<EmployeeLogin />} />
             </Routes>
