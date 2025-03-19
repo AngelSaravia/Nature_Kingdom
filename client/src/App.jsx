@@ -15,11 +15,6 @@ import EmployeeLogin from "./pages/employee/employee_login";
 import EmployeeForm from "./pages/dataEntries/employee_form";
 import "./App.css";
 
-// Performance monitoring callback
-function onRenderCallback(id, phase, actualDuration) {
-  console.log(`[Performance] ${id} ${phase}: ${actualDuration.toFixed(2)}ms`);
-}
-
 function BodyClassManager() {
   const { pathname } = useLocation();
 
@@ -101,5 +96,3 @@ function App() {
     </Router>
   );
 }
-
-export default Root;
