@@ -5,7 +5,7 @@ const { sign_up } = require("./routes/sign_up");
 const db_connection = mysql.createConnection({
   host: "localhost", // or your database host
   user: "root", // your database username
-  password: "Root231.", // your database password
+  password: "baharjoon3", // your database password
   database: "nature_kingdom", // your database name
 }); //must change password for each pull
 
