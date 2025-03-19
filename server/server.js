@@ -2,30 +2,9 @@ const http = require("http");
 const url = require("url");
 const handleSignUp = require("./helpers/sign_up"); // Import your signup handler
 
-<<<<<<< HEAD
-const db_connection = mysql.createConnection({
-  host: "localhost", // or your database host
-  user: "root", // your database username
-  password: "baharjoon3", // your database password
-  database: "nature_kingdom", // your database name
-}); //must change password for each pull
-
-// Check the database connection
-db_connection.connect((err) => {
-  if (err) {
-    console.error("Error connecting to the database:", err.stack);
-    return;
-  }
-  console.log("Connected to the MySQL database  ✅");
-});
-
-const server = http.createServer((req, res) => {
-  // ADD THESE CORS HEADERS RIGHT HERE ↓
-=======
 // Create the server
 const server = http.createServer(async (req, res) => {
   // Enable CORS
->>>>>>> origin/main
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -63,7 +42,8 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-const PORT = 5004;
+const PORT = 5005;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
