@@ -93,6 +93,7 @@ function App() {
             <Route path="/signup" element={<Sign_up />} />
             <Route path="/login" element={<Login />} />
             <Route path="/employee_login" element={<EmployeeLogin />} />
+            <Route path="/employee_form" element={<EmployeeForm />} />
           </Routes>
         </main>
         <Footer />
