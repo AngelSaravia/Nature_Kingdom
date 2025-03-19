@@ -11,6 +11,7 @@ import HomePage from "./pages/home/home";
 import Sign_up from "./pages/signup/sign_up";
 import Login from "./pages/login/login";
 import EmployeeLogin from "./pages/employee/employee_login";
+import EmployeeForm from "./pages/dataEntries/employee_form";
 import "./App.css";
 
 // Component to manage body classes
@@ -44,6 +45,7 @@ function App() {
             <Route path="/signup" element={<Sign_up />} />
             <Route path="/login" element={<Login />} />
             <Route path="/employee_login" element={<EmployeeLogin />} />
+            <Routh path="/employee_form" element={<EmployeeForm/>}/>
           </Routes>
         </main>
         <Footer />
