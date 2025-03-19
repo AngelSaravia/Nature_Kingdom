@@ -37,7 +37,10 @@
   color: white !important; 
 }
 
-
+.membership-title.maintitle{
+  background:#004D40;
+  margin-inline:30%;
+}
 
 .membership-boxes {
   display: flex;

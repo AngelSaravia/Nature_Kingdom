@@ -6,7 +6,7 @@ const Membership = () => {
   return (
     <div class="membership-bg">
         <div className="membership-container">
-        <h1 className="membership-title">MEMBERSHIP</h1>
+        <h1 className="membership-title maintitle">MEMBERSHIP</h1>
         
         <div className="membership-boxes">
             <div className="membership-box welcome">
