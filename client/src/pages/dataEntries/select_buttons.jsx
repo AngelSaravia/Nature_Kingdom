@@ -1,8 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styles from "./selectGroup.module.css";
+import styles from "./employee_form.module.css";
 
 const SelectGroup = ({label, options, selectedOption, onChange}) => {
+    const handleSelect = (option) => {
+        if (selectedOption === option) {
+            onChange("");
+        }
+        else onChange(option);
+    };
+    
     return(
         <div className={styles.selectgroup}>
             <label className={styles.label}>{label}</label>
@@ -12,7 +19,7 @@ const SelectGroup = ({label, options, selectedOption, onChange}) => {
                         key={option}
                         type="button"
                         className={`${styles.optionButton} ${selectedOption === option ? styles.selected : ""}`}
-                        onClick={() => onChange(option)}
+                        onClick={() => handleSelect(option)}
                     >
                         {option}
                     </button>

@@ -1,18 +1,23 @@
 import React from "react";
+import styles from "./employee_form.module.css";
 
-const InputFields = ({label, type, name, value, onChange, required}) => {
+const InputFields = ({label, type="text", name, value, onChange, required}) => {
+    const handleInputChange = (event) => {
+        onChange(event.target.values);
+    };
+    
     return (
-        <div className={StyleSheet.inputContainer}>
-            <label htmlFor={name}>{label}</label>
+        <div className={styles.inputGroup}>
+            <label htmlFor={name} className={styles.inputLabel}>{label}</label>
             <input
                 id={name}
                 type={type}
                 name={name}
                 value={value}
-                onChange={onChange}
+                onChange={handleInputChange}
                 required={required}
-                placeholder={`Enter ${label.toUpperCase()}`}
-                className={styles.inputs}
+                placeholder={`Enter ${label.toLowerCase()}`}
+                className={styles.inputField}
             />
         </div>
     );
