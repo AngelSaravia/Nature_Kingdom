@@ -25,13 +25,21 @@ const EmployeeForm = () => {
     const [submissionStatus, setSubmissionStatus] = useState(null);
   
     // For input changes
-    const handleChange = (field, value) => {
-      setFormData((prev) => ({
-        ...prev,
-        [field]: value,
-      }));
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
     };
-  
+    
+    const handleSelect = (name, value) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: prevData[name] === value ? "" : value, // Toggle selection
+        }));
+    };
+    
     // For form submission
     const handleSubmit = async (event) => {
       event.preventDefault();
@@ -81,23 +89,33 @@ const EmployeeForm = () => {
       <div className={styles.formContainer}>
         <h2 className={styles.formTitle}>ADD EMPLOYEE</h2>
         <form onSubmit={handleSubmit} className={styles.form}>
-          <InputFields label="FIRST NAME" value={formData.firstName} onChange={(value) => handleChange("firstName", value)} />
-          <InputFields label="MIDDLE INITIAL" value={formData.middleInit} onChange={(value) => handleChange("middleInit", value)} />
-          <InputFields label="LAST NAME" value={formData.lastName} onChange={(value) => handleChange("lastName", value)} />
-          <InputFields label="STREET ADDRESS" value={formData.streetAddress} onChange={(value) => handleChange("streetAddress", value)} />
-          <InputFields label="CITY" value={formData.city} onChange={(value) => handleChange("city", value)} />
-          <InputFields label="STATE" value={formData.state} onChange={(value) => handleChange("state", value)} />
-          <InputFields label="ZIP CODE" value={formData.zipCode} onChange={(value) => handleChange("zipCode", value)} />
-          <InputFields label="COUNTRY" value={formData.country} onChange={(value) => handleChange("country", value)} />
-          <InputFields label="SALARY" value={formData.salary} onChange={(value) => handleChange("salary", value)} />
+            <div className={styles.formRow}> 
+                <InputFields label="FIRST NAME" name="firstName" value={formData.firstName} onChange={handleChange} />
+                <InputFields label="MIDDLE INITIAL" name="middleInit" value={formData.middleInit} onChange={handleChange} required={false} />
+                <InputFields label="LAST NAME" name="lastName" value={formData.lastName} onChange={handleChange} />
+            </div>
 
-          <SelectGroup label="ROLE (choose one)" options={["Manager", "Zookeeper", "Veterinarian", "Maintenance", "Guest Services", "Administrator", "Operator"]} selectedOption={formData.role} onChange={(value) => handleChange("role", value)} />
-          <SelectGroup label="GENDER (choose one)" options={["Male", "Female", "Other", "Prefer not to say"]} selectedOption={formData.gender} onChange={(value) => handleChange("gender", value)} />
+            <div className={styles.formRow}>
+                <InputFields label="STREET ADDRESS" name="streetAddress" value={formData.streetAddress} onChange={handleChange} />
+                <InputFields label="CITY" name="city" value={formData.city} onChange={handleChange} />
+                <InputFields label="STATE" name="state" value={formData.state} onChange={handleChange} />
+            </div>
 
-          <InputFields label="MANAGER ID" value={formData.managerID} onChange={(value) => handleChange("managerID", value)} />
-          <InputFields label="EMAIL" type="email" value={formData.email} onChange={(value) => handleChange("email", value)} />
-          <InputFields label="PHONE" type="tel" value={formData.phone} onChange={(value) => handleChange("phone", value)} />
-  
+            <div className={styles.formRow}>
+                <InputFields label="ZIP CODE" name="zipCode" value={formData.zipCode} onChange={handleChange} />
+                <InputFields label="COUNTRY" name="country" value={formData.country} onChange={handleChange} />
+                <InputFields label="SALARY" name="salary" value={formData.salary} onChange={handleChange} />
+            </div>
+
+                <SelectGroup label="ROLE (choose one)" name="role" options={["Manager", "Zookeeper", "Veterinarian", "Maintenance", "Guest Services", "Administrator", "Operator"]} selectedOption={formData.role} onChange={handleSelect} required />
+                <SelectGroup label="GENDER (choose one)" name="gender" options={["Male", "Female", "Other", "Prefer not to say"]} selectedOption={formData.gender} onChange={handleSelect} required />
+
+            <div className={styles.formRow}>
+                <InputFields label="EMAIL" name="email" type="email" value={formData.email} onChange={handleChange} />
+                <InputFields label="PHONE" name="phone" type="tel" value={formData.phone} onChange={handleChange} />
+                <InputFields label="MANAGER ID" name="managerID" value={formData.managerID} onChange={handleChange} />
+            </div>
+
           <button type="submit" className={styles.submitButton}>Submit</button>
   
           {submissionStatus && <p className={styles.statusMessage}>{submissionStatus}</p>}

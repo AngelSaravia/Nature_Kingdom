@@ -1,10 +1,11 @@
 .formContainer {
-    max-width: 600px;
+    background-color: white;
+    padding: 30px;
+    width: 70%;
+    max-width: 900px;
     margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px black;
   }
   
   .formTitle {
@@ -14,10 +15,17 @@
     color: #333;
   }
   
-  .form {
+  .formRow {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+  }
+
+  .formRow > div {
+    flex: 1;
   }
   
   .submitButton {
@@ -44,8 +52,26 @@
 
   .inputGroup {
     flex-direction: column;
-    gap: 8px;
+    flex: 1;
     display: flex;
+  }
+
+  .inputGroup input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    font-size: 16px;
+    box-sizing: border-box;
+    outline: none;
+    cursor: text;
+  }
+
+  .inputGroup input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
   }
   
   .inputLabel {
@@ -69,10 +95,28 @@
 
   .selectGroup {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: 8px;
-    margin-bottom: 20px;
+    justify-content: center;
   }
+
+  .selectGroup button {
+    padding: 6px 10px;
+    border: 1px solid #888;
+    background-color: white;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+    min-width: 100px;
+    height: 30px;
+    text-align: center;
+  }
+
+  .selectGroup button.selected {
+    background-color: #666;
+    color: white;
+    border-color: #444;
+}
   
   .label {
     font-size: 18px;
@@ -107,5 +151,19 @@
     background-color: #8c9298;
     color: white;
     border-color: #8c9298;
+  }
+
+  .inputGroup input,
+  .selectGroup button {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background-color: white;
+    font-size: 16px;
+  }
+
+  .roleSection, .genderSection, .contactSection {
+    margin-top: 25px;
   }
   
