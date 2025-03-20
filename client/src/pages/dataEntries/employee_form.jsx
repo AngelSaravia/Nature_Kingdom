@@ -107,9 +107,14 @@ const EmployeeForm = () => {
                 <InputFields label="SALARY" name="salary" value={formData.salary} onChange={handleChange} />
             </div>
 
+            <div className={styles.formRow}> 
                 <SelectGroup label="ROLE (choose one)" name="role" options={["Manager", "Zookeeper", "Veterinarian", "Maintenance", "Guest Services", "Administrator", "Operator"]} selectedOption={formData.role} onChange={handleSelect} required />
-                <SelectGroup label="GENDER (choose one)" name="gender" options={["Male", "Female", "Other", "Prefer not to say"]} selectedOption={formData.gender} onChange={handleSelect} required />
+            </div>
 
+            <div className={styles.formRow}> 
+                <SelectGroup label="GENDER (choose one)" name="gender" options={["Male", "Female", "Other", "Prefer not to say"]} selectedOption={formData.gender} onChange={handleSelect} required />
+            </div>
+            
             <div className={styles.formRow}>
                 <InputFields label="EMAIL" name="email" type="email" value={formData.email} onChange={handleChange} />
                 <InputFields label="PHONE" name="phone" type="tel" value={formData.phone} onChange={handleChange} />
