@@ -12,6 +12,7 @@ import HomePage from "./pages/home/home";
 import Sign_up from "./pages/signup/sign_up";
 import Login from "./pages/login/login";
 import EmployeeLogin from "./pages/employee/employee_login";
+import EventsPage from './pages/events/EventsPage';
 import "./App.css";
 
 // Performance monitoring callback
@@ -108,6 +109,7 @@ function App() {
               <Route path="/signup" element={<Sign_up />} />
               <Route path="/login" element={<Login />} />
               <Route path="/employee_login" element={<EmployeeLogin />} />
+              <Route path="/events" element={<EventsPage />} />
             </Routes>
           </main>
           <Footer />
