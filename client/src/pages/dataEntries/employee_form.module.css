@@ -6,29 +6,31 @@
     margin: 0 auto;
     border-radius: 8px;
     box-shadow: 0 4px 10px black;
-  }
+    position: relative;
+    z-index: 1;
+}
   
-  .formTitle {
+.formTitle {
     text-align: center;
     font-size: 24px;
     margin-bottom: 48px;
     color: #333;
-  }
+}
   
-  .formRow {
+.formRow {
     display: flex;
     flex-direction: row;
     gap: 20px;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 25px;
-  }
+}
 
-  .formRow > div {
+.formRow > div {
     flex: 1;
-  }
+}
   
-  .submitButton {
+.submitButton {
     padding: 12px;
     background-color: #007bff;
     color: white;
@@ -37,133 +39,116 @@
     border-radius: 5px;
     font-size: 16px;
     transition: background-color 0.2s;
-  }
+}
   
-  .submitButton:hover {
+.submitButton:hover {
     background-color: #0056b3;
-  }
+}
   
-  .statusMessage {
+.statusMessage {
     text-align: center;
     margin-top: 10px;
     font-size: 14px;
     color: red;
-  }
+}
 
-  .inputGroup {
+.inputGroup {
     flex-direction: column;
     flex: 1;
     display: flex;
-  }
-
-  .inputGroup input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: white;
-    font-size: 16px;
-    box-sizing: border-box;
-    outline: none;
-    cursor: text;
-  }
-
-  .inputGroup input:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-  }
-  
-  .inputLabel {
-    color: #616161;
-    font-size: 16px;
-  }
-  
-  .inputField {
-    background-color: #f5f5f5;
-    border-width: 1px;
-    border-color: #0003;
-    width: 100%;
-    height: 34px;
-    padding: 0 10px;
-  }
-  
-  .inputError {
-    border-color: #d32f2f;
-    border-width: 2px;
-  }
-
-  .selectGroup {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-  }
-
-  .selectGroup button {
-    padding: 6px 10px;
-    border: 1px solid #888;
-    background-color: white;
-    cursor: pointer;
-    font-size: 14px;
-    white-space: nowrap;
-    min-width: 100px;
-    height: 30px;
-    text-align: center;
-  }
-
-  .selectGroup button.selected {
-    background-color: #666;
-    color: white;
-    border-color: #444;
 }
-  
-  .label {
-    font-size: 18px;
-    font-weight: 600;
-    color: #333;
-  }
-  
-  .optionsContainer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  
-  .optionButton {
-    padding: 10px 20px;
-    font-size: 14px;
-    border-width: 1px;
-    border-color: black;
-    background-color: #d9d9d9;
-    width: 124px;
-    height: 28px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.2s, border-color 0.2s;
-  }
-  
-  .optionButton:hover {
-    background-color: #e0e0e0;
-  }
-  
-  .selected {
-    background-color: #8c9298;
-    color: white;
-    border-color: #8c9298;
-  }
 
-  .inputGroup input,
-  .selectGroup button {
+.inputGroup input {
     width: 100%;
     padding: 10px;
     border: 1px solid lightgray;
     border-radius: 5px;
     background-color: white;
     font-size: 16px;
-  }
+    box-sizing: border-box;
+    outline: none;
+    cursor: text;
+}
 
-  .roleSection, .genderSection, .contactSection {
-    margin-top: 25px;
-  }
+.inputGroup input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
   
+.inputLabel {
+    color: #616161;
+    font-size: 16px;
+}
+  
+.inputField {
+    background-color: #f5f5f5;
+    border-width: 1px;
+    border-color: #0003;
+    width: 100%;
+    height: 34px;
+    padding: 0 10px;
+}
+  
+.inputError {
+    border-color: #d32f2f;
+    border-width: 2px;
+}
+  
+.label {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.roleSection, .genderSection, .contactSection {
+    margin-top: 25px;
+}
+
+.dropdown {
+    position: relative;
+    width: 100%;
+    z-index: 1000;
+}
+
+.dropdown button {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background-color: white;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid lightgray;
+    z-index: 1100;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    background-color: white;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f1f1;
+}

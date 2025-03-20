@@ -1,0 +1,9 @@
+.dropdown {
+    position: relative;
+    z-index: 100;
+  }
+
+.dropdown-content {
+    bottom: auto;
+    top: 100%;
+}
