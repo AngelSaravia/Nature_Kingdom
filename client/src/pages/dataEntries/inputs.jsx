@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styles from "./employee_form.module.css";
+import styles from "./forms.module.css";
 
 const InputFields = ({label, type="text", name, value, onChange, required=true, autocomplete}) => {
     return (

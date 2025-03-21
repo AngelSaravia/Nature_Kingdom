@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import InputFields from "./inputs.jsx";
-import styles from "./employee_form.module.css";
+import styles from "./forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
 

@@ -12,6 +12,7 @@ import Sign_up from "./pages/signup/sign_up";
 import Login from "./pages/login/login";
 import EmployeeLogin from "./pages/employee/employee_login";
 import EmployeeForm from "./pages/dataEntries/employee_form";
+import AnimalForm from "./pages/dataEntries/animal_form";
 import "./App.css";
 
 function BodyClassManager() {
@@ -40,6 +41,7 @@ function MainApp() {
             <Route path="/login" element={<Login />} />
             <Route path="/employee_login" element={<EmployeeLogin />} />
             <Route path="/employee_form" element={<EmployeeForm />} />
+            <Route path="/animal_form" element={<AnimalForm />} />
           </Routes>
         </main>
         <Footer />
