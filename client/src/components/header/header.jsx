@@ -110,7 +110,7 @@ function Header() {
             </div>
           </div>
         ) : (
-          <Link to="/signup" className="login-button">
+          <Link to="/login" className="login-button">
             LOGIN / SIGN UP
           </Link>
         )}
