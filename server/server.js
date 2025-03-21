@@ -49,7 +49,7 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-const PORT = 5004;
+const PORT = 5006;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

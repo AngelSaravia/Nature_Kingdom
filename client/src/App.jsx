@@ -114,11 +114,7 @@ function AppContent() {
               <Route path="/membership" element={<Membership />} />
               <Route path="/login" element={<Login />} />
               <Route path="/employee_login" element={<EmployeeLogin />} />
-              <Route
-                path="/dashboard"
-                element={<div>Dashboard Page</div>}
-              />{" "}
-              {/* Add your dashboard route */}
+              <Route path="/dashboard" element={<div>Dashboard Page</div>} />
             </Routes>
           </main>
           <Footer />
