@@ -93,7 +93,7 @@ return (
             </div>
 
             <div className={styles.formRow}>
-                <label htmlFor="animalTypeDropdown" className={styles.label}>ROLE (choose one)</label>
+                <label htmlFor="animalTypeDropdown" className={styles.label}>ANIMAL TYPE (choose one)</label>
                 <Dropdown
                     label={formData.animalType || "Select animal type"}
                     onSelect={(value) => handleSelect("animalType", value)}
@@ -106,7 +106,7 @@ return (
                     ))}
                 </Dropdown>
 
-                <label htmlFor="healthStatusDropdown" className={styles.label}>GENDER (choose one)</label>
+                <label htmlFor="healthStatusDropdown" className={styles.label}>HEALTH STATUS (choose one)</label>
                 <Dropdown
                     label={formData.gender || "Select health status"}
                     onSelect={(value) => handleSelect("healthStatus", value)}
