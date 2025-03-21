@@ -27,7 +27,7 @@ const Footer = () => {
               Employee Login
             </a>
             <a
-              href="https://github.com/AngelSaravia/ZOO-PROJECT"
+              href="https://github.com/AngelSaravia/Nature_Kingdom"
               className="github-icon"
               aria-label="GitHub"
             >
