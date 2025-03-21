@@ -104,7 +104,11 @@ return (
             </div>
 
             <div className={styles.formRow}>
-                <label>TEMPERATURE CONTROLLED<input type="checkbox" name="temp_control" checked={formData.temp_control} onChange={handleChange}/></label>
+                <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "16px" }}>
+                    TEMPERATURE CONTROLLED:
+                    <input type="checkbox" name="temp_control" checked={formData.temp_control || false} 
+                    onChange={(e) => handleChange({ target: { name: "temp_control", value: e.target.checked } })}
+                    style={{ width: "20px", height: "20px", cursor: "pointer" }}/></label>
             </div>
 
             <div className={styles.formRow}>

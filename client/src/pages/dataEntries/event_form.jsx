@@ -93,7 +93,7 @@ return (
 
             <div className={styles.formRow}>
                 <InputFields label="EVENT DATE AND TIME" name="eventDate" value={formData.eventDate} type="datetime-local" onChange={handleChange} autocomplete="off"/>
-                <InputFields label="DURATION" name="duration" value={formData.duration} onChange={handleChange} type="time" autocomplete="off"/>
+                <InputFields label="DURATION" name="duration" title="Enter duration in HH:MM format" value={formData.duration} onChange={handleChange} type="text" placeholder="HH:MM" pattern="^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$" autocomplete="off"/>
             </div>
 
             <div className={styles.formRow}>
