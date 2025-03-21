@@ -1,7 +1,7 @@
 .wrapper {
   position: relative;
   z-index: 1;
-  background-color: rgb(186, 138, 82);
+  background-color: rgb(217 143 57);
   color: black;
   padding: 30px;
   margin: 70px auto;
@@ -40,11 +40,21 @@ a {
   color: black;
 }
 
+.forgot_password{
+  color: #555;
+
+}
+
 .login_button button {
   padding: 15px 0;
-  font-size: 18px;
+  font-size: 25px;
   width: 70%;
   border-radius: 30px;
+  background-color: #116557;
+  color: white;
+  font-style: bolder;
+  font-family: serif;
+  
 }
 .login_button {
   display: flex;
