@@ -1,0 +1,17 @@
+/* Example custom styles */
+.rbc-calendar {
+    /*background-color: #f9f9f9;*/
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 16px;
+  }
+  
+  .rbc-event {
+    /*background-color: #3174ad;*/
+    background-color: #3174ad;
+  }
+  
+  .rbc-today {
+    /*background-color: #eaf6ff;*/
+    background-color: #93cefa;
+  }
