@@ -1,7 +1,7 @@
 .wrapper {
   position: relative;
   z-index: 1;
-  background-color: rgb(217 143 57);
+  background-color: #da973b;
   color: black;
   padding: 30px;
   margin: 70px auto;
@@ -47,7 +47,7 @@ a {
 
 .login_button button {
   padding: 15px 0;
-  font-size: 25px;
+  font-size: 30px;
   width: 70%;
   border-radius: 30px;
   background-color: #116557;
