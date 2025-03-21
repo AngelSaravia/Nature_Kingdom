@@ -6,12 +6,12 @@ import DropdownItem from "../../components/DropdownItem/DropdownItem";
 
 const AnimalForm = () => {
     const [formData, setFormData] = useState({
-        animalName: "",
-        dateOfBirth: "",
-        enclosureID: "",
+        animal_name: "",
+        date_of_birth: "",
+        enclosure_id: "",
         species: "",
-        animalType: "",
-        healthStatus: "",
+        animal_type: "",
+        health_status: "",
     });
 
 const [submissionStatus, setSubmissionStatus] = useState(null);
@@ -60,12 +60,12 @@ const handleSubmit = async (event) => {
         if (response.ok) {
             setSubmissionStatus("Animal successfully added.");
             setFormData({
-                animalName: "",
-                dateOfBirth: "",
-                enclosureID: "",
+                animal_name: "",
+                date_of_birth: "",
+                enclosure_id: "",
                 species: "",
-                animalType: "",
-                healthStatus: "",
+                animal_type: "",
+                health_status: "",
             });
         } else {
             setSubmissionStatus("Failed to add animal. Please try again.");
@@ -81,11 +81,11 @@ return (
         <h2 className={styles.formTitle}>ADD ANIMAL</h2>
         <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.formRow}>
-                <InputFields label="ANIMAL NAME" name="animalName" value={formData.animalName} onChange={handleChange} pattern="[A-Za-z\s\-]+" autocomplete="off"/>
+                <InputFields label="ANIMAL NAME" name="animal_name" value={formData.animal_name} onChange={handleChange} pattern="[A-Za-z\s\-]+" autocomplete="off"/>
             </div>
 
             <div className={styles.formRow}>
-                <InputFields label="DATE OF BIRTH" name="dateOfBirth" value={formData.dateOfBirth} type="date" onChange={handleChange} autocomplete="bday"/>
+                <InputFields label="DATE OF BIRTH" name="date_of_birth" value={formData.date_of_birth} type="date" onChange={handleChange} autocomplete="bday"/>
             </div>
 
             <div className={styles.formRow}>
@@ -93,11 +93,11 @@ return (
             </div>
 
             <div className={styles.formRow}>
-                <label htmlFor="animalTypeDropdown" className={styles.label}>ANIMAL TYPE (choose one)</label>
+                <label htmlFor="animal_typeDropdown" className={styles.label}>ANIMAL TYPE (choose one)</label>
                 <Dropdown
-                    label={formData.animalType || "Select animal type"}
-                    onSelect={(value) => handleSelect("animalType", value)}
-                    id="animalTypeDropdown"
+                    label={formData.animal_type || "Select animal type"}
+                    onSelect={(value) => handleSelect("animal_type", value)}
+                    id="animal_typeDropdown"
                 >
                     {["Mammal", "Bird", "Reptile", "Amphibian", "Fish", "Invertebrate"].map((option) => (
                         <DropdownItem key={option} value={option}>
@@ -106,11 +106,11 @@ return (
                     ))}
                 </Dropdown>
 
-                <label htmlFor="healthStatusDropdown" className={styles.label}>HEALTH STATUS (choose one)</label>
+                <label htmlFor="health_statusDropdown" className={styles.label}>HEALTH STATUS (choose one)</label>
                 <Dropdown
-                    label={formData.gender || "Select health status"}
-                    onSelect={(value) => handleSelect("healthStatus", value)}
-                    id="healthStatusDropdown"
+                    label={formData.health_status || "Select health status"}
+                    onSelect={(value) => handleSelect("health_status", value)}
+                    id="health_statusDropdown"
                 >
                     {["HEALTHY", "NEEDS CARE", "CRITICAL"].map((option) => (
                         <DropdownItem key={option} value={option}>
@@ -121,7 +121,7 @@ return (
             </div>
 
             <div className={styles.formRow}>
-                <InputFields label="ENCLOSURE ID" name="enclosureID" type="text" value={formData.enclosureID} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autocomplete="off"/>
+                <InputFields label="ENCLOSURE ID" name="enclosure_id" type="text" value={formData.enclosure_id} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autocomplete="off"/>
             </div>
 
             <button type="submit" className={styles.submitButton}>Submit</button>

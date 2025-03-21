@@ -6,15 +6,16 @@ import DropdownItem from "../../components/DropdownItem/DropdownItem";
 
 const EnclosureForm = () => {
     const [formData, setFormData] = useState({
-        enclosureName: "",
-        currentCapacity: "",
-        maxCapacity: "",
-        exhibitID: "",
-        managerID: "",
+        name: "",
+        current_capacity: "",
+        capacity: "",
+        exhibit_id: "",
+        Manager_id: "",
         location: "",
-        openingTime: "",
-        closingTime: "",
-        enclosureStatus: "",
+        opens_at: "",
+        closes_at: "",
+        status: "",
+        temp_control: "",
     });
 
 const [submissionStatus, setSubmissionStatus] = useState(null);
@@ -63,15 +64,16 @@ const handleSubmit = async (event) => {
         if (response.ok) {
             setSubmissionStatus("Enclosure successfully added.");
             setFormData({
-                enclosureName: "",
-                currentCapacity: "",
-                maxCapacity: "",
-                exhibitID: "",
-                managerID: "",
+                name: "",
+                current_capacity: "",
+                capacity: "",
+                exhibit_id: "",
+                Manager_id: "",
                 location: "",
-                openingTime: "",
-                closingTime: "",
-                enclosureStatus: "",
+                opens_at: "",
+                closes_at: "",
+                status: "",
+                temp_control: "",
             });
         } else {
             setSubmissionStatus("Failed to add enclosure. Please try again.");
@@ -87,26 +89,30 @@ return (
         <h2 className={styles.formTitle}>ADD ENCLOSURE</h2>
         <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.formRow}>
-                <InputFields label="ENCLOSURE NAME" name="enclosureName" value={formData.enclosureName} onChange={handleChange} pattern="[A-Za-z\s\-]+" autocomplete="off"/>
-                <InputFields label="CURRENT CAPACITY" name="currentCapacity" value={formData.currentCapacity} pattern="[0-9]+" onChange={handleChange} autocomplete="off"/>
+                <InputFields label="ENCLOSURE NAME" name="name" value={formData.name} onChange={handleChange} pattern="[A-Za-z\s\-]+" autocomplete="off"/>
+                <InputFields label="CURRENT CAPACITY" name="current_capacity" value={formData.current_capacity} pattern="[0-9]+" onChange={handleChange} autocomplete="off"/>
             </div>
 
             <div className={styles.formRow}>
-                <InputFields label="MAXIMUM CAPACITY" name="maxCapacity" value={formData.maxCapacity} pattern="[0-9]+" onChange={handleChange} autocomplete="off"/>
-                <InputFields label="LOCATION" name="location" value={formData.location} onChange={handleChange} pattern="[A-Za-z0-9\s\-,]+" autocomplete="off"/>
+                <InputFields label="MAXIMUM CAPACITY" name="capacity" value={formData.capacity} pattern="[0-9]+" min="0" onChange={handleChange} autocomplete="off"/>
+                <InputFields label="LOCATION" name="location" value={formData.location} onChange={handleChange} pattern="[A-Za-z0-9\s\-,]+" required={false} autocomplete="off"/>
             </div>
 
             <div className={styles.formRow}>
-                <InputFields label="OPENING TIME" name="openingTime" type="time" value={formData.openingTime} onChange={handleChange} autocomplete="off"/>
-                <InputFields label="CLOSING TIME" name="closingTime" type="time" value={formData.closingTime} onChange={handleChange} autocomplete="off"/>
+                <InputFields label="OPENING TIME" name="opens_at" type="time" value={formData.opens_at} onChange={handleChange} required={false} autocomplete="off"/>
+                <InputFields label="CLOSING TIME" name="closes_at" type="time" value={formData.closes_at} onChange={handleChange} required={false} autocomplete="off"/>
             </div>
 
             <div className={styles.formRow}>
-                <label htmlFor="enclosureStatusDropdown" className={styles.label}>ENCLOSURE STATUS (choose one)</label>
+                <label>TEMPERATURE CONTROLLED<input type="checkbox" name="temp_control" checked={formData.temp_control} onChange={handleChange}/></label>
+            </div>
+
+            <div className={styles.formRow}>
+                <label htmlFor="statusDropdown" className={styles.label}>ENCLOSURE STATUS (choose one)</label>
                 <Dropdown
-                    label={formData.enclosureStatus || "Select enclosure status"}
-                    onSelect={(value) => handleSelect("enclosureStatus", value)}
-                    id="enclosureStatusDropdown"
+                    label={formData.status || "Select enclosure status"}
+                    onSelect={(value) => handleSelect("status", value)}
+                    id="statusDropdown"
                 >
                     {["active", "inactive", "under maintenance"].map((option) => (
                         <DropdownItem key={option} value={option}>
@@ -117,8 +123,8 @@ return (
             </div>
 
             <div className={styles.formRow}>
-                <InputFields label="EXHIBIT ID" name="exhibitID" type="text" value={formData.exhibitID} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autocomplete="off"/>
-                <InputFields label="MANAGER ID" name="managerID" type="text" value={formData.managerID} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autocomplete="off"/>
+                <InputFields label="EXHIBIT ID" name="exhibit_id" type="text" value={formData.exhibit_id} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autocomplete="off"/>
+                <InputFields label="MANAGER ID" name="Manager_id" type="text" value={formData.Manager_id} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} required={false} autocomplete="off"/>
             </div>
 
             <button type="submit" className={styles.submitButton}>Submit</button>

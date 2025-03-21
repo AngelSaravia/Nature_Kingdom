@@ -6,20 +6,21 @@ import DropdownItem from "../../components/DropdownItem/DropdownItem";
 
 const EmployeeForm = () => {
     const [formData, setFormData] = useState({
-        firstName: "",
-        middleInit: "",
-        lastName: "",
-        streetAddress: "",
+        first_name: "",
+        Minit_name: "",
+        last_name: "",
+        date_of_birth: "",
+        street_address: "",
         city: "",
         state: "",
-        zipCode: "",
+        zip_code: "",
         country: "",
         salary: "",
         role: "",
         gender: "",
         email: "",
         phone: "",
-        managerID: "",
+        Manager_id: "",
     });
 
 const [submissionStatus, setSubmissionStatus] = useState(null);
@@ -68,20 +69,21 @@ const handleSubmit = async (event) => {
         if (response.ok) {
             setSubmissionStatus("Employee successfully added.");
             setFormData({
-                firstName: "",
-                middleInit: "",
-                lastName: "",
-                streetAddress: "",
+                first_name: "",
+                Minit_name: "",
+                last_name: "",
+                date_of_birth: "",
+                street_address: "",
                 city: "",
                 state: "",
-                zipCode: "",
+                zip_code: "",
                 country: "",
                 salary: "",
                 role: "",
                 gender: "",
                 email: "",
                 phone: "",
-                managerID: "",
+                Manager_id: "",
             });
         } else {
             setSubmissionStatus("Failed to add employee. Please try again.");
@@ -97,19 +99,19 @@ return (
         <h2 className={styles.formTitle}>ADD EMPLOYEE</h2>
         <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.formRow}>
-                <InputFields label="FIRST NAME" name="firstName" value={formData.firstName} onChange={handleChange} pattern="[A-Za-z]+" autocomplete="given-name"/>
-                <InputFields label="MIDDLE INITIAL" name="middleInit" value={formData.middleInit} onChange={handleChange} maxLength="1" pattern="[A-Za-z]" required={false} autocomplete="additional-name"/>
-                <InputFields label="LAST NAME" name="lastName" value={formData.lastName} onChange={handleChange} pattern="[A-Za-z]+" autocomplete="family-name"/>
+                <InputFields label="FIRST NAME" name="first_name" value={formData.first_name} onChange={handleChange} pattern="[A-Za-z]+" autocomplete="given-name"/>
+                <InputFields label="MIDDLE INITIAL" name="Minit_name" value={formData.Minit_name} onChange={handleChange} maxLength="1" pattern="[A-Za-z]" required={false} autocomplete="additional-name"/>
+                <InputFields label="LAST NAME" name="last_name" value={formData.last_name} onChange={handleChange} pattern="[A-Za-z]+" autocomplete="family-name"/>
             </div>
 
             <div className={styles.formRow}>
-                <InputFields label="STREET ADDRESS" name="streetAddress" value={formData.streetAddress} onChange={handleChange} pattern="[A-Za-z0-9\s]+" autocomplete="address-line1"/>
+                <InputFields label="STREET ADDRESS" name="street_address" value={formData.street_address} onChange={handleChange} pattern="[A-Za-z0-9\s]+" autocomplete="address-line1"/>
                 <InputFields label="CITY" name="city" value={formData.city} onChange={handleChange} pattern="[A-Za-z\s]+" autocomplete="address-level2"/>
                 <InputFields label="STATE" name="state" value={formData.state} onChange={handleChange} pattern="[A-Za-z\s]+" autocomplete="address-level1"/>
             </div>
 
             <div className={styles.formRow}>
-                <InputFields label="ZIP CODE" name="zipCode" value={formData.zipCode} onChange={handleChange} type="text" pattern="[0-9]{5}" autocomplete="postal-code"/>
+                <InputFields label="ZIP CODE" name="zip_code" value={formData.zip_code} onChange={handleChange} type="text" pattern="[0-9]{5}" autocomplete="postal-code"/>
                 <InputFields label="COUNTRY" name="country" value={formData.country} onChange={handleChange} pattern="[A-Za-z\s]+" autocomplete="country-name"/>
                 <InputFields label="SALARY" name="salary" value={formData.salary} onChange={handleChange} type="text" pattern="[0-9]+" onInput={handleNumericInput} autocomplete="off"/>
             </div>
@@ -143,9 +145,13 @@ return (
             </div>
 
             <div className={styles.formRow}>
+                <InputFields label="DATE OF BIRTH" name="date_of_birth" value={formData.date_of_birth} type="date" onChange={handleChange} autocomplete="bday"/>
+            </div>
+
+            <div className={styles.formRow}>
                 <InputFields label="EMAIL" name="email" type="email" value={formData.email} onChange={handleChange} autocomplete="email"/>
                 <InputFields label="PHONE" name="phone" type="tel" value={formData.phone} onChange={handleChange} pattern="[0-9]{10}" autocomplete="tel"/>
-                <InputFields label="MANAGER ID" name="managerID" type="text" value={formData.managerID} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autocomplete="off"/>
+                <InputFields label="MANAGER ID" name="Manager_id" type="text" value={formData.Manager_id} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autocomplete="off"/>
             </div>
 
             <button type="submit" className={styles.submitButton}>Submit</button>
