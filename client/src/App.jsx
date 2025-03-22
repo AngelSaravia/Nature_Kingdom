@@ -14,6 +14,10 @@ import Tickets from "./pages/tickets/tickets";
 import Sign_up from "./pages/signup/sign_up";
 import Login from "./pages/login/login";
 import EmployeeLogin from "./pages/employee/employee_login";
+import EmployeeForm from "./pages/dataEntries/employee_form";
+import AnimalForm from "./pages/dataEntries/animal_form";
+import EnclosureForm from "./pages/dataEntries/enclosure_form";
+import EventForm from "./pages/dataEntries/event_form";
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
 
@@ -113,6 +117,10 @@ function AppContent() {
               <Route path="/membership" element={<Membership />} />
               <Route path="/login" element={<Login />} />
               <Route path="/employee_login" element={<EmployeeLogin />} />
+              <Route path="/employee_form" element={<EmployeeForm />} />
+              <Route path="/animal_form" element={<AnimalForm />} />
+              <Route path="/enclosure_form" element={<EnclosureForm />} />
+              <Route path="/event_form" element={<EventForm />} />
             </Routes>
           </main>
           <Footer />
