@@ -8,6 +8,8 @@ import {
 import Header from "./components/header/header";
 import Footer from "./components/footer/footer";
 import HomePage from "./pages/home/home";
+import Membership from "./pages/membership/membership";
+import Tickets from "./pages/tickets/tickets";
 import Sign_up from "./pages/signup/sign_up";
 import Login from "./pages/login/login";
 import EmployeeLogin from "./pages/employee/employee_login";
@@ -16,6 +18,7 @@ import AnimalForm from "./pages/dataEntries/animal_form";
 import EnclosureForm from "./pages/dataEntries/enclosure_form";
 import EventForm from "./pages/dataEntries/event_form";
 import "./App.css";
+import HeaderManager from "./components/header/headerManager";
 
 function BodyClassManager() {
   const { pathname } = useLocation();

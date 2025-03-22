@@ -14,7 +14,7 @@ const EventForm = () => {
         eventType: "",
         capacity: "",
         price: "",
-        employeeID: "",
+        managerID: "",
     });
 
 const [submissionStatus, setSubmissionStatus] = useState(null);
@@ -71,7 +71,7 @@ const handleSubmit = async (event) => {
                 eventType: "",
                 capacity: "",
                 price: "",
-                employeeID: "",
+                managerID: "",
             });
         } else {
             setSubmissionStatus("Failed to add event. Please try again.");
@@ -102,7 +102,7 @@ return (
             </div>
 
             <div className={styles.formRow}>
-                <InputFields label="EMPLOYEE ID" name="employeeID" type="text" value={formData.employeeID} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autocomplete="off"/>
+                <InputFields label="MANAGER ID" name="managerID" type="text" value={formData.managerID} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autocomplete="off"/>
             </div>
 
             <div className={styles.formRow}>

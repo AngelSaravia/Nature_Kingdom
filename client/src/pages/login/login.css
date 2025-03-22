@@ -1,0 +1,75 @@
+.wrapper {
+  position: relative;
+  z-index: 1;
+  background-color: #da973b;
+  color: black;
+  padding: 30px;
+  margin: 70px auto;
+  width: 95%;
+  max-width: 800px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+h1 {
+  color: white;
+  display: flex;
+  justify-content: center;
+  font-size: 40px;
+}
+.input-box {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid;
+  border-radius: 5px;
+  padding: 10px;
+  gap: 10px;
+}
+p {
+  font-size: 20px;
+}
+
+form .remember-forgot {
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  margin: 35px;
+}
+a {
+  font-size: 25px;
+  color: black;
+}
+
+.forgot_password{
+  color: #555;
+
+}
+
+.login_button button {
+  padding: 15px 0;
+  font-size: 30px;
+  width: 70%;
+  border-radius: 30px;
+  background-color: #116557;
+  color: white;
+  font-style: bolder;
+  font-family: serif;
+  
+}
+
+.login_button button:hover{
+  background-color: #257467;
+}
+
+.login_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin: 20px 0;
+}
+.input_container {
+  display: flex;
+  flex-direction: column;
+  gap: 22px; /* Adds space between the input fields */
+}

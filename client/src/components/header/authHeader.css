@@ -1,0 +1,32 @@
+.nav-links {
+  display: flex;
+  gap: 50px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+}
+.nav-links a:hover {
+  color: white;
+  text-decoration: underline;
+  text-decoration-thickness: 5px;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  margin-right: 50px;
+  margin-left: 30px;
+  gap: 30px;
+}
+.username {
+  font-size: 28px;
+}
+.logout-btn {
+  font-size: 20px;
+  border-radius: 10px;
+}
+.logout-btn:hover {
+  background-color: red;
+}

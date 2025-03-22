@@ -5,6 +5,8 @@ import "./registration.css"; // Make sure to create this CSS file
 function Registration() {
   // Form state management
   const [formData, setFormData] = useState({
+    username: "",
+    password: "",
     firstname: "",
     middlename: "",
     lastname: "",
@@ -43,6 +45,31 @@ function Registration() {
   // Validate the form
   const validateForm = () => {
     let errors = {};
+
+    //username validation
+    if (!formData.username.trim()) {
+      errors.username = "Username is required";
+    } else if (formData.username.length < 3 || formData.username.length > 20) {
+      errors.username = "Username must be between 3 and 20 characters";
+    } else if (!/^[A-Za-z0-9_-]+$/.test(formData.username)) {
+      errors.username =
+        "Username can only contain letters, numbers, hyphens, and underscores";
+    }
+
+    //password validation
+    if (!formData.password.trim()) {
+      errors.password = "Password is required";
+    } else if (formData.password.length < 8) {
+      errors.password = "Password must be at least 8 characters long";
+    } else if (!/[A-Z]/.test(formData.password)) {
+      errors.password = "Password must contain at least one uppercase letter";
+    } else if (!/[a-z]/.test(formData.password)) {
+      errors.password = "Password must contain at least one lowercase letter";
+    } else if (!/[0-9]/.test(formData.password)) {
+      errors.password = "Password must contain at least one number";
+    } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
+      errors.password = "Password must contain at least one special character";
+    }
 
     // First name validation
     if (!formData.firstname.trim()) {
@@ -123,6 +150,8 @@ function Registration() {
   // Reset form to initial state
   const resetForm = () => {
     setFormData({
+      username: "",
+      password: "",
       firstname: "",
       middlename: "",
       lastname: "",
@@ -149,11 +178,19 @@ function Registration() {
     if (validateForm()) {
       setIsSubmitting(true);
 
+      const correctedFormData = {
+        ...formData,
+        age: Number(formData.age), // Convert age to a number
+      };
+
       try {
         // You can change the endpoint URL as needed
+
+        console.log(correctedFormData);
+        console.log(formData);
         const response = await axios.post(
           "http://localhost:5004/signup",
-          formData
+          correctedFormData
         );
         setSubmitStatus({
           message: "Registration successful!",
@@ -200,6 +237,34 @@ function Registration() {
       )}
 
       <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label>Username *</label>
+          <input
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            className={formErrors.username ? "error" : ""}
+          />
+          {formErrors.username && (
+            <span className="error-text">{formErrors.username}</span>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label>Password *</label>
+          <input
+            type="text"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className={formErrors.password ? "error" : ""}
+          />
+          {formErrors.password && (
+            <span className="error-text">{formErrors.password}</span>
+          )}
+        </div>
+
         <div className="form-row">
           <div className="form-group">
             <label>First Name *</label>
