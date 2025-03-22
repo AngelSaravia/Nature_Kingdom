@@ -9,6 +9,95 @@ const Checkout = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const purchaseType = location.pathname.includes('/tickets/') ? 'tickets' : 'membership';
 
+  // Add state for form fields
+  const [paymentDetails, setPaymentDetails] = useState({
+    cardNumber: '',
+    expiryDate: '',
+    cvv: '',
+    nameOnCard: ''
+  });
+
+  // Handle card number input
+  const handleCardNumberChange = (e) => {
+    const value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+    if (value.length <= 16) {
+      // Format with spaces for display (but spaces aren't stored in value)
+      const formatted = value.replace(/(\d{4})/g, '$1 ').trim();
+      e.target.value = formatted;
+      setPaymentDetails(prev => ({
+        ...prev,
+        cardNumber: value
+      }));
+    }
+  };
+
+  // Handle expiry date input
+  const handleExpiryDateChange = (e) => {
+    let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+    if (value.length <= 4) {
+      // Auto-format as MM/YY
+      if (value.length > 2) {
+        value = value.slice(0, 2) + '/' + value.slice(2);
+      }
+      // Validate month
+      if (value.length >= 2) {
+        const month = parseInt(value.slice(0, 2));
+        if (month > 12) {
+          value = '12' + value.slice(2);
+        }
+        if (month < 1) {
+          value = '01' + value.slice(2);
+        }
+      }
+      e.target.value = value;
+      setPaymentDetails(prev => ({
+        ...prev,
+        expiryDate: value
+      }));
+    }
+  };
+
+  // Handle CVV input
+  const handleCVVChange = (e) => {
+    const value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+    if (value.length <= 3) {
+      setPaymentDetails(prev => ({
+        ...prev,
+        cvv: value
+      }));
+    }
+  };
+
+  // Handle name input
+  const handleNameChange = (e) => {
+    setPaymentDetails(prev => ({
+      ...prev,
+      nameOnCard: e.target.value
+    }));
+  };
+
+  // Validate form before submission
+  const validateForm = () => {
+    if (paymentDetails.cardNumber.length !== 16) {
+      alert('Please enter a valid 16-digit card number');
+      return false;
+    }
+    if (paymentDetails.expiryDate.length !== 5) {
+      alert('Please enter a valid expiry date (MM/YY)');
+      return false;
+    }
+    if (paymentDetails.cvv.length !== 3) {
+      alert('Please enter a valid 3-digit CVV');
+      return false;
+    }
+    if (!paymentDetails.nameOnCard.trim()) {
+      alert('Please enter the name on card');
+      return false;
+    }
+    return true;
+  };
+
+
     useEffect(() => {
       // Validate state and redirect if invalid access
       if (!state) {
@@ -76,14 +165,14 @@ const Checkout = () => {
   
     const handleSubmit = (e) => {
         e.preventDefault();
-        setShowConfirmation(true);
-        
-        // 6-second delay before redirecting
-        setTimeout(() => {
-          navigate('/confirmation');  // or wherever you want to redirect after purchase
-        }, 5000);
+        if (validateForm()) {
+          setShowConfirmation(true);
+          setTimeout(() => {
+            navigate('/');
+          }, 6000);
+        }
       };
-    
+
       return (
         <>
           <div className="checkout-container">
@@ -102,7 +191,11 @@ const Checkout = () => {
                   <input 
                     type="text" 
                     placeholder="XXXX XXXX XXXX XXXX"
-                    maxLength="16"
+                    onChange={handleCardNumberChange}
+                    onKeyPress={(e) => {
+                      if (!/\d/.test(e.key)) e.preventDefault();
+                    }}
+                    maxLength="19"
                     required
                   />
                 </div>
@@ -113,6 +206,10 @@ const Checkout = () => {
                     <input 
                       type="text" 
                       placeholder="MM/YY"
+                      onChange={handleExpiryDateChange}
+                      onKeyPress={(e) => {
+                        if (!/\d/.test(e.key)) e.preventDefault();
+                      }}
                       maxLength="5"
                       required
                     />
@@ -123,6 +220,10 @@ const Checkout = () => {
                     <input 
                       type="text" 
                       placeholder="123"
+                      onChange={handleCVVChange}
+                      onKeyPress={(e) => {
+                        if (!/\d/.test(e.key)) e.preventDefault();
+                      }}
                       maxLength="3"
                       required
                     />
@@ -134,6 +235,7 @@ const Checkout = () => {
                   <input 
                     type="text" 
                     placeholder="John Doe"
+                    onChange={handleNameChange}
                     required
                   />
                 </div>
@@ -159,5 +261,4 @@ const Checkout = () => {
       );
     };
     
-
-export default Checkout;
+    export default Checkout;
