@@ -7,19 +7,19 @@ const handleSignUp = (req, res) => {
   getParseData(req) // Use getParseData to parse the request body
     .then((data) => {
       const {
-        firstname,
-        middlename,
-        lastname,
-        email,
+        first_name,
+        Minit_name,
+        last_name,
         username,
+        email,
         password,
-        age,
-        state,
-        country,
-        zipcode,
-        address,
+        phone_number,
+        date_of_birth,
+        street_address,
         city,
-        mobile,
+        state,
+        zipcode,
+        country
       } = data;
 
       // Hash the password before saving it to the database
@@ -31,26 +31,38 @@ const handleSignUp = (req, res) => {
         }
 
         const query = `
-          INSERT INTO users (firstname, middlename, lastname, email, username, password, age, state, country, zipcode, address, city, mobile) 
+          INSERT INTO users ( first_name,
+                              Minit_name,
+                              last_name,
+                              username,
+                              email,
+                              password,
+                              phone_number,
+                              date_of_birth,
+                              street_address,
+                              city,
+                              state,
+                              zipcode,
+                              country)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         db_connection.query(
           query,
           [
-            firstname,
-            middlename,
-            lastname,
-            email,
+            first_name,
+            Minit_name,
+            last_name,
             username,
-            hashedPassword, // Use hashed password instead of plain text
-            age,
-            state,
-            country,
-            zipcode,
-            address,
+            email,
+            password,
+            phone_number,
+            date_of_birth,
+            street_address,
             city,
-            mobile,
+            state,
+            zipcode,
+            country
           ],
           (err, result) => {
             if (err) {

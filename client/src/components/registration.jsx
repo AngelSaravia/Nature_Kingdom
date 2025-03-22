@@ -5,19 +5,19 @@ import "./registration.css"; // Make sure to create this CSS file
 function Registration() {
   // Form state management
   const [formData, setFormData] = useState({
+    first_name: "",
+    Minit_name: "",
+    last_name: "",
     username: "",
     password: "",
-    firstname: "",
-    middlename: "",
-    lastname: "",
     email: "",
     date_of_birth: "",
     state: "",
     country: "",
     zipcode: "",
-    address: "",
+    street_address: "",
     city: "",
-    mobile: "",
+    phone_number: "",
   });
 
   // Validation and UI states
@@ -72,22 +72,22 @@ function Registration() {
     }
 
     // First name validation
-    if (!formData.firstname.trim()) {
-      errors.firstname = "First name is required";
-    } else if (!/^[A-Za-z\s]+$/.test(formData.firstname)) {
-      errors.firstname = "First name should contain only letters";
+    if (!formData.first_name.trim()) {
+      errors.first_name = "First name is required";
+    } else if (!/^[A-Za-z\s]+$/.test(formData.first_name)) {
+      errors.first_name = "First name should contain only letters";
     }
 
     // Middle name validation (optional)
-    if (formData.middlename && !/^[A-Za-z\s]*$/.test(formData.middlename)) {
-      errors.middlename = "Middle name should contain only letters";
+    if (formData.Minit_name && !/^[A-Za-z\s]*$/.test(formData.Minit_name)) {
+      errors.Minit_name = "Middle name should contain only letters";
     }
 
     // Last name validation
-    if (!formData.lastname.trim()) {
-      errors.lastname = "Last name is required";
-    } else if (!/^[A-Za-z\s]+$/.test(formData.lastname)) {
-      errors.lastname = "Last name should contain only letters";
+    if (!formData.last_name.trim()) {
+      errors.last_name = "Last name is required";
+    } else if (!/^[A-Za-z\s]+$/.test(formData.last_name)) {
+      errors.last_name = "Last name should contain only letters";
     }
 
     // Email validation
@@ -108,16 +108,16 @@ function Registration() {
       errors.date_of_birth = "Please enter a valid Date of Birth";
     }
 
-    // Mobile validation
-    if (!formData.mobile.trim()) {
-      errors.mobile = "Mobile number is required";
-    } else if (!/^\d{10}$/.test(formData.mobile.replace(/\D/g, ""))) {
-      errors.mobile = "Please enter a valid 10-digit mobile number";
+    // phone_number validation
+    if (!formData.phone_number.trim()) {
+      errors.phone_number = "Mobile number is required";
+    } else if (!/^\d{10}$/.test(formData.phone_number.replace(/\D/g, ""))) {
+      errors.phone_number = "Please enter a valid 10-digit mobile number";
     }
 
     // Address validation
-    if (!formData.address.trim()) {
-      errors.address = "Address is required";
+    if (!formData.street_address.trim()) {
+      errors.street_address = "Address is required";
     }
 
     // City validation
@@ -150,19 +150,19 @@ function Registration() {
   // Reset form to initial state
   const resetForm = () => {
     setFormData({
+      first_name: "",
+      Minit_name: "",
+      last_name: "",
       username: "",
       password: "",
-      firstname: "",
-      middlename: "",
-      lastname: "",
       email: "",
       date_of_birth: "",
       state: "",
       country: "",
       zipcode: "",
-      address: "",
+      street_address: "",
       city: "",
-      mobile: "",
+      phone_number: "",
     });
     setFormErrors({});
     setSubmitStatus({ message: "", type: "" });
@@ -270,13 +270,13 @@ function Registration() {
             <label>First Name *</label>
             <input
               type="text"
-              name="firstname"
-              value={formData.firstname}
+              name="first_name"
+              value={formData.first_name}
               onChange={handleChange}
-              className={formErrors.firstname ? "error" : ""}
+              className={formErrors.first_name ? "error" : ""}
             />
-            {formErrors.firstname && (
-              <span className="error-text">{formErrors.firstname}</span>
+            {formErrors.first_name && (
+              <span className="error-text">{formErrors.first_name}</span>
             )}
           </div>
 
@@ -284,13 +284,13 @@ function Registration() {
             <label>Middle Name</label>
             <input
               type="text"
-              name="middlename"
-              value={formData.middlename}
+              name="Minit_name"
+              value={formData.Minit_name}
               onChange={handleChange}
-              className={formErrors.middlename ? "error" : ""}
+              className={formErrors.Minit_name ? "error" : ""}
             />
-            {formErrors.middlename && (
-              <span className="error-text">{formErrors.middlename}</span>
+            {formErrors.Minit_name && (
+              <span className="error-text">{formErrors.Minit_name}</span>
             )}
           </div>
 
@@ -298,13 +298,13 @@ function Registration() {
             <label>Last Name *</label>
             <input
               type="text"
-              name="lastname"
-              value={formData.lastname}
+              name="last_name"
+              value={formData.last_name}
               onChange={handleChange}
-              className={formErrors.lastname ? "error" : ""}
+              className={formErrors.last_name ? "error" : ""}
             />
-            {formErrors.lastname && (
-              <span className="error-text">{formErrors.lastname}</span>
+            {formErrors.last_name && (
+              <span className="error-text">{formErrors.last_name}</span>
             )}
           </div>
         </div>
@@ -329,14 +329,14 @@ function Registration() {
             <label>Mobile *</label>
             <input
               type="tel"
-              name="mobile"
-              value={formData.mobile}
+              name="phone_number"
+              value={formData.phone_number}
               onChange={handleChange}
-              className={formErrors.mobile ? "error" : ""}
+              className={formErrors.phone_number ? "error" : ""}
               placeholder="1234567890"
             />
-            {formErrors.mobile && (
-              <span className="error-text">{formErrors.mobile}</span>
+            {formErrors.phone_number && (
+              <span className="error-text">{formErrors.phone_number}</span>
             )}
           </div>
         </div>
@@ -361,14 +361,14 @@ function Registration() {
           <div className="form-group full-width">
             <label>Address *</label>
             <textarea
-              name="address"
-              value={formData.address}
+              name="street_address"
+              value={formData.street_address}
               onChange={handleChange}
-              className={formErrors.address ? "error" : ""}
+              className={formErrors.street_address ? "error" : ""}
               rows="3"
             />
-            {formErrors.address && (
-              <span className="error-text">{formErrors.address}</span>
+            {formErrors.street_address && (
+              <span className="error-text">{formErrors.street_address}</span>
             )}
           </div>
         </div>
