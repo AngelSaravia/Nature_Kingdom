@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const handleSignUp = require("./helpers/sign_up_helper");
 const handleLogin = require("./helpers/login_helper");
+const handleEmployeeLogin = require("./helpers/employee_login");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 const server = http.createServer(async (req, res) => {
@@ -38,6 +39,8 @@ const server = http.createServer(async (req, res) => {
     handleSignUp(req, res);
   } else if (path === "/login" && req.method === "POST") {
     handleLogin(req, res);
+  } else if (path === "/employee_login" && req.method === "POST") {
+    handleEmployeeLogin(req, res);
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(
