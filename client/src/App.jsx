@@ -114,6 +114,10 @@ function AppContent() {
               <Route path="/membership" element={<Membership />} />
               <Route path="/login" element={<Login />} />
               <Route path="/employee_login" element={<EmployeeLogin />} />
+              <Route path="/employee_form" element={<EmployeeForm />} />
+              <Route path="/animal_form" element={<AnimalForm />} />
+              <Route path="/enclosure_form" element={<EnclosureForm />} />
+              <Route path="/event_form" element={<EventForm />} />
               <Route
                 path="/dashboard"
                 element={<div>Dashboard Page</div>}
