@@ -118,7 +118,6 @@ function AppContent() {
                 path="/dashboard"
                 element={<div>Dashboard Page</div>}
               />{" "}
-              {/* Add your dashboard route */}
             </Routes>
           </main>
           <Footer />
