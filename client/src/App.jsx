@@ -122,7 +122,7 @@ function AppContent() {
               <Route path="/animal_form" element={<AnimalForm />} />
               <Route path="/enclosure_form" element={<EnclosureForm />} />
               <Route path="/event_form" element={<EventForm />} />
-              <Route path="/events" element= {<EventsPage/>}/>
+              <Route path="/calendar" element= {<EventsPage/>}/>
               <Route
                 path="/dashboard"
                 element={<div>Dashboard Page</div>}

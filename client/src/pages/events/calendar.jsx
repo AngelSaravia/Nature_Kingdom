@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import format from 'date-fns/format';
 import parse from 'date-fns/parse';
@@ -21,19 +21,52 @@ const localizer = dateFnsLocalizer({
 });
 
 const MyCalendar = () => {
-  const [events, setEvents] = useState([
-    {
-      title: 'Event 1',
-      start: new Date(2023, 10, 1),
-      end: new Date(2023, 10, 2),
-    },
-    {
-      title: 'Event 2',
-      start: new Date(2023, 10, 3),
-      end: new Date(2023, 10, 4),
-    },
-    // Add more events here
-  ]);
+  const [events, setEvents] = useState([]);
+
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Fetch events from the backend
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        console.log("Fetching events from backend...");
+        const response = await fetch("http://localhost:5004/calendar");
+  
+        // Log the raw response for debugging
+        const rawResponse = await response.text();
+        console.log("Raw response:", rawResponse);
+  
+        // Check if the response is valid JSON
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+  
+        const data = JSON.parse(rawResponse); // Parse the response as JSON
+        console.log("Parsed data:", data);
+  
+        if (data.success) {
+          const formattedEvents = data.events.map((event) => ({
+            title: event.title,
+            start: new Date(event.start),
+            end: new Date(event.end),
+            desc: event.event_desc,
+          }));
+          setEvents(formattedEvents);
+        } else {
+          console.error("Failed to fetch events:", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+  
+    fetchEvents();
+  }, []);
+  //new addition ^^
+
+  const handleNavigate = (newDate,/*add*/ view,/*addd*/ action) => {
+    setCurrentDate(newDate);
+  };
 
   return (
     <div style={{ height: 500 }}>
@@ -42,6 +75,9 @@ const MyCalendar = () => {
         events={events}
         startAccessor="start"
         endAccessor="end"
+        date={currentDate}
+        onNavigate={handleNavigate}
+        defaultView="month"
       />
     </div>
   );

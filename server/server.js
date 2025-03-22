@@ -5,8 +5,11 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const handleSignUp = require("./helpers/sign_up_helper");
 const handleLogin = require("./helpers/login_helper");
+/*new change: added db_connection line*/
+const db_connection = require("./database"); // Import the database connection
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
+
 const server = http.createServer(async (req, res) => {
   // Enable CORS
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:5176");
@@ -38,7 +41,31 @@ const server = http.createServer(async (req, res) => {
     handleSignUp(req, res);
   } else if (path === "/login" && req.method === "POST") {
     handleLogin(req, res);
-  } else {
+  } 
+  
+  // New route to fetch events NEW ADDTION
+  else if (path === "/calendar" && req.method === "GET") {
+    try {
+      const query = "SELECT * FROM events";
+      db_connection.query(query, (err, results) => {
+        if (err) {
+          console.error("Error fetching events:", err);
+          res.writeHead(500, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ success: false, message: "Database error" }));
+          return;
+        }
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: true, events: results }));
+      });
+    } catch (error) {
+      console.error("Error:", error);
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: false, message: "Server error" }));
+    }
+  }
+  //REMOVE IF THIS SHIT DON WORK ^^
+
+  else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(
       JSON.stringify({
