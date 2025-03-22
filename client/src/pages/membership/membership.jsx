@@ -1,6 +1,18 @@
 import React from 'react';
 import './membership.css';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+
+
+const handleCheckout = () => {
+  navigate(`/membership/checkout`, { 
+    state: { 
+      membershipDetails: selectedMembership,
+      type: 'membership'
+    } 
+  });
+};
 
 const Membership = () => {
   return (

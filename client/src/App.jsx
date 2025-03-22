@@ -18,6 +18,7 @@ import EmployeeForm from "./pages/dataEntries/employee_form";
 import AnimalForm from "./pages/dataEntries/animal_form";
 import EnclosureForm from "./pages/dataEntries/enclosure_form";
 import EventForm from "./pages/dataEntries/event_form";
+import Checkout from "./pages/checkout/checkout";
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
 
@@ -121,6 +122,7 @@ function AppContent() {
               <Route path="/animal_form" element={<AnimalForm />} />
               <Route path="/enclosure_form" element={<EnclosureForm />} />
               <Route path="/event_form" element={<EventForm />} />
+              <Route path="/:type/checkout" element={<Checkout />} />
               <Route
                 path="/dashboard"
                 element={<div>Dashboard Page</div>}

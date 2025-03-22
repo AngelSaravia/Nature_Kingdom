@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './tickets.css';
 
 const Tickets = () => {
@@ -20,6 +21,33 @@ const Tickets = () => {
     child: 14.99,
     senior: 19.99,
     member: 0
+  };
+
+
+  const navigate = useNavigate();
+
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleCheckout = () => {
+    // Clear any existing error message
+    setErrorMessage('');
+  
+    // Check if any tickets are selected
+    const totalTickets = Object.values(tickets).reduce((sum, count) => sum + count, 0);
+    
+    if (totalTickets === 0) {
+      setErrorMessage('Please select at least one ticket before proceeding to checkout');
+      return;
+    }
+  
+    // If tickets are selected, proceed to checkout
+    navigate(`/tickets/checkout`, { 
+      state: { 
+        tickets: tickets,
+        total: total,
+        type: 'tickets'
+      } 
+    });
   };
 
   // This would normally come from your backend
@@ -168,13 +196,20 @@ const Tickets = () => {
         </div>
       )}
 
+      
       <div className="checkout-section">
+      {errorMessage && (
+        <div className="error-message">
+            {errorMessage}
+        </div>
+      )}
         <div className="total-amount">
           <h2>Total: ${total.toFixed(2)}</h2>
         </div>
+        
         <button 
           className="checkout-button"
-          onClick={() => console.log('Implement checkout/redemption')}
+          onClick={() => {handleCheckout()}}
         >
           {isMemberView ? 'Redeem Free Tickets' : 'Proceed to Checkout'}
         </button>
@@ -187,6 +222,7 @@ const Tickets = () => {
           <li>Tickets are valid for the selected date only</li>
           <li>No refunds available for purchased tickets</li>
           <li>Present your e-ticket at the entrance</li>
+          <li>Tickets are only valid 60 days after purchase date</li>
           {isMemberView && (
             <>
               <li>Member ID required at entrance</li>
