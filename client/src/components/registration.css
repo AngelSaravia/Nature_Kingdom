@@ -20,6 +20,11 @@
   min-width: 200px;
 }
 
+.form-group.full-width textarea {
+  box-sizing: border-box;
+  width: 100%;
+}
+
 .full-width {
   flex-basis: 100%;
 }
@@ -40,6 +45,7 @@ input[type="tel"] {
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
+  box-sizing: border-box;
 }
 
 input.error {

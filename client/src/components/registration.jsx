@@ -11,7 +11,7 @@ function Registration() {
     middlename: "",
     lastname: "",
     email: "",
-    age: "",
+    date_of_birth: "",
     state: "",
     country: "",
     zipcode: "",
@@ -98,14 +98,14 @@ function Registration() {
     }
 
     // Age validation
-    if (!formData.age) {
-      errors.age = "Age is required";
+    if (!formData.date_of_birth) {
+      errors.date_of_birth = "Date of Birth is required";
     } else if (
-      isNaN(formData.age) ||
-      parseInt(formData.age) < 0 ||
-      parseInt(formData.age) > 120
+      isNaN(formData.date_of_birth) ||
+      parseInt(formData.date_of_birth) < 0 ||
+      parseInt(formData.date_of_birth) > 120
     ) {
-      errors.age = "Please enter a valid age (0-120)";
+      errors.date_of_birth = "Please enter a valid Date of Birth";
     }
 
     // Mobile validation
@@ -156,7 +156,7 @@ function Registration() {
       middlename: "",
       lastname: "",
       email: "",
-      age: "",
+      date_of_birth: "",
       state: "",
       country: "",
       zipcode: "",
@@ -180,7 +180,7 @@ function Registration() {
 
       const correctedFormData = {
         ...formData,
-        age: Number(formData.age), // Convert age to a number
+        date_of_birth: Number(formData.date_of_birth), // Convert date_of_birth to a number
       };
 
       try {
@@ -326,22 +326,6 @@ function Registration() {
           </div>
 
           <div className="form-group">
-            <label>Age *</label>
-            <input
-              type="number"
-              name="age"
-              value={formData.age}
-              onChange={handleChange}
-              className={formErrors.age ? "error" : ""}
-              min="0"
-              max="120"
-            />
-            {formErrors.age && (
-              <span className="error-text">{formErrors.age}</span>
-            )}
-          </div>
-
-          <div className="form-group">
             <label>Mobile *</label>
             <input
               type="tel"
@@ -356,6 +340,22 @@ function Registration() {
             )}
           </div>
         </div>
+
+        <div className="form-group">
+            <label>Date of Birth *</label>
+            <input
+              type="number"
+              name="date_of_birth"
+              value={formData.date_of_birth}
+              onChange={handleChange}
+              className={formErrors.date_of_birth ? "error" : ""}
+              min="0"
+              max="120"
+            />
+            {formErrors.date_of_birth && (
+              <span className="error-text">{formErrors.date_of_birth}</span>
+            )}
+          </div>
 
         <div className="form-row">
           <div className="form-group full-width">
