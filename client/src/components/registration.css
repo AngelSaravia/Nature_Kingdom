@@ -12,12 +12,12 @@
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
-  margin-bottom: 15px;
 }
 
 .form-group {
   flex: 1;
   min-width: 200px;
+  margin-bottom: 15px;
 }
 
 .form-group.full-width textarea {
