@@ -1,7 +1,7 @@
 // src/pages/sign_up/sign_up.jsx
 import React from "react";
 
-import Registration from "../../components/registration";
+import Registration from "../../components/registration/registration";
 import "./sign_up.css";
 
 function Sign_up() {
