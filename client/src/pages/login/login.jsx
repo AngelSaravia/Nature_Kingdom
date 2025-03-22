@@ -21,7 +21,7 @@ function Login() {
       });
 
       localStorage.setItem("username", username);
-      localStorage.setItem("token", res.data.token); //store JWT token in login local storage
+      localStorage.setItem("token", res.data.token);
       setMessage("Login Successful");
       navigate("/dashboard", { replace: true });
     } catch (e) {
