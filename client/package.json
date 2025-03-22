@@ -12,7 +12,11 @@
   "dependencies": {
     "@lottiefiles/dotlottie-react": "^0.13.2",
     "axios": "^1.8.3",
+<<<<<<< HEAD
     "date-fns": "^4.1.0",
+=======
+    "dotenv": "^16.4.7",
+>>>>>>> a31f21afb2b7e517a01206893bf967cc0b20c8cb
     "react": "^19.0.0",
     "react-big-calendar": "^1.18.0",
     "react-dom": "^19.0.0",

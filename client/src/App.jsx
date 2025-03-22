@@ -6,7 +6,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import Header from "./components/header/header";
+
 import Footer from "./components/footer/footer";
 import HomePage from "./pages/home/home";
 import Membership from "./pages/membership/membership";
@@ -14,8 +14,8 @@ import Tickets from "./pages/tickets/tickets";
 import Sign_up from "./pages/signup/sign_up";
 import Login from "./pages/login/login";
 import EmployeeLogin from "./pages/employee/employee_login";
-import EventsPage from './pages/events/EventsPage';
 import "./App.css";
+import HeaderManager from "./components/header/headerManager";
 
 // Performance monitoring callback
 function onRenderCallback(id, phase, actualDuration) {
@@ -40,7 +40,7 @@ function BodyClassManager() {
   return null;
 }
 
-function App() {
+function AppContent() {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const minLoadTime = 1500; // Minimum loading time in ms
@@ -97,7 +97,7 @@ function App() {
         </div>
       ) : (
         <div className="app">
-          <Header />
+          <HeaderManager />
           <main className="main-content">
             <Routes>
               <Route
@@ -113,7 +113,6 @@ function App() {
               <Route path="/membership" element={<Membership />} />
               <Route path="/login" element={<Login />} />
               <Route path="/employee_login" element={<EmployeeLogin />} />
-              <Route path="/events" element={<EventsPage />} />
             </Routes>
           </main>
           <Footer />
@@ -127,7 +126,7 @@ function Root() {
   return (
     <Router>
       <BodyClassManager />
-      <App />
+      <AppContent />
     </Router>
   );
 }
