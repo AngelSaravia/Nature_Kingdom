@@ -17,6 +17,10 @@ import Login from "./pages/login/login";
 import EmployeeLogin from "./pages/employee/employee_login";
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
+import EmployeeForm from "./pages/dataEntries/employee_form";
+import AnimalForm from "./pages/dataEntries/animal_form";
+import EventForm from "./pages/dataEntries/event_form";
+import EnclosureForm from "./pages/dataEntries/enclosure_form";
 
 // Performance monitoring callback
 function onRenderCallback(id, phase, actualDuration) {
