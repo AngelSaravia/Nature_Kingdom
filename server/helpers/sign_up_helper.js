@@ -55,7 +55,7 @@ const handleSignUp = (req, res) => {
             last_name,
             username,
             email,
-            password,
+            hashedPassword,
             phone_number,
             date_of_birth,
             street_address,
