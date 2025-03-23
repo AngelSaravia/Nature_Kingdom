@@ -36,7 +36,7 @@ function AuthHeader() {
         <Link to="/membership">Membership</Link>
       </nav>
       <div className="user-menu">
-        <span className="username">Welcome , {username}</span>
+        <span className="username">Welcome, {username}</span>
         <button className="logout-btn" onClick={handleLogout}>
           Logout
         </button>

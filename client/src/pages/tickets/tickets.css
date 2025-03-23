@@ -440,3 +440,72 @@
     color: #666;
     font-size: 0.9rem;
   }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+  
+  .login-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    text-align: center;
+    min-width: 300px;
+  }
+  
+  .login-popup h3 {
+    color: #2C5530;
+    margin-bottom: 15px;
+    font-size: 24px;
+  }
+  
+  .login-popup p {
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .popup-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .popup-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .popup-buttons .login-button {
+    background-color: #4A8E51;
+    color: white;
+  }
+  
+  .popup-buttons .login-button:hover {
+    background-color: #2C5530;
+  }
+  
+  .popup-buttons .cancel-button {
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+  }
+  
+  .popup-buttons .cancel-button:hover {
+    background-color: #e2e6ea;
+  }

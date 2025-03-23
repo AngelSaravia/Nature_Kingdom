@@ -25,7 +25,7 @@ const handleLogin = (req, res) => {
       }
 
       db_connection.execute(
-        "SELECT * FROM users WHERE username = ?",
+        "SELECT * FROM visitors WHERE username = ?",
         [username],
         async (err, results) => {
           if (err) {

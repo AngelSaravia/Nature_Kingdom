@@ -7,6 +7,9 @@ const Tickets = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // This will come from auth context later
   const [memberTicketsThisMonth, setMemberTicketsThisMonth] = useState(0);
   const [lastRedemptionDate, setLastRedemptionDate] = useState(null);
+  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [tickets, setTickets] = useState({
     adult: 0,
     child: 0,
@@ -24,15 +27,8 @@ const Tickets = () => {
   };
 
 
-  const navigate = useNavigate();
-
-  const [errorMessage, setErrorMessage] = useState('');
 
   const handleCheckout = () => {
-    // Clear any existing error message
-    setErrorMessage('');
-  
-    // Check if any tickets are selected
     const totalTickets = Object.values(tickets).reduce((sum, count) => sum + count, 0);
     
     if (totalTickets === 0) {
@@ -40,7 +36,11 @@ const Tickets = () => {
       return;
     }
   
-    // If tickets are selected, proceed to checkout
+    if (!isLoggedIn) {
+      setShowLoginPopup(true);
+      return;
+    }
+  
     navigate(`/tickets/checkout`, { 
       state: { 
         tickets: tickets,
@@ -232,6 +232,32 @@ const Tickets = () => {
           )}
         </ul>
       </div>
+      {showLoginPopup && (
+        <>
+          <div className="overlay" onClick={() => setShowLoginPopup(false)}></div>
+          <div className="login-popup">
+            <h3>Login Required</h3>
+            <p>Please log in to proceed with your ticket purchase.</p>
+            <div className="popup-buttons">
+              <button 
+                onClick={() => {
+                  setShowLoginPopup(false);
+                  navigate('/login');
+                }}
+                className="login-button"
+              >
+                Go to Login
+              </button>
+              <button 
+                onClick={() => setShowLoginPopup(false)}
+                className="cancel-button"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
