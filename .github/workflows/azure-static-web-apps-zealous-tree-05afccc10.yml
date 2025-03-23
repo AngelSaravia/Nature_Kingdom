@@ -36,16 +36,27 @@ jobs:
         with:
           node-version: "18.x"
 
-      - name: Install Dependencies
-        run: npm install
-
       # List directory structure to help with debugging
       - name: List directory structure
         run: |
           echo "Root directory contents:"
           ls -la
-          echo "Checking if specific directories exist:"
-          find . -type d -maxdepth 2 | sort
+          echo "Client directory contents:"
+          ls -la client || echo "Client directory not found"
+          echo "Checking directory structure:"
+          find . -type d -maxdepth 3 | sort
+
+      # Install dependencies in the client directory
+      - name: Install Dependencies
+        run: |
+          cd client
+          npm install
+
+      # Build the React app
+      - name: Build React App
+        run: |
+          cd client
+          npm run build
 
       - name: Build And Deploy
         id: builddeploy
@@ -57,8 +68,8 @@ jobs:
           ###### Repository/Build Configurations ######
           app_location: "/client" # App source code path
           api_location: "api" # API source code path - optional
-          output_location: "/" # For static sites with no build process, use the root directory
-          skip_app_build: true # Skip the build process since your app doesn't need a build step
+          output_location: "dist" # Vite's default output directory
+          skip_app_build: false # Enable the build process
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
