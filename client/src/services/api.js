@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 // Define API base URL
 const API_BASE_URL = "http://localhost:5004";
 
@@ -22,5 +24,37 @@ export const registerUser = async (userData) => {
 };
 
 // You can add more API services here as needed
+
+
+export const purchaseTickets = async (ticketData) => {
+  try {
+    const response = await apiClient.post('/api/tickets/purchase', ticketData);
+    return response.data;
+  } catch (error) {
+    console.error('Error purchasing tickets:', error);
+    throw error;
+  }
+};
+
+export const purchaseMembership = async (membershipData) => {
+  try {
+    const response = await apiClient.post('/api/membership/purchase', membershipData);
+    return response.data;
+  } catch (error) {
+    console.error('Error purchasing membership:', error);
+    throw error;
+  }
+};
+
+export const checkMembershipStatus = async () => {
+  try {
+    const username = localStorage.getItem('username');
+    const response = await apiClient.get(`/api/membership/check?username=${username}`);
+    return response.data.hasMembership;
+  } catch (error) {
+    console.error('Error checking membership status:', error);
+    throw error;
+  }
+};
 
 export default apiClient;

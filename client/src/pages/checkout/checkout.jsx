@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './checkout.css';
+import { purchaseTickets, purchaseMembership } from '../../services/api';
+
+
 
 const Checkout = () => {
   const location = useLocation();
@@ -169,18 +172,59 @@ const Checkout = () => {
       member: 0
     };
   
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (validateForm()) {
-          setShowProcessing(true);
-          
-          // After 6 seconds, switch to confirmation popup
-          setTimeout(() => {
-            setShowProcessing(false);
-            setShowConfirmation(true);
-          }, 6000);
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      if (validateForm()) {
+        setShowProcessing(true);
+        
+        try {
+          if (purchaseType === 'tickets') {
+            const ticketPurchaseData = {
+              tickets: state.tickets,
+              total: state.total,
+              username: localStorage.getItem('username')
+            };
+    
+            // Make API call to process tickets
+            const response = await purchaseTickets(ticketPurchaseData);
+            
+            if (response.success) {
+              setTimeout(() => {
+                setShowProcessing(false);
+                setShowConfirmation(true);
+              }, 4000);
+            }
+          } else if (purchaseType === 'membership') {
+            // Check membership status first
+            const hasMembership = await checkMembershipStatus();
+            if (hasMembership) {
+              setShowProcessing(false);
+              alert('You already have an active membership.');
+              return;
+            }
+    
+            const membershipPurchaseData = {
+              username: localStorage.getItem('username'),
+              membershipDetails: state.membershipDetails
+            };
+    
+            const response = await purchaseMembership(membershipPurchaseData);
+            if (response.success) {
+              setTimeout(() => {
+                setShowProcessing(false);
+                setShowConfirmation(true);
+              }, 6000);
+            } else {
+              setShowProcessing(false);
+              alert(response.message);
+            }
+          }
+        } catch (error) {
+          setShowProcessing(false);
+          alert('Error processing purchase: ' + error.message);
         }
-      };
+      }
+    };
 
       const handleConfirmationClose = () => {
         setShowConfirmation(false);

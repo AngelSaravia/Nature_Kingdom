@@ -4,7 +4,7 @@ import './tickets.css';
 
 const Tickets = () => {
   const [isMemberView, setIsMemberView] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // This will come from auth context later
+  const isLoggedIn = localStorage.getItem("token") !== null;
   const [memberTicketsThisMonth, setMemberTicketsThisMonth] = useState(0);
   const [lastRedemptionDate, setLastRedemptionDate] = useState(null);
   const navigate = useNavigate();

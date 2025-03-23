@@ -1,7 +1,8 @@
-import React from 'react';
-import './membership.css';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { checkMembershipStatus } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
+import './membership.css';
 
 
 const membershipDetails = {
@@ -17,9 +18,30 @@ const membershipDetails = {
     ]
   };
 
-const Membership = () => {
+  const Membership = () => {
     const navigate = useNavigate();
     const isLoggedIn = localStorage.getItem("token") !== null;
+    const [hasMembership, setHasMembership] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
+
+    useEffect(() => {
+        const checkMembership = async () => {
+          try {
+            const membershipStatus = await checkMembershipStatus();
+            setHasMembership(membershipStatus);
+            if (membershipStatus) {
+              setShowAlert(true);
+            }
+          } catch (error) {
+            console.error('Error checking membership:', error);
+          }
+        };
+    
+        if (isLoggedIn) {
+          checkMembership();
+        }
+      }, [isLoggedIn]);
+      
 
     const handleMembershipSelection = () => {
     if (!isLoggedIn) {
@@ -40,6 +62,18 @@ const Membership = () => {
     <div className="membership-bg">
         <div className="membership-container">
         <h1 className="membership-title maintitle">MEMBERSHIP</h1>
+        {showAlert && (
+            <>
+            <div className="overlay" onClick={() => setShowAlert(false)}></div>
+            <div className="membership-alert">
+                <h3>Active Membership</h3>
+                <p>You already have an active membership!</p>
+                <button onClick={() => setShowAlert(false)} className="close-button">
+                Close
+                </button>
+            </div>
+            </>
+        )}
         
         <div className="membership-boxes">
             <div className="membership-box welcome">
