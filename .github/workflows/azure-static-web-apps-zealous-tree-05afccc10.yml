@@ -28,9 +28,8 @@ jobs:
       - name: Install Dependencies
         run: npm install # Ensure all dependencies are installed before building
 
-      # Optional: Skip the build if no build step is needed
       - name: Skip Build Step (if not needed)
-        run: echo "No build step for backend"
+        run: echo "No build step for backend" # Skip build for backend app
 
       - name: Build And Deploy
         id: builddeploy
@@ -39,9 +38,9 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ZEALOUS_TREE_05AFCCC10 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for GitHub integrations (i.e. PR comments)
           action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          app_location: "/" # App source code path (root folder for backend)
-          api_location: "api" # API source code path - optional, remove if not used
+          ###### Repository/Build Configurations ######
+          app_location: "/" # The root folder for the backend app
+          api_location: "api" # API source code path - optional (remove if not needed)
           # Removed output_location since backend doesn't generate a dist folder
           ###### End of Repository/Build Configurations ######
 
