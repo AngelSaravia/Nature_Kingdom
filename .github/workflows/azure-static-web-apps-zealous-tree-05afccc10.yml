@@ -10,7 +10,7 @@ on:
       - Angel's-branch
 
 permissions:
-  contents: write # Add explicit permissions for repo contents
+  contents: write
 
 jobs:
   build_and_deploy_job:
@@ -34,25 +34,36 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18.x" # Ensure the correct Node.js version is used
+          node-version: "18.x"
 
       - name: Install Dependencies
-        run: npm install # Ensure all dependencies are installed before building
+        run: npm install
 
       - name: Build Project
-        run: npm run build # Build your project BEFORE deployment
+        run: npm run build
+
+      - name: Check output directory
+        run: |
+          echo "Listing directories in the current folder:"
+          ls -la
+          echo "Checking for common build output directories:"
+          if [ -d "build" ]; then echo "build directory exists"; fi
+          if [ -d "dist" ]; then echo "dist directory exists"; fi
+          if [ -d "public" ]; then echo "public directory exists"; fi
+          if [ -d "_site" ]; then echo "site directory exists"; fi
+          if [ -d "out" ]; then echo "out directory exists"; fi
 
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ZEALOUS_TREE_05AFCCC10 }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for GitHub integrations (i.e. PR comments)
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           ###### Repository/Build Configurations ######
-          app_location: "/" # The root folder for the backend app
-          api_location: "api" # API source code path - optional
-          output_location: "build" # Add the correct output directory where your build creates the static files
+          app_location: "/" # App source code path
+          api_location: "api" # API source code path
+          output_location: "" # Set this to the actual output directory from your build, leave blank if the app_location already contains the built files
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
