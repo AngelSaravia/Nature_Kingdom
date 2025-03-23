@@ -1,17 +1,16 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./header.css";
-import "./authHeader.css";
-import logoImage from "../../zoo_pictures/Nature's_Kingdom.jpeg";
+import "./admin.css";
+import logoImage from "../../../zoo_pictures/Nature's_Kingdom.jpeg";
+import { useAuth } from "../../../context/Authcontext"; // Import the auth context hook
 
 function AuthHeader() {
   const navigate = useNavigate();
-  const username = localStorage.getItem("username") || "User";
+  const { user, logout } = useAuth();
+  const username = localStorage.getItem("user_name") || "User";
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
-    navigate("/login");
+    logout();
   };
 
   return (
@@ -32,11 +31,12 @@ function AuthHeader() {
 
       <nav className="nav-links">
         <Link to="/dashboard">Dashboard</Link>
-        <Link to="/tickets">My Tickets</Link>
-        <Link to="/membership">Membership</Link>
+        <Link to="/event_form">Events Form</Link>
+        <Link to="/enclosure_form">Enclosure Form</Link>
+        <Link to="/animal_form">Animal Form</Link>
       </nav>
       <div className="user-menu">
-        <span className="username">Welcome , {username}</span>
+        <span className="username">Welcome, {username}</span>
         <button className="logout-btn" onClick={handleLogout}>
           Logout
         </button>

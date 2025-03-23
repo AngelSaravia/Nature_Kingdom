@@ -26,7 +26,7 @@ function EmployeeLogin() {
       localStorage.setItem("email", email);
       localStorage.setItem("token", res.data.token);
       setMessage("Employee Login Successful");
-      navigate("/Employee/dashboard", { replace: true });
+      navigate("/dashboard", { replace: true });
     } catch (e) {
       setMessage(e.response?.data?.e || "Login failed");
     }

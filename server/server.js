@@ -17,7 +17,7 @@ const server = http.createServer(async (req, res) => {
   );
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Content-Type, X-Requested-With"
+    "Content-Type, X-Requested-With, Authorization"
   );
   res.setHeader("Access-Control-Allow-Credentials", "true");
 
