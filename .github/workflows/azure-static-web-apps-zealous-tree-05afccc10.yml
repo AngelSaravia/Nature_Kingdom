@@ -9,6 +9,9 @@ on:
     branches:
       - Angel's-branch
 
+permissions:
+  contents: write # Add explicit permissions for repo contents
+
 jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
@@ -23,8 +26,10 @@ jobs:
       # Fix permissions and clean Git configuration
       - name: Fix Git configuration permissions
         run: |
-          sudo chown -R runner:runner /home/runner/work
+          sudo chown -R $(whoami) .git/
+          sudo chmod -R u+rw .git/
           git config --global --unset-all http.https://github.com/.extraheader || true
+          git config --local --unset-all http.https://github.com/.extraheader || true
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -46,8 +51,8 @@ jobs:
           action: "upload"
           ###### Repository/Build Configurations ######
           app_location: "/" # The root folder for the backend app
-          api_location: "api" # API source code path - optional (remove if not needed)
-          # Removed output_location since backend doesn't generate a dist folder
+          api_location: "api" # API source code path - optional
+          output_location: "build" # Add the correct output directory where your build creates the static files
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
