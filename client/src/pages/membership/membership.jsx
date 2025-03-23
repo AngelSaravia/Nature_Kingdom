@@ -4,19 +4,40 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 
-
-const handleCheckout = () => {
-  navigate(`/membership/checkout`, { 
-    state: { 
-      membershipDetails: selectedMembership,
-      type: 'membership'
-    } 
-  });
-};
+const membershipDetails = {
+    type: "Annual Membership",
+    duration: "1 Year",
+    price: 79.99,
+    benefits: [
+      "Unlimited single daily tickets", 
+      "10% discount at gift shops",
+      "Early access to special events",
+      "5 Monthly Guest tickets", 
+      "Free parking"
+    ]
+  };
 
 const Membership = () => {
+    const navigate = useNavigate();
+    const isLoggedIn = localStorage.getItem("token") !== null;
+
+    const handleMembershipSelection = () => {
+    if (!isLoggedIn) {
+        // If not logged in, redirect to signup
+        navigate('/signup');
+    } else {
+        // If logged in, proceed to checkout with membership details
+        navigate(`/membership/checkout`, { 
+        state: { 
+            membershipDetails,
+            type: 'membership'
+        } 
+        });
+    }
+    };
+
   return (
-    <div class="membership-bg">
+    <div className="membership-bg">
         <div className="membership-container">
         <h1 className="membership-title maintitle">MEMBERSHIP</h1>
         
@@ -48,9 +69,9 @@ const Membership = () => {
                 <img src="src\zoo_pictures\family_zoo_picture.jpg" alt="Family enjoying zoo visit" />
             </div>
 
-            
-            {/* needs to be changed to membership sign up page and not signup page */}
-            <Link to="/signup" className="become-member-button">BECOME A MEMBER</Link>
+
+            <button onClick={handleMembershipSelection} className="become-member-button">BECOMER A MEMBER</button>
+
             </div>
         </div>
         </div>

@@ -145,10 +145,13 @@ const Checkout = () => {
         return (
           <div className="purchase-details">
             <h3>Membership Purchase Details</h3>
-            <div className="membership-details">
+            <div className="membership-details cart-item">
               <p>Type: {state?.membershipDetails.type}</p>
               <p>Duration: {state?.membershipDetails.duration}</p>
               <p>Price: ${state?.membershipDetails.price}</p>
+            </div>
+            <div className='total'>
+            <h4>Total: ${state?.membershipDetails.price}</h4>
             </div>
           </div>
         );
@@ -157,6 +160,7 @@ const Checkout = () => {
   
     // Add prices object at the top of the component
     const prices = {
+      membership: 79.99,
       adult: 24.99,
       child: 14.99,
       senior: 19.99,
