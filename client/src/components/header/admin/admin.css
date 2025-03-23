@@ -36,7 +36,7 @@
 /* Navigation links */
 .nav-links {
   display: flex;
-  gap: clamp(20px, 4vw, 50px);
+  gap: clamp(10px, 3vw, 50px);
   align-items: center;
   margin: 0 auto;
 }
@@ -91,6 +91,9 @@
 }
 
 @media (max-width: 1270px) {
+  .user-menu {
+    margin: auto;
+  }
   .header {
     flex-wrap: wrap;
     justify-content: center;
