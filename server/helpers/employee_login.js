@@ -6,18 +6,18 @@ const jwt = require("jsonwebtoken");
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
-const handleLogin = (req, res) => {
+const handleEmployeeLogin = (req, res) => {
   getParseData(req)
     .then((data) => {
       console.log("Received data:", data);
-      let { username, password } = data;
+      let { email, password } = data;
 
-      username = username.trim();
+      email = email.trim();
       password = password.trim();
 
-      console.log("Trimmed data:", { username, password });
+      console.log("Trimmed data:", { email, password });
 
-      if (!username || !password) {
+      if (!email || !password) {
         res.writeHead(400, { "Content-Type": "application/json" });
         return res.end(
           JSON.stringify({ error: "Username and password are required" })
@@ -25,8 +25,8 @@ const handleLogin = (req, res) => {
       }
 
       db_connection.execute(
-        "SELECT * FROM users WHERE username = ?",
-        [username],
+        "SELECT * FROM employees WHERE email = ?",
+        [email],
         async (err, results) => {
           if (err) {
             console.error("Database error:", err);
@@ -41,31 +41,24 @@ const handleLogin = (req, res) => {
 
           const user = results[0];
 
-          const passwordMatch = await bcrypt.compare(password, user.password);
+          const passwordMatch = password === user.password; //need to use bcrypt later
           if (!passwordMatch) {
             res.writeHead(400, { "Content-Type": "application/json" });
             return res.end(JSON.stringify({ error: "Invalid credentials" }));
           }
 
-          // Include user ID, email, and role in the token payload
-          const token = jwt.sign(
-            {
-              id: user.id,
-              username: user.username,
-              email: user.email,
-            },
-            SECRET_KEY,
-            { expiresIn: "1h" }
-          );
+          const token = jwt.sign({ email: user.email }, SECRET_KEY, {
+            expiresIn: "1h",
+          });
 
-          // Now include email in the response for the frontend
           res.writeHead(200, { "Content-Type": "application/json" });
+          // Include username (or first_name + last_name) in the response
           res.end(
             JSON.stringify({
               token,
-              username: user.username,
-              email: user.email,
-              // Include any other user info you need, but don't include password
+              username: user.first_name
+                ? `${user.first_name} ${user.last_name || ""}`.trim()
+                : user.email,
             })
           );
         }
@@ -78,4 +71,4 @@ const handleLogin = (req, res) => {
     });
 };
 
-module.exports = handleLogin;
+module.exports = handleEmployeeLogin;

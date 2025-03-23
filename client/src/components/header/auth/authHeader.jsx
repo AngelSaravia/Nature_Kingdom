@@ -1,16 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./header.css";
 import "./authHeader.css";
-import logoImage from "../../zoo_pictures/Nature's_Kingdom.jpeg";
+import logoImage from "../../../zoo_pictures/Nature's_Kingdom.jpeg";
 
 function AuthHeader() {
   const navigate = useNavigate();
-  const username = localStorage.getItem("username") || "User";
+  const [username, setUsername] = useState("User");
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+    setUsername("User");
     navigate("/login");
   };
 
@@ -36,7 +43,7 @@ function AuthHeader() {
         <Link to="/membership">Membership</Link>
       </nav>
       <div className="user-menu">
-        <span className="username">Welcome , {username}</span>
+        <span className="username">Welcome, {username}</span>
         <button className="logout-btn" onClick={handleLogout}>
           Logout
         </button>
