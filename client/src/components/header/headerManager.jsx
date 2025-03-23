@@ -7,7 +7,14 @@ function HeaderManager() {
   const location = useLocation();
   const isLoggedIn = localStorage.getItem("token") !== null;
 
-  const authPaths = ["/dashboard", "/profile", "/my-tickets"];
+  const authPaths = [
+    "/dashboard", 
+    "/profile", 
+    "/tickets",
+    "/membership",
+    "/checkout",
+    "/my-tickets"
+  ];
 
   const UseAuthHeader =
     isLoggedIn &&
