@@ -20,9 +20,11 @@ jobs:
           submodules: true
           lfs: false
 
-      # Clean Git configuration to remove any problematic extraheader settings
-      - name: Clean Git configuration
-        run: git config --global --unset-all http.https://github.com/.extraheader || true
+      # Fix permissions and clean Git configuration
+      - name: Fix Git configuration permissions
+        run: |
+          sudo chown -R runner:runner /home/runner/work
+          git config --global --unset-all http.https://github.com/.extraheader || true
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -32,8 +34,8 @@ jobs:
       - name: Install Dependencies
         run: npm install # Ensure all dependencies are installed before building
 
-      - name: Skip Build Step (if not needed)
-        run: echo "No build step for backend" # Skip build for backend app
+      - name: Build Project
+        run: npm run build # Build your project BEFORE deployment
 
       - name: Build And Deploy
         id: builddeploy
