@@ -12,7 +12,7 @@ console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
 const server = http.createServer(async (req, res) => {
   // Enable CORS
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5176");
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5177");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, DELETE, OPTIONS"
