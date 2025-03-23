@@ -55,7 +55,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           ###### Repository/Build Configurations ######
-          app_location: "/" # App source code path
+          app_location: "/client" # App source code path
           api_location: "api" # API source code path - optional
           output_location: "/" # For static sites with no build process, use the root directory
           skip_app_build: true # Skip the build process since your app doesn't need a build step
