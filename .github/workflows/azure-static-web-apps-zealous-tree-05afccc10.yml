@@ -39,19 +39,13 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Build Project
-        run: npm run build
-
-      - name: Check output directory
+      # List directory structure to help with debugging
+      - name: List directory structure
         run: |
-          echo "Listing directories in the current folder:"
+          echo "Root directory contents:"
           ls -la
-          echo "Checking for common build output directories:"
-          if [ -d "build" ]; then echo "build directory exists"; fi
-          if [ -d "dist" ]; then echo "dist directory exists"; fi
-          if [ -d "public" ]; then echo "public directory exists"; fi
-          if [ -d "_site" ]; then echo "site directory exists"; fi
-          if [ -d "out" ]; then echo "out directory exists"; fi
+          echo "Checking if specific directories exist:"
+          find . -type d -maxdepth 2 | sort
 
       - name: Build And Deploy
         id: builddeploy
@@ -62,8 +56,9 @@ jobs:
           action: "upload"
           ###### Repository/Build Configurations ######
           app_location: "/" # App source code path
-          api_location: "api" # API source code path
-          output_location: "" # Set this to the actual output directory from your build, leave blank if the app_location already contains the built files
+          api_location: "api" # API source code path - optional
+          output_location: "/" # For static sites with no build process, use the root directory
+          skip_app_build: true # Skip the build process since your app doesn't need a build step
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
