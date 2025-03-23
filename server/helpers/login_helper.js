@@ -47,12 +47,27 @@ const handleLogin = (req, res) => {
             return res.end(JSON.stringify({ error: "Invalid credentials" }));
           }
 
-          const token = jwt.sign({ username: user.username }, SECRET_KEY, {
-            expiresIn: "1h",
-          });
+          // Include user ID, email, and role in the token payload
+          const token = jwt.sign(
+            {
+              id: user.id,
+              username: user.username,
+              email: user.email,
+            },
+            SECRET_KEY,
+            { expiresIn: "1h" }
+          );
 
+          // Now include email in the response for the frontend
           res.writeHead(200, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ token }));
+          res.end(
+            JSON.stringify({
+              token,
+              username: user.username,
+              email: user.email,
+              // Include any other user info you need, but don't include password
+            })
+          );
         }
       );
     })

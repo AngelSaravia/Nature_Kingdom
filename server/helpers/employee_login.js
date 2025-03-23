@@ -41,7 +41,7 @@ const handleEmployeeLogin = (req, res) => {
 
           const user = results[0];
 
-          const passwordMatch = password === user.password; //need to use bycrpt later
+          const passwordMatch = password === user.password; //need to use bcrypt later
           if (!passwordMatch) {
             res.writeHead(400, { "Content-Type": "application/json" });
             return res.end(JSON.stringify({ error: "Invalid credentials" }));
@@ -52,7 +52,15 @@ const handleEmployeeLogin = (req, res) => {
           });
 
           res.writeHead(200, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ token }));
+          // Include username (or first_name + last_name) in the response
+          res.end(
+            JSON.stringify({
+              token,
+              username: user.first_name
+                ? `${user.first_name} ${user.last_name || ""}`.trim()
+                : user.email,
+            })
+          );
         }
       );
     })

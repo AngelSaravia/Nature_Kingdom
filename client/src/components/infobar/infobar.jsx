@@ -1,5 +1,5 @@
 import React from "react";
-import "./InfoBar.css";
+import "./infobar.css";
 import { FaTicketAlt, FaMapMarkerAlt, FaMap, FaIdCard } from "react-icons/fa";
 
 const InfoBar = () => {

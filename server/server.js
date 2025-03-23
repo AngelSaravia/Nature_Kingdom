@@ -20,7 +20,7 @@ const server = http.createServer(async (req, res) => {
   );
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Content-Type, X-Requested-With"
+    "Content-Type, X-Requested-With, Authorization"
   );
   res.setHeader("Access-Control-Allow-Credentials", "true");
 
@@ -36,9 +36,7 @@ const server = http.createServer(async (req, res) => {
   if (path === "/" && req.method === "GET") {
     res.writeHead(200, { "Content-Type": "text/plain" });
     res.end("Server is running!");
-  }
-  // Handle signup route
-  else if (path === "/signup" && req.method === "POST") {
+  } else if (path === "/signup" && req.method === "POST") {
     handleSignUp(req, res);
   } else if (path === "/login" && req.method === "POST") {
     handleLogin(req, res);
