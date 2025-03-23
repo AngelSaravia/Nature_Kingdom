@@ -6,6 +6,7 @@ const Checkout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { state } = location;
+  const [showProcessing, setShowProcessing] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const purchaseType = location.pathname.includes('/tickets/') ? 'tickets' : 'membership';
 
@@ -16,6 +17,7 @@ const Checkout = () => {
     cvv: '',
     nameOnCard: ''
   });
+
 
   // Handle card number input
   const handleCardNumberChange = (e) => {
@@ -170,17 +172,25 @@ const Checkout = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (validateForm()) {
-          setShowConfirmation(true);
+          setShowProcessing(true);
+          
+          // After 6 seconds, switch to confirmation popup
           setTimeout(() => {
-            navigate('/');
+            setShowProcessing(false);
+            setShowConfirmation(true);
           }, 6000);
         }
+      };
+
+      const handleConfirmationClose = () => {
+        setShowConfirmation(false);
+        navigate('/'); // Optional: navigate only when they click "Done"
       };
 
       return (
         <>
           <div className="checkout-container">
-            <h2>Checkout</h2>
+            {/* <h2 className = "checkout-heading">Checkout</h2> */}
             <div className="purchase-type-indicator">
               {purchaseType === 'tickets' ? 'Ticket Purchase' : 'Membership Purchase'}
             </div>
@@ -251,16 +261,37 @@ const Checkout = () => {
             </div>
           </div>
     
-          {showConfirmation && (
+          {showProcessing && (
             <>
-              <div className="overlay"></div>
-              <div className="confirmation-popup">
+            <div className="overlay"></div>
+            <div className="confirmation-popup">
                 <h3>Processing Your Purchase</h3>
                 <div className="loading-spinner"></div>
                 <p>Please wait while we process your payment...</p>
-              </div>
+            </div>
             </>
-          )}
+        )}
+          {showConfirmation && (
+            <>
+            <div className="overlay"></div>
+            <div className="confirmation-popup success">
+                <div className="success-icon">✓</div>
+                <h3>Purchase Successful!</h3>
+                <p>Thank you for your purchase.</p>
+                {purchaseType === 'tickets' ? (
+                <p>Your tickets can be viewed from your dashboard.</p>
+                ) : (
+                <p>Your membership has been activated.</p>
+                )}
+                <button 
+                className="checkout-button"
+                onClick={handleConfirmationClose}
+                >
+                Done
+                </button>
+            </div>
+            </>
+        )}
         </>
       );
     };
