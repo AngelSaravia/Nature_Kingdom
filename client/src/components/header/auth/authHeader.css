@@ -27,6 +27,8 @@
   font-size: 20px;
   border-radius: 10px;
 }
-.logout-btn:hover {
-  background-color: red;
+button:hover {
+  background-color: red !important;
+  color: white !important;
+  border-color: darkred !important;
 }

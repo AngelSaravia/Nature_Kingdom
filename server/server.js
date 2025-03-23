@@ -33,9 +33,7 @@ const server = http.createServer(async (req, res) => {
   if (path === "/" && req.method === "GET") {
     res.writeHead(200, { "Content-Type": "text/plain" });
     res.end("Server is running!");
-  }
-  // Handle signup route
-  else if (path === "/signup" && req.method === "POST") {
+  } else if (path === "/signup" && req.method === "POST") {
     handleSignUp(req, res);
   } else if (path === "/login" && req.method === "POST") {
     handleLogin(req, res);

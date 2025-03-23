@@ -16,7 +16,6 @@ export const AuthProvider = ({ children }) => {
       const username = localStorage.getItem("username");
 
       if (token) {
-        // Set axios default header for all future requests
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         setUser({ username });
         setIsAuthenticated(true);

@@ -11,7 +11,7 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault(); //prevents the default page from being reloaded
+    e.preventDefault(); // prevents the default page from being reloaded
 
     console.log(import.meta.env.VITE_API_URL);
     try {
@@ -20,12 +20,41 @@ function Login() {
         password,
       });
 
+      // Store token and username
       localStorage.setItem("username", username);
       localStorage.setItem("token", res.data.token);
+
+      // Store email when it's included in the response
+      if (res.data.email) {
+        localStorage.setItem("email", res.data.email);
+      } else {
+        // If email isn't in the response, check if it's a special admin username
+        // This is a temporary solution until your backend sends email
+        if (username === "mrodriguez") {
+          localStorage.setItem("email", "mrodriguez@admin.naturekingdom.com");
+        } else {
+          // Set a default email domain for regular users
+          localStorage.setItem("email", `${username}@user.naturekingdom.com`);
+        }
+      }
+
       setMessage("Login Successful");
-      navigate("/dashboard", { replace: true });
+
+      // Check if user is staff by email domain to determine redirect
+      const email = res.data.email || localStorage.getItem("email");
+      const isStaff =
+        email &&
+        (email.endsWith("@admin.naturekingdom.com") ||
+          email.endsWith("@manager.naturekingdom.com") ||
+          email.endsWith("@staff.naturekingdom.com"));
+
+      if (isStaff) {
+        navigate("/admin", { replace: true });
+      } else {
+        navigate("/dashboard", { replace: true });
+      }
     } catch (e) {
-      setMessage(e.response?.data?.e || "Login failed");
+      setMessage(e.response?.data?.error || "Login failed");
     }
   };
 
@@ -39,6 +68,7 @@ function Login() {
               <input
                 type="text"
                 placeholder="Username"
+                value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
               />
@@ -46,8 +76,9 @@ function Login() {
             </div>
             <div className="input-box">
               <input
-                type="text"
+                type="password" // Changed to password to hide input
                 placeholder="Password"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />

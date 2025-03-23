@@ -2,15 +2,23 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./admin.css";
 import logoImage from "../../../zoo_pictures/Nature's_Kingdom.jpeg";
-import { useAuth } from "../../../context/Authcontext"; // Import the auth context hook
+import { useAuth } from "../../../context/Authcontext";
 
-function AuthHeader() {
+function AdminHeader() {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
-  const username = localStorage.getItem("user_name") || "User";
+  const auth = useAuth();
+
+  const username =
+    auth?.user?.username || localStorage.getItem("username") || "User";
 
   const handleLogout = () => {
-    logout();
+    if (auth && auth.logout) {
+      auth.logout();
+    } else {
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      navigate("/login");
+    }
   };
 
   return (
@@ -34,6 +42,7 @@ function AuthHeader() {
         <Link to="/event_form">Events Form</Link>
         <Link to="/enclosure_form">Enclosure Form</Link>
         <Link to="/animal_form">Animal Form</Link>
+        <Link to="/employee_form">Employee Form</Link>
       </nav>
       <div className="user-menu">
         <span className="username">Welcome, {username}</span>
@@ -45,4 +54,4 @@ function AuthHeader() {
   );
 }
 
-export default AuthHeader;
+export default AdminHeader;

@@ -23,12 +23,15 @@ function EmployeeLogin() {
         }
       );
 
+      localStorage.setItem("username", res.data.username);
       localStorage.setItem("email", email);
       localStorage.setItem("token", res.data.token);
+
       setMessage("Employee Login Successful");
       navigate("/dashboard", { replace: true });
     } catch (e) {
-      setMessage(e.response?.data?.e || "Login failed");
+      console.error("Login error:", e);
+      setMessage(e.response?.data?.error || "Login failed");
     }
   };
 
@@ -40,7 +43,7 @@ function EmployeeLogin() {
           <div className="input_container">
             <div className="input-box">
               <input
-                type="text"
+                type="email"
                 placeholder="Email *"
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -49,7 +52,7 @@ function EmployeeLogin() {
             </div>
             <div className="input-box">
               <input
-                type="text"
+                type="password"
                 placeholder="Password *"
                 onChange={(e) => setPassword(e.target.value)}
                 required
