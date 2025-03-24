@@ -50,7 +50,6 @@
     background: #0056b3;
   }
   
-  /* Report Table */
   .report-table {
     flex-grow: 1;
     background: white;
@@ -62,6 +61,7 @@
   .report-table table {
     width: 100%;
     border-collapse: collapse;
+    background-color: #ddd;
   }
   
   .report-table th, .report-table td {
@@ -77,9 +77,5 @@
   
   .report-table tr:nth-child(even) {
     background-color: #f2f2f2;
-  }
-  
-  .report-table tr:hover {
-    background-color: #ddd;
   }
   

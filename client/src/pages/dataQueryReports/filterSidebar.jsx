@@ -2,19 +2,12 @@ import React from "react";
 import "./reportStyles.css";
 
 const FilterSidebar = ({ filters, onFilterChange, onRunReport, filterOptions }) => {
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    onFilterChange({ ...filters, [name]: value });
+  const handleChange = (event) => {
+    onFilterChange(event);
   };
 
-  const handleCheckboxChange = (name, value) => {
-    const updatedFilters = { ...filters };
-    if (updatedFilters[name]?.includes(value)) {
-      updatedFilters[name] = updatedFilters[name].filter((v) => v !== value);
-    } else {
-      updatedFilters[name] = [...(updatedFilters[name] || []), value];
-    }
-    onFilterChange(updatedFilters);
+  const handleCheckboxChange = (event) => {
+    onFilterChange(event);
   };
 
   return (
@@ -32,8 +25,10 @@ const FilterSidebar = ({ filters, onFilterChange, onRunReport, filterOptions }) 
               <label key={option}>
                 <input
                   type="checkbox"
+                  name={name}
+                  value={option}
                   checked={filters[name]?.includes(option) || false}
-                  onChange={() => handleCheckboxChange(name, option)}
+                  onChange={handleCheckboxChange}
                 />
                 {option}
               </label>
@@ -41,7 +36,7 @@ const FilterSidebar = ({ filters, onFilterChange, onRunReport, filterOptions }) 
         </div>
       ))}
 
-      <button onClick={() => onFilterChange({})}>Clear All</button>
+      <button onClick={() => onFilterChange(() => ({}))}>Clear All</button>
       <button onClick={onRunReport}>Run Report</button>
     </div>
   );

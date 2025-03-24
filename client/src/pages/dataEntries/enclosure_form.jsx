@@ -48,13 +48,13 @@ const handleSubmit = async (event) => {
     event.preventDefault();
 
     const requiredFields = ["name", "current_capacity", "capacity", "temp_control", "exhibit_id"];
-    if (requiredFields.some(field => !formData[field]?.trim())) {
+    if (requiredFields.some(field => !String(formData[field] || "").trim())) {
         setSubmissionStatus("Please fill out all required fields before submitting.");
         return;
     }
 
     try {
-        const response = await fetch("http://localhost:5004/employee_form", {
+        const response = await fetch("http://localhost:5004/enclosure_form", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

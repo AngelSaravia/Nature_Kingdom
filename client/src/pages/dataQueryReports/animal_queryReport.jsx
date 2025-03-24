@@ -5,7 +5,7 @@ import "./reportStyles.css";
 
 const filterOptions = [
   { label: "ANIMAL NAME", type: "text", name: "animal_name" },
-  { label: "BIRTH DATE", type: "date", name: "birth_date" },
+  { label: "BIRTH DATE", type: "date", name: "date_of_birth" },
   { label: "ENCLOSURE ID", type: "number", name: "enclosure_id" },
   { label: "TYPE", type: "checkbox", name: "animal_type", options: ["Mammal", "Bird", "Reptile", "Amphibian", "Fish", "Invertebrate"] },
   { label: "HEALTH STATUS", type: "checkbox", name: "health_status", options: ["HEALTHY", "NEEDS CARE", "CRITICAL"] },
@@ -18,45 +18,58 @@ const AnimalQueryReport = () => {
   const [filters, setFilters] = useState({});
   const [reportData, setReportData] = useState([]);
 
-  const handleFilterChange = (event) => {
-    const { name, value, type, checked } = event.target;
-
-    setFilters((prevFilters) => {
-      if (type === "checkbox") {
-        const updatedValues = prevFilters[name] ? [...prevFilters[name]] : [];
-        if (checked) {
-          updatedValues.push(value);
-        } else {
-          const index = updatedValues.indexOf(value);
-          if (index > -1) updatedValues.splice(index, 1);
+  const handleFilterChange = (eventOrUpdater) => {
+    if (typeof eventOrUpdater === "function") {
+      setFilters((prevFilters) => eventOrUpdater(prevFilters));
+    } else {
+      const { name, value, type, checked } = eventOrUpdater.target;
+    
+      setFilters((prevFilters) => {
+        if (type === "checkbox") {
+          const updatedValues = prevFilters[name] ? [...prevFilters[name]] : [];
+          if (checked) {
+            if (!updatedValues.includes(value)) updatedValues.push(value);
+          } else {
+            const index = updatedValues.indexOf(value);
+            if (index > -1) updatedValues.splice(index, 1);
+          }
+          return { ...prevFilters, [name]: updatedValues };
         }
-        return { ...prevFilters, [name]: updatedValues };
-      }
-      return { ...prevFilters, [name]: value };
-    });
+        return { ...prevFilters, [name]: value };
+      });
+    }
   };
 
   const fetchReport = async () => {
     try {
-      const queryString = new URLSearchParams(
-        Object.entries(filters)
-          .filter(([_, value]) => value && value.length > 0)
-          .reduce((acc, [key, value]) => {
-            acc[key] = Array.isArray(value) ? value.join(",") : value;
-            return acc;
-          }, {})
-      ).toString();
+        if (Object.keys(filters).length === 0) {
+            console.error("No filters applied. Please select at least one filter.");
+            return;
+        }
 
-      const response = await fetch(`http://localhost:5004/query_report/animals?${queryString}`);
-      const data = await response.json();
+        const queryParams = { entity_type: "animals", ...filters };
 
-      if (data.success) {
-        setReportData(data.data);
-      } else {
-        console.error("Error fetching report:", data.message);
-      }
+        Object.keys(queryParams).forEach((key) => {
+            if (Array.isArray(queryParams[key]) && queryParams[key].length > 0) {
+                queryParams[key] = queryParams[key].join(",");
+            }
+        });
+
+        const response = await fetch(`http://localhost:5004/query_report/animals`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(queryParams),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            setReportData(data.data);
+        } else {
+            console.error("Error fetching report:", data.message);
+        }
     } catch (error) {
-      console.error("Error fetching report:", error);
+        console.error("Error fetching report:", error);
     }
   };
 

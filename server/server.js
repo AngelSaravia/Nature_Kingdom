@@ -39,7 +39,7 @@ const server = http.createServer(async (req, res) => {
     handleSignUp(req, res);
   } else if (path === "/login" && req.method === "POST") {
     handleLogin(req, res);
-  }else if (path.startsWith("/query_report") && req.method === "GET") { //Handle query reports
+  } else if (path === "/query_report/animals" && req.method === "POST") { //Handle query reports
     handleQueryReport(req, res);
   }
   // Handle enclosure form submission
@@ -66,9 +66,9 @@ const server = http.createServer(async (req, res) => {
           res.end(JSON.stringify({ success: false, message: "All * fields are required" }));
           return;
         }
-
+        const tempControlValue = temp_control ? 1 : 0;
         const sql = "INSERT INTO enclosures (name, current_capacity, capacity, exhibit_id, temp_control, Manager_id, location, opens_at, closes_at, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        const values = [name, current_capacity, capacity, exhibit_id, temp_control, Manager_id, location, opens_at, closes_at, status];
+        const values = [name, current_capacity, capacity, exhibit_id, tempControlValue, Manager_id, location, opens_at, closes_at, status];
 
         db.query(sql, values, (err, result) => {
           if (err) {
