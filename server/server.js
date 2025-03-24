@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const handleSignUp = require("./helpers/sign_up_helper");
 const handleLogin = require("./helpers/login_helper");
+const db = require("./database"); // Import database connection
 const handleEmployeeLogin = require("./helpers/employee_login");
 const ticketHelper = require('./helpers/ticket_helper');
 const getParseData = require('./utils/getParseData');

@@ -47,13 +47,14 @@ const handleNumericInput = (event) => {
 const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!Object.values(formData).every((field) => field.trim() !== "")) {
-        setSubmissionStatus("Please fill out all fields before submitting.");
+    const requiredFields = ["name", "current_capacity", "capacity", "temp_control", "exhibit_id"];
+    if (requiredFields.some(field => !formData[field]?.trim())) {
+        setSubmissionStatus("Please fill out all required fields before submitting.");
         return;
     }
 
     try {
-        const response = await fetch("http://localhost:5001/submit-employee", {
+        const response = await fetch("http://localhost:5004/employee_form", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -89,23 +90,23 @@ return (
         <h2 className={styles.formTitle}>ADD ENCLOSURE</h2>
         <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.formRow}>
-                <InputFields label="ENCLOSURE NAME" name="name" value={formData.name} onChange={handleChange} pattern="[A-Za-z\s\-]+" autocomplete="off"/>
-                <InputFields label="CURRENT CAPACITY" name="current_capacity" value={formData.current_capacity} pattern="[0-9]+" onChange={handleChange} autocomplete="off"/>
+                <InputFields label="ENCLOSURE NAME *" name="name" value={formData.name} onChange={handleChange} pattern="[A-Za-z\s\-]+" autoComplete="off"/>
+                <InputFields label="CURRENT CAPACITY *" name="current_capacity" value={formData.current_capacity} pattern="[0-9]+" onChange={handleChange} autoComplete="off"/>
             </div>
 
             <div className={styles.formRow}>
-                <InputFields label="MAXIMUM CAPACITY" name="capacity" value={formData.capacity} pattern="[0-9]+" min="0" onChange={handleChange} autocomplete="off"/>
-                <InputFields label="LOCATION" name="location" value={formData.location} onChange={handleChange} pattern="[A-Za-z0-9\s\-,]+" required={false} autocomplete="off"/>
+                <InputFields label="MAXIMUM CAPACITY *" name="capacity" value={formData.capacity} pattern="[0-9]+" min="0" onChange={handleChange} autoComplete="off"/>
+                <InputFields label="LOCATION" name="location" value={formData.location} onChange={handleChange} pattern="[A-Za-z0-9\s\-,]+" required={false} autoComplete="off"/>
             </div>
 
             <div className={styles.formRow}>
-                <InputFields label="OPENING TIME" name="opens_at" type="time" value={formData.opens_at} onChange={handleChange} required={false} autocomplete="off"/>
-                <InputFields label="CLOSING TIME" name="closes_at" type="time" value={formData.closes_at} onChange={handleChange} required={false} autocomplete="off"/>
+                <InputFields label="OPENING TIME" name="opens_at" type="time" value={formData.opens_at} onChange={handleChange} required={false} autoComplete="off"/>
+                <InputFields label="CLOSING TIME" name="closes_at" type="time" value={formData.closes_at} onChange={handleChange} required={false} autoComplete="off"/>
             </div>
 
             <div className={styles.formRow}>
                 <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "16px" }}>
-                    TEMPERATURE CONTROLLED:
+                    TEMPERATURE CONTROLLED * :
                     <input type="checkbox" name="temp_control" checked={formData.temp_control || false} 
                     onChange={(e) => handleChange({ target: { name: "temp_control", value: e.target.checked } })}
                     style={{ width: "20px", height: "20px", cursor: "pointer" }}/></label>
@@ -127,8 +128,8 @@ return (
             </div>
 
             <div className={styles.formRow}>
-                <InputFields label="EXHIBIT ID" name="exhibit_id" type="text" value={formData.exhibit_id} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autocomplete="off"/>
-                <InputFields label="MANAGER ID" name="Manager_id" type="text" value={formData.Manager_id} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} required={false} autocomplete="off"/>
+                <InputFields label="EXHIBIT ID *" name="exhibit_id" type="text" value={formData.exhibit_id} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autoComplete="off"/>
+                <InputFields label="MANAGER ID" name="Manager_id" type="text" value={formData.Manager_id} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} required={false} autoComplete="off"/>
             </div>
 
             <button type="submit" className={styles.submitButton}>Submit</button>
