@@ -41,8 +41,12 @@ const server = http.createServer(async (req, res) => {
     handleLogin(req, res);
   } else if (path === "/query_report/animals" && req.method === "POST") { //Handle query reports
     handleQueryReport(req, res);
+  } else if (path === "/query_report/events" && req.method === "POST") {
+    handleQueryReport(req, res);
+  } else if (path === "/query_report/enclosures" && req.method === "POST") {
+    handleQueryReport(req, res);
   }
-  // Handle enclosure form submission
+  // Handle enclosure data entry form submission
   else if (path === "/enclosure_form" && req.method === "POST") {
     let body = "";
 
