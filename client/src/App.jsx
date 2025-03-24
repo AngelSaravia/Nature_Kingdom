@@ -14,11 +14,15 @@ import Tickets from "./pages/tickets/tickets";
 import Sign_up from "./pages/signup/sign_up";
 import Login from "./pages/login/login";
 import EmployeeLogin from "./pages/employee/employee_login";
+import Dashboard from "./pages/dashboard/dashboard";
+import Checkout from "./pages/checkout/checkout";
+import MyTickets from "./pages/dashboard/my-tickets/my-tickets";
+import MyMembership from "./pages/dashboard/my-membership/my-membership";
+
 import EmployeeForm from "./pages/dataEntries/employee_form";
 import AnimalForm from "./pages/dataEntries/animal_form";
 import EnclosureForm from "./pages/dataEntries/enclosure_form";
 import EventForm from "./pages/dataEntries/event_form";
-import Checkout from "./pages/checkout/checkout";
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
 
@@ -123,10 +127,9 @@ function AppContent() {
               <Route path="/enclosure_form" element={<EnclosureForm />} />
               <Route path="/event_form" element={<EventForm />} />
               <Route path="/:type/checkout" element={<Checkout />} />
-              <Route
-                path="/dashboard"
-                element={<div>Dashboard Page</div>}
-              />{" "}
+              <Route path="/dashboard"element={<Dashboard />}/> 
+              <Route path="/my-tickets" element={<MyTickets />} />
+              <Route path="/my-membership" element={<MyMembership />} />
             </Routes>
           </main>
           <Footer />

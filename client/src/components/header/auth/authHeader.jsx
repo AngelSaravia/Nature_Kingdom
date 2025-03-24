@@ -39,7 +39,7 @@ function AuthHeader() {
 
       <nav className="nav-links">
         <Link to="/dashboard">Dashboard</Link>
-        <Link to="/tickets">My Tickets</Link>
+        <Link to="/tickets">Tickets</Link>
         <Link to="/membership">Membership</Link>
       </nav>
       <div className="user-menu">

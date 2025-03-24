@@ -21,6 +21,7 @@
   padding: 2rem;
   background-color: #f5f5f5;
   border-radius: 8px;
+  width: 80%;
 }
 
 .tickets-hero h1 {
@@ -295,6 +296,7 @@
 
 .checkout-section {
   text-align: center;
+  width: 80%;
   margin: 3rem 0;
   padding: 2rem;
   background-color: #f5f5f5;
