@@ -7,6 +7,7 @@ const handleSignUp = require("./helpers/sign_up_helper");
 const handleLogin = require("./helpers/login_helper");
 const db = require("./database"); // Import database connection
 const handleEmployeeLogin = require("./helpers/employee_login");
+const { handleQueryReport } = require("./helpers/queryReportHelper");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 const server = http.createServer(async (req, res) => {
@@ -38,6 +39,8 @@ const server = http.createServer(async (req, res) => {
     handleSignUp(req, res);
   } else if (path === "/login" && req.method === "POST") {
     handleLogin(req, res);
+  }else if (path.startsWith("/query_report") && req.method === "GET") { //Handle query reports
+    handleQueryReport(req, res);
   }
   // Handle enclosure form submission
   else if (path === "/enclosure_form" && req.method === "POST") {
