@@ -42,6 +42,8 @@ const server = http.createServer(async (req, res) => {
     handleSignUp(req, res);
   } else if (path === "/login" && req.method === "POST") {
     handleLogin(req, res);
+  } else if (path === "/employee_login" && req.method === "POST") {
+    handleEmployeeLogin(req, res);
   } else if (path === "/query_report/animals" && req.method === "POST") { //Handle query reports
     handleQueryReport(req, res);
   } else if (path === "/query_report/events" && req.method === "POST") {
@@ -226,9 +228,6 @@ const server = http.createServer(async (req, res) => {
     });
   }
 
-  } else if (path === "/employee_login" && req.method === "POST") {
-    handleEmployeeLogin(req, res);
-  } 
   // Add new ticket purchase route
   else if (path === "/api/tickets/purchase" && req.method === "POST") {
     try {
