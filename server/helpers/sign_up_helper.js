@@ -31,7 +31,7 @@ const handleSignUp = (req, res) => {
         }
 
         const query = `
-          INSERT INTO users ( first_name,
+          INSERT INTO visitors ( first_name,
                               Minit_name,
                               last_name,
                               username,
