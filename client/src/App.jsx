@@ -23,6 +23,9 @@ import EmployeeForm from "./pages/dataEntries/employee_form";
 import AnimalForm from "./pages/dataEntries/animal_form";
 import EnclosureForm from "./pages/dataEntries/enclosure_form";
 import EventForm from "./pages/dataEntries/event_form";
+import AnimalQueryReport from "./pages/dataQueryReports/animal_queryReport";
+import EventQueryReport from "./pages/dataQueryReports/event_queryReport";
+import EnclosureQueryReport from "./pages/dataQueryReports/enclosure_queryReport";
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
 
@@ -126,6 +129,13 @@ function AppContent() {
               <Route path="/animal_form" element={<AnimalForm />} />
               <Route path="/enclosure_form" element={<EnclosureForm />} />
               <Route path="/event_form" element={<EventForm />} />
+              <Route path="/query_report/animals" element={<AnimalQueryReport />} />
+              <Route path="/query_report/events" element={<EventQueryReport />} />
+              <Route path="/query_report/enclosures" element={<EnclosureQueryReport />} />
+              <Route
+                path="/dashboard"
+                element={<div>Dashboard Page</div>}
+              />{" "}
               <Route path="/:type/checkout" element={<Checkout />} />
               <Route path="/dashboard"element={<Dashboard />}/> 
               <Route path="/my-tickets" element={<MyTickets />} />
