@@ -1,0 +1,194 @@
+.checkout-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    color: black;
+  }
+  
+  
+  .purchase-type-indicator {
+    background-color: #4A8E51;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.2rem;
+  }
+  
+  .purchase-details {
+    background-color: #f9f9f9;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .purchase-details h3 {
+    color: #2C5530;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+  }
+  
+  .cart-item {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 15px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .cart-item p {
+    margin: 5px 0;
+    color: #333;
+  }
+  
+  .total {
+    margin-top: 20px;
+    text-align: right;
+    padding-top: 15px;
+    border-top: 2px solid #4A8E51;
+  }
+  
+  .total h4 {
+    color: #2C5530;
+    font-size: 1.3rem;
+  }
+  
+  .payment-section {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .payment-section h3 {
+    color: #2C5530;
+    margin-bottom: 25px;
+    font-size: 1.5rem;
+  }
+  
+  .payment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .form-group label {
+    color: #333;
+    font-weight: 500;
+  }
+  
+  .form-group input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+  }
+  
+  .form-group input:focus {
+    border-color: #4A8E51;
+    outline: none;
+  }
+  
+  .form-row {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .form-row .form-group {
+    flex: 1;
+  }
+  
+  .checkout-button {
+    background-color: #4A8E51;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .checkout-button:hover {
+    background-color: #2C5530;
+  }
+  
+  /* Confirmation Popup Styles */
+  .confirmation-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    z-index: 1000;
+    min-width: 300px;
+  }
+  
+  .confirmation-popup h3 {
+    color: #2C5530;
+    margin-bottom: 15px;
+  }
+  
+  .confirmation-popup p {
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #4A8E51;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+  }
+  
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  @media (max-width: 768px) {
+    .checkout-container {
+      padding: 15px;
+      margin: 20px auto;
+    }
+  
+    .form-row {
+      flex-direction: column;
+      gap: 15px;
+    }
+  
+    .cart-item {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+  
