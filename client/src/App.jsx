@@ -132,10 +132,6 @@ function AppContent() {
               <Route path="/query_report/animals" element={<AnimalQueryReport />} />
               <Route path="/query_report/events" element={<EventQueryReport />} />
               <Route path="/query_report/enclosures" element={<EnclosureQueryReport />} />
-              <Route
-                path="/dashboard"
-                element={<div>Dashboard Page</div>}
-              />{" "}
               <Route path="/:type/checkout" element={<Checkout />} />
               <Route path="/dashboard"element={<Dashboard />}/> 
               <Route path="/my-tickets" element={<MyTickets />} />
