@@ -228,7 +228,7 @@ const Checkout = () => {
 
       const handleConfirmationClose = () => {
         setShowConfirmation(false);
-        navigate('/'); // Optional: navigate only when they click "Done"
+        navigate('/dashboard'); // Optional: navigate only when they click "Done"
       };
 
       return (

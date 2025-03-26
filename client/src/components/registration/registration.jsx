@@ -100,12 +100,29 @@ function Registration() {
     // Age validation
     if (!formData.date_of_birth) {
       errors.date_of_birth = "Date of Birth is required";
-    } else if (
-      isNaN(formData.date_of_birth) ||
-      parseInt(formData.date_of_birth) < 0 ||
-      parseInt(formData.date_of_birth) > 120
-    ) {
-      errors.date_of_birth = "Please enter a valid Date of Birth";
+    } else {
+      const birthDate = new Date(formData.date_of_birth);
+      const currentDate = new Date();
+    
+      // Check if it's a valid date
+      if (isNaN(birthDate.getTime())) {
+        errors.date_of_birth = "Please enter a valid Date of Birth";
+      } else {
+        // Calculate the age by comparing the birthdate with the current date
+        let age = currentDate.getFullYear() - birthDate.getFullYear();
+        const birthMonth = birthDate.getMonth(); // Birth month (0-indexed)
+        const currentMonth = currentDate.getMonth(); // Current month (0-indexed)
+    
+        // If the birthday hasn't occurred yet this year (considering month and day)
+        if (currentMonth < birthMonth || (currentMonth === birthMonth && currentDate.getDate() < birthDate.getDate())) {
+          age--;  // Subtract 1 if the birthday hasn't passed yet this year
+        }
+    
+        // Validate age range: 0 to 120
+        if (age < 0 || age > 120) {
+          errors.date_of_birth = "Please enter a valid Date of Birth";
+        }
+      }
     }
 
     // phone_number validation
@@ -180,7 +197,7 @@ function Registration() {
 
       const correctedFormData = {
         ...formData,
-        date_of_birth: Number(formData.date_of_birth), // Convert date_of_birth to a number
+        date_of_birth: new Date(formData.date_of_birth).toISOString().split('T')[0], 
       };
 
       try {
@@ -342,20 +359,18 @@ function Registration() {
         </div>
 
         <div className="form-group">
-            <label>Date of Birth *</label>
-            <input
-              type="number"
-              name="date_of_birth"
-              value={formData.date_of_birth}
-              onChange={handleChange}
-              className={formErrors.date_of_birth ? "error" : ""}
-              min="0"
-              max="120"
-            />
-            {formErrors.date_of_birth && (
-              <span className="error-text">{formErrors.date_of_birth}</span>
-            )}
-          </div>
+          <label>Date of Birth *</label>
+          <input
+            type="date"
+            name="date_of_birth"
+            value={formData.date_of_birth}
+            onChange={handleChange}
+            className={formErrors.date_of_birth ? "error" : ""}
+          />
+          {formErrors.date_of_birth && (
+            <span className="error-text">{formErrors.date_of_birth}</span>
+          )}
+        </div>
 
         <div className="form-row">
           <div className="form-group full-width">
