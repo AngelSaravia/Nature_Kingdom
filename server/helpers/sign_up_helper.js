@@ -19,7 +19,7 @@ const handleSignUp = (req, res) => {
         city,
         state,
         zipcode,
-        country
+        country,
       } = data;
 
       // Hash the password before saving it to the database
@@ -31,7 +31,7 @@ const handleSignUp = (req, res) => {
         }
 
         const query = `
-          INSERT INTO users ( first_name,
+          INSERT INTO visitors ( first_name,
                               Minit_name,
                               last_name,
                               username,
@@ -62,7 +62,7 @@ const handleSignUp = (req, res) => {
             city,
             state,
             zipcode,
-            country
+            country,
           ],
           (err, result) => {
             if (err) {
