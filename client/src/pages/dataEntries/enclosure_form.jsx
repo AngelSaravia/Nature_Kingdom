@@ -54,7 +54,7 @@ const handleSubmit = async (event) => {
     }
 
     try {
-        const response = await fetch("http://localhost:5004/enclosure_form", {
+        const response = await fetch("${API_BASE_URL}/enclosure_form", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
