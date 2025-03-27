@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "./forms.module.css";
 
-const InputFields = ({label, type="text", name, value, onChange, required=true, autocomplete}) => {
+const InputFields = ({label, type="text", name, value, onChange, required=true, autoComplete}) => {
     return (
         <div className={styles.inputGroup}>
             <label htmlFor={name} className={styles.inputLabel}>{label}</label>
@@ -13,7 +13,7 @@ const InputFields = ({label, type="text", name, value, onChange, required=true, 
                 value={value}
                 onChange={onChange}
                 required={required}
-                autoComplete={autocomplete}
+                autoComplete={autoComplete}
                 placeholder={`Enter ${label.toLowerCase()}`}
                 className={styles.inputField}
             />
@@ -28,7 +28,7 @@ InputFields.propTypes = {
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     onChange: PropTypes.func.isRequired,
     required: PropTypes.bool,
-    autocomplete: PropTypes.string
+    autoComplete: PropTypes.string
 };
 
 export default InputFields;

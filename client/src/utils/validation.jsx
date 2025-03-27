@@ -49,15 +49,31 @@ export const validateRegistrationForm = (formData) => {
     errors.email = "Please enter a valid email address";
   }
 
-  // Validate age (required)
-  if (!formData.age) {
-    errors.age = "Age is required";
-  } else if (
-    isNaN(formData.age) ||
-    parseInt(formData.age) < 0 ||
-    parseInt(formData.age) > 120
-  ) {
-    errors.age = "Please enter a valid age (0-120)";
+  if (!formData.date_of_birth) {
+    errors.date_of_birth = "Date of Birth is required";
+  } else {
+    const birthDate = new Date(formData.date_of_birth);
+    const currentDate = new Date();
+  
+    // Check if it's a valid date
+    if (isNaN(birthDate.getTime())) {
+      errors.date_of_birth = "Please enter a valid Date of Birth";
+    } else {
+      // Calculate the age by comparing the birthdate with the current date
+      let age = currentDate.getFullYear() - birthDate.getFullYear();
+      const birthMonth = birthDate.getMonth(); // Birth month (0-indexed)
+      const currentMonth = currentDate.getMonth(); // Current month (0-indexed)
+  
+      // If the birthday hasn't occurred yet this year (considering month and day)
+      if (currentMonth < birthMonth || (currentMonth === birthMonth && currentDate.getDate() < birthDate.getDate())) {
+        age--;  // Subtract 1 if the birthday hasn't passed yet this year
+      }
+  
+      // Validate age range: 0 to 120
+      if (age < 0 || age > 120) {
+        errors.date_of_birth = "Please enter a valid Date of Birth";
+      }
+    }
   }
 
   // Validate mobile (required)
