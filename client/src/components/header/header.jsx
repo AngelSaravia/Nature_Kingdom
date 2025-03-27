@@ -62,7 +62,7 @@ function Header() {
             className="logo-image"
           />
           <div className="brand-name">
-            <span>NATURE</span>
+            <span> working? NATURE</span>
             <span>KINGDOM</span>
           </div>
         </Link>
