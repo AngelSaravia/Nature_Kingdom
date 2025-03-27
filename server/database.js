@@ -1,10 +1,10 @@
 const mysql = require("mysql2");
 
 const db_connection = mysql.createConnection({
-  host: "zoombase-t15.mysql.database.azure.com",
-  user: "livesite",
-  password: "livesite123",
-  database: "zoo",
+  host: "localhost",//"zoombase-t15.mysql.database.azure.com",
+  user: "root",//"livesite",
+  password: "baharjoon3",//"livesite123",
+  database: "nature_kingdom",//"zoo",
 });
 
 db_connection.connect((err) => {

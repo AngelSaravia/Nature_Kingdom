@@ -21,7 +21,7 @@ function handleAnimalForm(req, res) {
         const sql = "INSERT INTO animals (animal_name, date_of_birth, enclosure_id, species, animal_type, health_status) VALUES (?, ?, ?, ?, ?, ?)";
         const values = [animal_name, date_of_birth, enclosure_id, species, animal_type, health_status];
 
-        db.query(sql, values, (err, result) => {
+        db_connection.query(sql, values, (err, result) => {
           if (err) {
             console.error("Database insert error:", err);
             res.writeHead(500, { "Content-Type": "application/json" });

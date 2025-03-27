@@ -27,7 +27,7 @@ function handleEnclosureForm(req, res) {
         const sql = "INSERT INTO enclosures (name, current_capacity, capacity, exhibit_id, temp_control, Manager_id, location, opens_at, closes_at, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         const values = [name, current_capacity, capacity, exhibit_id, tempControlValue, Manager_id, location, opens_at, closes_at, status];
 
-        db.query(sql, values, (err, result) => {
+        db_connection.query(sql, values, (err, result) => {
           if (err) {
             console.error("Database insert error:", err);
             res.writeHead(500, { "Content-Type": "application/json" });

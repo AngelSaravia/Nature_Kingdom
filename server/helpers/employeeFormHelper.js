@@ -28,7 +28,7 @@ function handleEmployeeForm(req, res) {
         const sql = "INSERT INTO employees (first_name, last_name, date_of_birth, salary, user_name, department_id, role, gender, email, phone, Manager_id, Minit_name, street_address, city, state, zip_code, country) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         const values = [first_name, last_name, date_of_birth, salary, user_name, department_id, role, gender, email, phone, Manager_id, Minit_name, street_address, city, state, zip_code, country];
 
-        db.query(sql, values, (err, result) => {
+        db_connection.query(sql, values, (err, result) => {
           if (err) {
             console.error("Database insert error:", err);
             res.writeHead(500, { "Content-Type": "application/json" });

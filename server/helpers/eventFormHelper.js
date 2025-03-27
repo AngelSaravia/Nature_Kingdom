@@ -25,7 +25,7 @@ function handleEventForm(req, res) {
         const sql = "INSERT INTO events (eventName, eventDate, location, eventType, price, description, duration, capacity, managerID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         const values = [eventName, eventDate, location, eventType, price, description, duration, capacity, managerID];
 
-        db.query(sql, values, (err, result) => {
+        db_connection.query(sql, values, (err, result) => {
           if (err) {
             console.error("Database insert error:", err);
             res.writeHead(500, { "Content-Type": "application/json" });

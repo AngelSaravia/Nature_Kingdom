@@ -15,6 +15,7 @@ const handleEnclosureForm = require("./helpers/enclosureFormHelper");
 const handleAnimalForm = require("./helpers/animalFormHelper");
 const handleEmployeeForm = require("./helpers/employeeFormHelper");
 const handleEventForm = require("./helpers/eventFormHelper");
+const handleCalendar = require('./helpers/calendar_helper');
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -47,9 +48,8 @@ const server = http.createServer(async (req, res) => {
     handleSignUp(req, res);
   } else if (path === "/login" && req.method === "POST") {
     handleLogin(req, res);
-  } 
-  // New route to fetch events NEW ADDTION
-  else if (path === "/calendar" && req.method === "GET") {
+  } else if (path === "/calendar" && req.method === "GET") {
+    handleCalendar(req, res);
   } else if (path === "/employee_login" && req.method === "POST") {
     handleEmployeeLogin(req, res);
   } else if (path === "/query_report/animals" && req.method === "POST") { //Handle query reports
