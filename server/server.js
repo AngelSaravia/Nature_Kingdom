@@ -12,12 +12,13 @@ const { handleQueryReport } = require("./helpers/queryReportHelper");
 const ticketHelper = require('./helpers/ticket_helper');
 const getParseData = require('./utils/getParseData');
 const membershipHelper = require('./helpers/membership_helper');
+const handleCalendar = require('./helpers/calendar_helper');
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
 const server = http.createServer(async (req, res) => {
   // Enable CORS
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5177");
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, DELETE, OPTIONS"
@@ -48,6 +49,7 @@ const server = http.createServer(async (req, res) => {
   
   // New route to fetch events NEW ADDTION
   else if (path === "/calendar" && req.method === "GET") {
+    handleCalendar(req, res);
   } else if (path === "/employee_login" && req.method === "POST") {
     handleEmployeeLogin(req, res);
   } else if (path === "/query_report/animals" && req.method === "POST") { //Handle query reports

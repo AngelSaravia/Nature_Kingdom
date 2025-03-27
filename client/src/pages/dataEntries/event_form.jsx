@@ -53,12 +53,26 @@ const handleSubmit = async (event) => {
     }
 
     try {
+        // Convert duration to proper format for calendar
+        const [hours, minutes] = formData.duration ? formData.duration.split(':') : [0, 0];
+        const durationInMs = (parseInt(hours) * 60 * 60 * 1000) + (parseInt(minutes) * 60 * 1000);
+        
+        const eventData = {
+            ...formData,
+            // Add fields needed for calendar
+            title: formData.eventName,
+            start: new Date(formData.eventDate).toISOString(),
+            end: new Date(new Date(formData.eventDate).getTime() + durationInMs).toISOString(),
+            event_desc: formData.description
+        };
+
+
         const response = await fetch("${API_BASE_URL}/event_form", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify(eventData),
         });
 
         if (response.ok) {
@@ -74,6 +88,8 @@ const handleSubmit = async (event) => {
                 price: "",
                 managerID: "",
             });
+            //Optionally trigger a global event to notify calendar to refresh
+            window.dispatchEvent(new Event('newEventAdded'));
         } else {
             setSubmissionStatus("Failed to add event. Please try again.");
         }
