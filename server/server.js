@@ -59,6 +59,8 @@ const server = http.createServer(async (req, res) => {
     handleQueryReport(req, res);
   } else if (path === "/query_report/events" && req.method === "POST") {
     handleQueryReport(req, res);
+  } else if (path === "/query_report/employees" && req.method === "POST") {
+    handleQueryReport(req, res);
   } else if (path === "/query_report/enclosures" && req.method === "POST") {
     handleQueryReport(req, res);
 
@@ -112,6 +114,18 @@ const server = http.createServer(async (req, res) => {
 
   } else if (path === "/event_form" && req.method === "POST") {
     handleEventForm(req, res);
+  } else if (path === "/get_events" && req.method === "GET") {
+    const sql = "SELECT * FROM enclosures"; // Query to fetch all events
+    db_connection.query(sql, (err, results) => {
+        if (err) {
+            console.error("Error fetching events:", err);
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: false, message: "Database error" }));
+            return;
+        }
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: true, data: results }));
+    });
   }
   // Add new ticket purchase route
   else if (path === "/api/tickets/purchase" && req.method === "POST") {

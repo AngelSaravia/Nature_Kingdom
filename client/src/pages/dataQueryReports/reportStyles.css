@@ -1,6 +1,7 @@
 .animal-query-report, 
 .enclosure-query-report, 
-.event-query-report {
+.event-query-report,
+.employee-query-report {
     display: flex;
     gap: 20px;
     padding: 20px;
