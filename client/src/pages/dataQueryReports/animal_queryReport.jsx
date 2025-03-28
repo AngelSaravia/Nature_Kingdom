@@ -55,7 +55,7 @@ const AnimalQueryReport = () => {
             }
         });
 
-        const response = await fetch(`http://localhost:5004/query_report/animals`, {
+        const response = await fetch(`${API_BASE_URL}/query_report/animals`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(queryParams),

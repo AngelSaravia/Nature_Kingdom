@@ -206,7 +206,7 @@ function Registration() {
         console.log(correctedFormData);
         console.log(formData);
         const response = await axios.post(
-          "http://localhost:5004/signup",
+          "${API_BASE_URL}/signup",
           correctedFormData
         );
         setSubmitStatus({

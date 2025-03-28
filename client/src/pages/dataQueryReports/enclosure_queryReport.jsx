@@ -59,7 +59,7 @@ const EnclosureQueryReport = () => {
             }
         });
 
-        const response = await fetch(`http://localhost:5004/query_report/enclosures`, {
+        const response = await fetch(`${API_BASE_URL}/query_report/enclosures`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(queryParams),

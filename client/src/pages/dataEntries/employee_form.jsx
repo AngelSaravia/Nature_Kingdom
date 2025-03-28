@@ -118,7 +118,7 @@ const EmployeeForm = () => {
         }
 
         try {
-            const response = await fetch("http://localhost:5004/employee_form", {
+            const response = await fetch("${API_BASE_URL}/employee_form", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

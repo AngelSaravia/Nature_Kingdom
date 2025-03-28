@@ -53,7 +53,7 @@ const handleSubmit = async (event) => {
     }
 
     try {
-        const response = await fetch("http://localhost:5004/event_form", {
+        const response = await fetch("${API_BASE_URL}/event_form", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
