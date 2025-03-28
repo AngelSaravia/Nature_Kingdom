@@ -58,7 +58,7 @@ const server = http.createServer(async (req, res) => {
     handleQueryReport(req, res);
   } else if (path === "/query_report/enclosures" && req.method === "POST") {
     handleQueryReport(req, res);
-    
+
   } else if (path === "/enclosure_form" && req.method === "POST") {
     handleEnclosureForm(req, res);
   } else if (path === "/animal_form" && req.method === "POST") {
@@ -75,11 +75,23 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ success: true, data: results }));
     });
+} else if (path === "/employee_form" && req.method === "POST") {
+    handleEmployeeForm(req, res);
+  } else if (path === "/get_employees" && req.method === "GET") {
+    const sql = "SELECT * FROM employees";
+    db_connection.query(sql, (err, results) => {
+        if (err) {
+            console.error("Error fetching employees:", err);
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: false, message: "Database error" }));
+            return;
+        }
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: true, data: results }));
+    });
 }
   
-  else if (path === "/employee_form" && req.method === "POST") {
-    handleEmployeeForm(req, res);
-  } else if (path === "/event_form" && req.method === "POST") {
+  else if (path === "/event_form" && req.method === "POST") {
     handleEventForm(req, res);
   }
   // Add new ticket purchase route
