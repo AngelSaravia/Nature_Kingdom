@@ -188,7 +188,6 @@ const EmployeeForm = () => {
                     <InputFields label="MIDDLE INITIAL" name="Minit_name" value={formData.Minit_name} onChange={handleChange} maxLength="1" pattern="[A-Za-z]" required={false} autoComplete="additional-name"/>
                     <InputFields label="LAST NAME *" name="last_name" value={formData.last_name} onChange={handleChange} pattern="[A-Za-z]+" autoComplete="family-name"/>
                 </div>
-                // add user_name and department_id
                 <div className={styles.formRow}>
                     <InputFields label="USER NAME *" name="user_name" value={formData.user_name} onChange={handleChange} pattern="[A-Za-z0-9_-]+" autoComplete="off"/>
                     <InputFields label="DEPARTMENT ID *" name="department_id" type="text" value={formData.department_id} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autoComplete="off"/>

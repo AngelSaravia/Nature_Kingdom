@@ -21,10 +21,10 @@ console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
 const server = http.createServer(async (req, res) => {
   // Enable CORS
-  const allowedOrigins = ["http://localhost:5177", "https://zealous-tree-05afccc10.6.azurestaticapps.net/"];
-  if(allowedOrigins.includes(req.headers.origin)){
-    res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
-  }
+  //const allowedOrigins = ["http://localhost:5177", "https://zealous-tree-05afccc10.6.azurestaticapps.net/"]; 
+  //if(allowedOrigins.includes(req.headers.origin)){ 
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+  //}
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, DELETE, OPTIONS"
@@ -64,6 +64,20 @@ const server = http.createServer(async (req, res) => {
 
   } else if (path === "/enclosure_form" && req.method === "POST") {
     handleEnclosureForm(req, res);
+  } else if (path === "/get_enclosures" && req.method === "GET") {
+    const sql = "SELECT * FROM enclosures"; // Query to fetch all enclosures
+    db_connection.query(sql, (err, results) => {
+        if (err) {
+            console.error("Error fetching enclosures:", err);
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: false, message: "Database error" }));
+            return;
+        }
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: true, data: results }));
+    });
+
+
   } else if (path === "/animal_form" && req.method === "POST") {
     handleAnimalForm(req, res);
   } else if (path === "/get_animals" && req.method === "GET") {
@@ -78,7 +92,9 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ success: true, data: results }));
     });
-} else if (path === "/employee_form" && req.method === "POST") {
+
+
+  } else if (path === "/employee_form" && req.method === "POST") {
     handleEmployeeForm(req, res);
   } else if (path === "/get_employees" && req.method === "GET") {
     const sql = "SELECT * FROM employees";
@@ -92,9 +108,9 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ success: true, data: results }));
     });
-}
-  
-  else if (path === "/event_form" && req.method === "POST") {
+
+
+  } else if (path === "/event_form" && req.method === "POST") {
     handleEventForm(req, res);
   }
   // Add new ticket purchase route
