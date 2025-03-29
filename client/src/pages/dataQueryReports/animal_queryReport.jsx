@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
   { label: "ANIMAL NAME", type: "text", name: "animal_name" },

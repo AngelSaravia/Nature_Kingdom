@@ -1,10 +1,10 @@
-require("dotenv").config();  
-const getParseData = require("../utils/getParseData");  
+require("dotenv").config();
+const getParseData = require("../utils/getParseData");
 const db_connection = require("../database");
 
 const handleQueryReport = (req, res) => {
     let body = "";
-    
+
     req.on("data", (chunk) => {
         body += chunk.toString();
     });
@@ -25,9 +25,30 @@ const handleQueryReport = (req, res) => {
             const values = [];
 
             Object.keys(filters).forEach((key) => {
-                if (filters[key] && filters[key].length > 0) {
-                    conditions.push(`${key} = ?`);
-                    values.push(filters[key]);
+                const value = filters[key];
+
+                if (value !== undefined && value !== null && value !== "") {
+                    if (key.endsWith("Min")) {
+                        // Handling minimum range filtering
+                        const field = key.replace("Min", ""); 
+                        conditions.push(`${field} >= ?`);
+                        values.push(value);
+                    } else if (key.endsWith("Max")) {
+                        // Handling maximum range filtering
+                        const field = key.replace("Max", ""); 
+                        conditions.push(`${field} <= ?`);
+                        values.push(value);
+                    } else if (typeof value === "string" && value.includes(",")) {
+                        // Handling multi-value filtering
+                        const valueArray = value.split(",").map((v) => v.trim()); 
+                        conditions.push(`${key} IN (${valueArray.map(() => "?").join(", ")})`);
+                        values.push(...valueArray);
+                        
+                    } else {
+                        // Handling exact matches
+                        conditions.push(`${key} = ?`);
+                        values.push(value);
+                    }
                 }
             });
 
@@ -53,5 +74,4 @@ const handleQueryReport = (req, res) => {
         }
     });
 };
-
 module.exports = { handleQueryReport };
