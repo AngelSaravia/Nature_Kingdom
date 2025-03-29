@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
     { label: "FIRST NAME", type: "text", name: "first_name"},
@@ -15,14 +16,13 @@ const filterOptions = [
     { label: "ZIP CODE", type: "number", name: "zip_code"},
     { label: "COUNTRY", type: "text", name: "country"},
     { label: "SALARY", type: "number", name: "salary"},
-    { label: "ROLE", type: "checkbox", name: "role", options: ["Manager", "Zookeeper", "Veterinarian", "Maintenance", "Guest Services", "Administrator", "Operator"] },
     { label: "GENDER", type: "checkbox", name: "gender", options: ["Male", "Female", "Other", "Prefer not to say"] },
     { label: "EMAIL", type: "text", name: "email"},
     { label: "PHONE", type: "text", name: "phone"},
     { label: "MANAGER ID", type: "number", name: "Manager_id"},
 ];
 
-const columnHeaders = ["Employee_id", "first_name", "last_name", "user_name", "department_id", "date_of_birth", "street_address", "city", "state", "zip_code", "country", "salary", "role", "gender", "email", "phone", "Manager_id"];
+const columnHeaders = ["Employee_id", "first_name", "last_name", "user_name", "department_id", "date_of_birth", "street_address", "city", "state", "zip_code", "country", "salary", "gender", "email", "phone", "Manager_id"];
 
 const EmployeeQueryReport = () => {
     const [filters, setFilters] = useState({});
@@ -64,22 +64,23 @@ const EmployeeQueryReport = () => {
                     queryParams[key] = queryParams[key].join(",");
                 }
             });
-    
-            const response = await fetch(`${API_BASE_URL}/query_report/employees`, { //const response = await fetch(`${API_BASE_URL}/query_report/animals`, {
+            
+            const response = await fetch(`${API_BASE_URL}/query_report/employees`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(queryParams),
             });
-    
+            
             const data = await response.json();
-    
+
             if (data.success) {
                 setReportData(data.data);
             } else {
                 console.error("Error fetching report:", data.message);
             }
+            console.log("3"); 
         } catch (error) {
-            console.error("Error fetching report:", error);
+            console.error("Error fetching report: ", error);
         }
       };
 
