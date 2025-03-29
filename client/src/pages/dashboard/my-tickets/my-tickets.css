@@ -1,4 +1,12 @@
 /* MyTickets.css */
+.section-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 20px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
 
 .tickets-container {
     min-height: 90vh;
@@ -25,31 +33,66 @@
     margin-bottom: 20px;
 }
 
-.tickets-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+.purchase-group {
     margin-bottom: 20px;
-}
-
-.ticket-box {
-    background-color: #f7f7f7;
-    padding: 16px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: left;
+    background-color: #f8f9fa;
 }
 
-.ticket-heading {
+.group-header {
+    cursor: pointer;
+    padding: 10px;
     font-size: 18px;
-    font-weight: 600;
-    color: #444444;
-    margin-bottom: 8px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #2C5530;
+    border-radius: 6px;
+    margin-bottom: 10px;
 }
 
-.ticket-text {
-    font-size: 14px;
-    color: #666666;
+.group-header:hover{
+    background-color: #306637 !important;
+}
+
+.purchase-date {
+    color: #ffffff;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.tickets-summary {
+    text-align: left;
+    padding-top: 10px;
+    padding-left: 20px;
+}
+
+.ticket-summary-text {
+    font-size: 18px; 
+    font-weight: 600;
+    color: #2C5530;
+    margin: 8px 0; 
+    padding-left: 10px;
+    border-left: 4px solid #4A8E51;
+}
+
+.purchase-summary {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+    font-weight: bold;
+    color: #2C5530;
+    text-align: right;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+.purchase-summary p {
+    margin: 0;
+    border-left: 4px solid #4A8E51;
+    padding-left: 10px;
 }
 
 .no-tickets-text {
@@ -64,7 +107,7 @@
     padding: 8px 12px;
     font-size: 14px;
     color: #ffffff;
-    background-color: #555555;
+    background-color: #2C5530;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -72,5 +115,31 @@
 }
 
 .tickets-button:hover {
-    background-color: #333333;
+    background-color: #3a7e42 !important;
+}
+
+.qr-button {
+    /* margin-top: 10px; */
+    padding: 8px 12px;
+    font-size: 20px;
+    color: #ffffff;
+    background-color: #305c35;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.qr-button:hover {
+    background-color: #3a7e42 !important;
+}
+
+.expired-header {
+    color: #ffffff;
+    background-color: #262626;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+.expired-header:hover{
+    background-color: #312c2c !important;
 }
