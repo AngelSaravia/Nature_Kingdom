@@ -17,7 +17,7 @@ function AdminHeader() {
     } else {
       localStorage.removeItem("token");
       localStorage.removeItem("username");
-      navigate("/login");
+      navigate("/employee_login");
     }
   };
 
