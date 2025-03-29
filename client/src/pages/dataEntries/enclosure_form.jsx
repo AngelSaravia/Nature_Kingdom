@@ -23,7 +23,7 @@ const EnclosureForm = () => {
     const [enclosures, setEnclosures] = useState([]);
 
     useEffect(() => {
-            fetch("http://localhost:5004/get_enclosures")
+            fetch("${API_BASE_URL}/get_enclosures")
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) setEnclosures(data.data);
@@ -104,7 +104,7 @@ const EnclosureForm = () => {
         }
 
         try {
-            const response = await fetch("http://localhost:5004/enclosure_form", { //const response = await fetch("${API_BASE_URL}/enclosure_form", {
+            const response = await fetch("${API_BASE_URL}/enclosure_form", { //const response = await fetch("${API_BASE_URL}/enclosure_form", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -119,7 +119,7 @@ const EnclosureForm = () => {
 
             if (result.success) {
                 if (action === "delete") {
-                    const freshResponse = await fetch ("http://localhost:5004/get_enclosures");
+                    const freshResponse = await fetch ("${API_BASE_URL}/get_enclosures");
                     const freshData = await freshResponse.json();
                     if (freshData.success) setEnclosures(freshData.data);
                 }

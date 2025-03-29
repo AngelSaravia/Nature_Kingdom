@@ -22,7 +22,7 @@ const EventForm = () => {
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:5004/get_events")
+        fetch("${API_BASE_URL}/get_events")
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -96,7 +96,7 @@ const EventForm = () => {
         }
 
         try {
-            const response = await fetch("http://localhost:5004/event_form", { //const response = await fetch("${API_BASE_URL}/event_form", {
+            const response = await fetch("${API_BASE_URL}/event_form", { //const response = await fetch("${API_BASE_URL}/event_form", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -111,7 +111,7 @@ const EventForm = () => {
 
             if (result.success) {
                 if (action === "delete") {
-                    const freshResponse = await fetch ("http://localhost:5004/get_events");
+                    const freshResponse = await fetch ("${API_BASE_URL}/get_events");
                     const freshData = await freshResponse.json();
                     if (freshData.success) setEvents(freshData.data);
                 }

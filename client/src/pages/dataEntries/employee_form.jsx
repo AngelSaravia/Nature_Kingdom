@@ -30,7 +30,7 @@ const EmployeeForm = () => {
     const [employees, setEmployees] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:5004/get_employees")
+        fetch("${API_BASE_URL}/get_employees")
             .then(response => response.json())
             .then(data => {
                 if (data.success) setEmployees(data.data);
@@ -118,7 +118,7 @@ const EmployeeForm = () => {
         }
 
         try {
-            const response = await fetch("http://localhost:5004/employee_form", { //const response = await fetch("${API_BASE_URL}/employee_form", {
+            const response = await fetch("${API_BASE_URL}/employee_form", { //const response = await fetch("${API_BASE_URL}/employee_form", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -133,7 +133,7 @@ const EmployeeForm = () => {
 
             if (result.success) {
                 if (action === "delete") {
-                    const freshResponse = await fetch ("http://localhost:5004/get_employees");
+                    const freshResponse = await fetch ("${API_BASE_URL}/get_employees");
                     const freshData = await freshResponse.json();
                     if (freshData.success) setEmployees(freshData.data);
                 }
