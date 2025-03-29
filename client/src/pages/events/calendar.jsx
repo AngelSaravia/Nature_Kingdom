@@ -12,7 +12,6 @@ const locales = {
   'en-US': enUS,
 };
 
-// CORRECTED: Only include what dateFnsLocalizer actually needs
 const localizer = dateFnsLocalizer({
   format,
   parse,
@@ -30,7 +29,7 @@ const MyCalendar = () => {
   const fetchEvents = async () => {
     try {
       console.log("Fetching events from backend...");
-      const response = await fetch("${API_BASE_URL}/calendar", {
+      const response = await fetch("http://localhost:5004/calendar", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
