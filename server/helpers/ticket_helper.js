@@ -11,6 +11,9 @@ const insertTicketQuery = `
   ) VALUES (?, ?, ?, NOW(), NOW(), DATE_ADD(NOW(), INTERVAL 60 DAY))
 `;
 
+
+
+
 const getVisitorIdQuery = `
   SELECT visitor_id FROM visitors WHERE username = ?
 `;
@@ -72,6 +75,31 @@ const processTicketPurchase = async (ticketData) => {
   }
 };
 
+const getUserActiveTickets = async (username) => {
+  const query = `
+    SELECT t.* 
+    FROM tickets t
+    JOIN visitors v ON t.visitor_id = v.visitor_id
+    WHERE v.username = ? 
+  `;
+
+  try {
+    console.log('Fetching tickets for user:', username);
+    const [tickets] = await db_connection.promise().query(query, [username]);
+    console.log('Found tickets:', tickets);
+
+    return {
+      success: true,
+      tickets: tickets,
+      activeCount: tickets.length
+    };
+  } catch (error) {
+    console.error('Error fetching user tickets:', error);
+    throw error;
+  }
+};
+
 module.exports = {
-  processTicketPurchase
+  processTicketPurchase,
+  getUserActiveTickets
 };

@@ -12,6 +12,7 @@ const { handleQueryReport } = require("./helpers/queryReportHelper");
 const ticketHelper = require('./helpers/ticket_helper');
 const getParseData = require('./utils/getParseData');
 const membershipHelper = require('./helpers/membership_helper');
+const handleCalendar = require('./helpers/calendar_helper');
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -51,6 +52,7 @@ const server = http.createServer(async (req, res) => {
   
   // New route to fetch events NEW ADDTION
   else if (path === "/calendar" && req.method === "GET") {
+    handleCalendar(req, res);
   } else if (path === "/employee_login" && req.method === "POST") {
     handleEmployeeLogin(req, res);
   } else if (path === "/query_report/animals" && req.method === "POST") { //Handle query reports
@@ -219,7 +221,7 @@ const server = http.createServer(async (req, res) => {
         const sql = "INSERT INTO events (eventName, eventDate, location, eventType, price, description, duration, capacity, managerID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         const values = [eventName, eventDate, location, eventType, price, description, duration, capacity, managerID];
 
-        db.query(sql, values, (err, result) => {
+        db_connection.query(sql, values, (err, result) => {
           if (err) {
             console.error("Database insert error:", err);
             res.writeHead(500, { "Content-Type": "application/json" });
@@ -257,7 +259,39 @@ const server = http.createServer(async (req, res) => {
       res.end(JSON.stringify({ success: false, message: "Server error" }));
     }
   }
-
+  else if (path.startsWith("/api/tickets/user/") && req.method === "GET") {
+    try {
+      const username = path.split("/").pop();
+      const result = await ticketHelper.getUserActiveTickets(username);
+      
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(result));
+    } catch (error) {
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({
+        success: false,
+        message: error.message
+      }));
+    }
+  }
+  else if (path === "/api/membership/check" && req.method === "GET") {
+    try {
+      const username = url.parse(req.url, true).query.username;
+      const result = await membershipHelper.checkExistingMembership(username);
+      
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({
+        hasMembership: result
+      }));
+    } catch (error) {
+      console.error('Error checking membership:', error);
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({
+        success: false,
+        message: error.message || 'Error checking membership status'
+      }));
+    }
+  }
   else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(
