@@ -257,7 +257,6 @@ const server = http.createServer(async (req, res) => {
       res.end(JSON.stringify({ success: false, message: "Server error" }));
     }
   }
-  //REMOVE IF THIS SHIT DON WORK ^^
 
   else {
     res.writeHead(404, { "Content-Type": "application/json" });
