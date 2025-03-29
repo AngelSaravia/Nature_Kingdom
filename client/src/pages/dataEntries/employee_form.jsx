@@ -3,6 +3,7 @@ import InputFields from "./inputs.jsx";
 import styles from "./forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const EmployeeForm = () => {
     const [formData, setFormData] = useState({
@@ -19,7 +20,6 @@ const EmployeeForm = () => {
         zip_code: "",
         country: "",
         salary: "",
-        role: "",
         gender: "",
         email: "",
         phone: "",
@@ -30,7 +30,7 @@ const EmployeeForm = () => {
     const [employees, setEmployees] = useState([]);
 
     useEffect(() => {
-        fetch("${API_BASE_URL}/get_employees")
+        fetch(`${API_BASE_URL}/get_employees`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) setEmployees(data.data);
@@ -76,7 +76,6 @@ const EmployeeForm = () => {
             zip_code: employee.zip_code || "",
             country: employee.country || "",
             salary: employee.salary || "",
-            role: employee.role || "",
             gender: employee.gender || "",
             email: employee.email || "",
             phone: employee.phone || "",
@@ -89,7 +88,7 @@ const EmployeeForm = () => {
         if (action !== "delete") {
             const requiredFields = [
                 'first_name', 'last_name', 'date_of_birth', 'salary',
-                'user_name', 'department_id', 'role', 'gender', 'email', 'phone'
+                'user_name', 'department_id', 'gender', 'email', 'phone'
             ];
             
             const missingFields = requiredFields.filter(field => {
@@ -118,7 +117,7 @@ const EmployeeForm = () => {
         }
 
         try {
-            const response = await fetch("${API_BASE_URL}/employee_form", { //const response = await fetch("${API_BASE_URL}/employee_form", {
+            const response = await fetch(`${API_BASE_URL}/employee_form`, { //const response = await fetch("${API_BASE_URL}/employee_form", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -133,7 +132,7 @@ const EmployeeForm = () => {
 
             if (result.success) {
                 if (action === "delete") {
-                    const freshResponse = await fetch ("${API_BASE_URL}/get_employees");
+                    const freshResponse = await fetch (`${API_BASE_URL}/get_employees`);
                     const freshData = await freshResponse.json();
                     if (freshData.success) setEmployees(freshData.data);
                 }
@@ -207,7 +206,7 @@ const EmployeeForm = () => {
 
                 <div className={styles.formRow}>
                     <label htmlFor="roleDropdown" className={styles.label}>ROLE (choose one)</label>
-                    <Dropdown
+                    {/* <Dropdown
                         label={formData.role || "Select role *"}
                         onSelect={(value) => handleSelect("role", value)}
                         id="roleDropdown"
@@ -218,7 +217,7 @@ const EmployeeForm = () => {
                                 {option}
                             </DropdownItem>
                         ))}
-                    </Dropdown>
+                    </Dropdown> */}
 
                     <label htmlFor="genderDropdown" className={styles.label}>GENDER (choose one)</label>
                     <Dropdown
