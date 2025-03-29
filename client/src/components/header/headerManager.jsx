@@ -29,7 +29,8 @@ function HeaderManager() {
     "/tickets",
     "/membership",
     "/checkout",
-    "/my-tickets"
+    "/my-tickets",
+    "/my-membership"
   ];
 
   const isAdminPath = adminPaths.some(

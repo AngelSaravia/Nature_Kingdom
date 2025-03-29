@@ -256,8 +256,21 @@ const server = http.createServer(async (req, res) => {
       res.end(JSON.stringify({ success: false, message: "Server error" }));
     }
   }
-  //REMOVE IF THIS SHIT DON WORK ^^
-
+  else if (path.startsWith("/api/tickets/user/") && req.method === "GET") {
+    try {
+      const username = path.split("/").pop();
+      const result = await ticketHelper.getUserActiveTickets(username);
+      
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(result));
+    } catch (error) {
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({
+        success: false,
+        message: error.message
+      }));
+    }
+  }
   else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(
