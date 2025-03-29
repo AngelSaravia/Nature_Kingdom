@@ -168,15 +168,29 @@ const server = http.createServer(async (req, res) => {
       const result = await membershipHelper.checkExistingMembership(username);
       
       res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({
-        hasMembership: result
-      }));
+      res.end(JSON.stringify(result));
     } catch (error) {
       console.error('Error checking membership:', error);
       res.writeHead(500, { "Content-Type": "application/json" });
       res.end(JSON.stringify({
         success: false,
         message: error.message || 'Error checking membership status'
+      }));
+    }
+  }
+  else if (path === "/api/checkvisitor" && req.method === "GET") {
+    try {
+      const username = url.parse(req.url, true).query.username;
+      const result = await handleLogin.checkExistingVisitor(username);
+      
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(result));
+    } catch (error) {
+      console.error('Error checking visitor:', error);
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({
+        success: false,
+        message: error.message || 'Error checking visitor status'
       }));
     }
   }
