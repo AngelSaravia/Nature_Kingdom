@@ -115,7 +115,7 @@ const server = http.createServer(async (req, res) => {
   } else if (path === "/event_form" && req.method === "POST") {
     handleEventForm(req, res);
   } else if (path === "/get_events" && req.method === "GET") {
-    const sql = "SELECT * FROM enclosures"; // Query to fetch all events
+    const sql = "SELECT * FROM events"; // Query to fetch all events
     db_connection.query(sql, (err, results) => {
         if (err) {
             console.error("Error fetching events:", err);

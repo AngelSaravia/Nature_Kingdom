@@ -1,6 +1,27 @@
 const db_connection = require("../database");
 
 function handleEventForm(req, res) {
+  if (req.method === "GET") {
+    const query = `
+        SELECT eventID, eventName, description, eventDate, duration, location, capacity, price, managerID, eventType FROM events
+        ORDER BY eventDate ASC`;
+    db_connection.query(query, (err, results) => {
+        if (err) {
+            console.error("Database query error:", err);
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: false, message: "Database error" }));
+            return;
+        }
+        const formattedResults = results.map(event => ({
+          ...event,
+          eventDate: event.eventDate ? new Date(event.eventDate).toISOString() : null,
+          duration: event.duration ? event.duration : null,
+      }));
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: true, data: formattedResults }));
+    });
+    return;
+}
     let body = "";
 
     req.on("data", (chunk) => {

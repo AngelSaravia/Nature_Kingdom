@@ -25,7 +25,11 @@ const EventForm = () => {
         fetch("http://localhost:5004/get_events")
             .then(response => response.json())
             .then(data => {
-                if (data.success) setEvents(data.data);
+                if (data.success) {
+                    setEvents(data.data);
+                } else {
+                    console.error("Failed to fetch events:", data.message);
+                }
             })
             .catch(error => console.error("Error fetching events:", error));
     }, []);
@@ -52,19 +56,20 @@ const EventForm = () => {
         event.target.value = event.target.value.replace(/\D/g, "");
     };
 
-    const handleEventSelect = (zooevent) => {
-            setFormData({
-                eventID: zooevent.eventID || "",
-                eventName: zooevent.eventName || "",
-                description: zooevent.description || "",
-                eventDate: zooevent.eventDate || "",
-                duration: zooevent.duration || "",
-                location: zooevent.location || "",
-                eventType: zooevent.eventType || "",
-                capacity: zooevent.capacity || "",
-                price: zooevent.price || "",
-                managerID: zooevent.managerID || "",
-            });
+    const handleEventSelect = (event) => {
+        const formattedDate = event.eventDate?.split('T')[0];
+        setFormData({
+            eventID: event.eventID || "",
+            eventName: event.eventName || "",
+            description: event.description || "",
+            eventDate: formattedDate || "",
+            duration: event.duration || "",
+            location: event.location || "",
+            eventType: event.eventType || "",
+            capacity: event.capacity || "",
+            price: event.price || "",
+            managerID: event.managerID || "",
+        });
     };
 
     // Handle form submission
@@ -141,9 +146,9 @@ const EventForm = () => {
                         onSelect={(value) => handleEventSelect(JSON.parse(value))}
                         selectedLabel={formData.eventID ? `${formData.eventName} (ID: ${formData.eventID})` : "Select Event to Modify/Delete"}
                     >
-                        {events.map(zooevent => (
-                            <DropdownItem key={zooevent.eventID} value={JSON.stringify(zooevent)}>
-                                {zooevent.eventName} (ID: {zooevent.eventID})
+                        {events.map((event, index) => (
+                            <DropdownItem key={event.eventID || `event-${index}`} value={JSON.stringify(event)}>
+                                {event.eventName} (ID: {event.eventID})
                             </DropdownItem>
                         ))}
                     </Dropdown>
