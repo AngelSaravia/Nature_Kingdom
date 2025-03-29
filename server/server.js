@@ -50,7 +50,7 @@ const server = http.createServer(async (req, res) => {
   } else if (path === "/signup" && req.method === "POST") {
     handleSignUp(req, res);
   } else if (path === "/login" && req.method === "POST") {
-    handleLogin(req, res);
+    handleLogin.handleLogin(req, res);
   } else if (path === "/calendar" && req.method === "GET") {
     handleCalendar(req, res);
   } else if (path === "/employee_login" && req.method === "POST") {

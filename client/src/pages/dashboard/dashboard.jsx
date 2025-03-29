@@ -39,12 +39,18 @@ const Dashboard = () => {
         if (!str) return str; // Handle empty string or null
         return str.charAt(0).toUpperCase() + str.slice(1);
       };
-    // useEffect(() => {
-    //     // Fetch tickets and membership info
-    //     fetch("/api/tickets").then(res => res.json()).then(setTickets);
-    //     fetch("/api/membership").then(res => res.json()).then(setMembership);
-    // }, []);
 
+      const formatPhoneNumber = (phoneNumber) => {
+        const cleaned = ('' + phoneNumber).replace(/\D/g, ''); // Remove non-numeric characters
+        const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/); // Match the phone number
+      
+        if (match) {
+          return `(${match[1]}) ${match[2]}-${match[3]}`;
+        }
+      
+        return null; // Return null if the phone number is invalid
+      };
+    
     return (
         <div className="dashboard-container">
         <div className="dashboard-card">
@@ -56,7 +62,7 @@ const Dashboard = () => {
             <p className="dashboard-text">Username: {dashboardData.user.username}</p>
             <p className="dashboard-text">Full Name: {capitalizeFirstLetter(dashboardData.user.first_name)} {capitalizeFirstLetter(dashboardData.user.Minit_name)} {capitalizeFirstLetter(dashboardData.user.last_name)}</p>
             <p className="dashboard-text">Email: {dashboardData.user.email}</p>
-            <p className="dashboard-text">Phone: {dashboardData.user.phone}</p>
+            <p className="dashboard-text">Phone: {formatPhoneNumber(dashboardData.user.phone_number)}</p>
             </div>
             <div className="dashboard-grid">
             <div className="dashboard-box">
