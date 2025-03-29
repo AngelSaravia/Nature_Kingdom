@@ -18,7 +18,7 @@ console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
 const server = http.createServer(async (req, res) => {
   // Enable CORS
-  const allowedOrigins = ["http://localhost:5177", "https://zealous-tree-05afccc10.6.azurestaticapps.net/"];
+  const allowedOrigins = ["http://localhost:5173", "https://zealous-tree-05afccc10.6.azurestaticapps.net/"];
   if(allowedOrigins.includes(req.headers.origin)){
     res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
   }
