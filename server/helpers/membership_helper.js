@@ -64,7 +64,7 @@ const processMembershipPurchase = async (membershipData) => {
     const visitor_id = visitor[0].visitor_id;
 
     // Set max guests based on membership type (you can adjust these values)
-    const maxGuests = 5; // Default value, adjust as needed
+    const maxGuests = 4; // Default value, adjust as needed
 
     // Log membership insertion attempt
     console.log('Attempting to insert membership...');
