@@ -131,7 +131,6 @@ function AppContent() {
               <Route path="/animal_form" element={<AnimalForm />} />
               <Route path="/enclosure_form" element={<EnclosureForm />} />
               <Route path="/event_form" element={<EventForm />} />
-<<<<<<< HEAD
               <Route
                 path="/query_report/animals"
                 element={<AnimalQueryReport />}
@@ -144,17 +143,13 @@ function AppContent() {
                 path="/query_report/enclosures"
                 element={<EnclosureQueryReport />}
               />
+              <Route
+                path="/query_report/employees"
+                element={<EmployeeQueryReport />}
+              />
               <Route path="/:type/checkout" element={<Checkout />} />
+              <Route path="/calendar" element={<EventsPage />} />
               <Route path="/dashboard" element={<Dashboard />} />
-=======
-              <Route path="/query_report/animals" element={<AnimalQueryReport />} />
-              <Route path="/query_report/events" element={<EventQueryReport />} />
-              <Route path="/query_report/enclosures" element={<EnclosureQueryReport />} />
-              <Route path="/query_report/employees" element={<EmployeeQueryReport />} />
-              <Route path="/:type/checkout" element={<Checkout />} />
-              <Route path="/calendar" element= {<EventsPage/>}/>
-              <Route path="/dashboard"element={<Dashboard />}/> 
->>>>>>> origin/Austin's-Branch
               <Route path="/my-tickets" element={<MyTickets />} />
               <Route path="/my-membership" element={<MyMembership />} />
             </Routes>
