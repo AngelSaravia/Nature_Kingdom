@@ -25,7 +25,7 @@ const checkExistingMembership = async (username) => {
     try {
       const [membership] = await db_connection.promise().query(query, [username]);
       console.log('Membership check result:', membership);
-      return membership.length > 0;
+      return membership;
     } catch (error) {
       console.error('Error checking membership status:', error);
       throw error;
@@ -64,7 +64,7 @@ const processMembershipPurchase = async (membershipData) => {
     const visitor_id = visitor[0].visitor_id;
 
     // Set max guests based on membership type (you can adjust these values)
-    const maxGuests = 5; // Default value, adjust as needed
+    const maxGuests = 4; // Default value, adjust as needed
 
     // Log membership insertion attempt
     console.log('Attempting to insert membership...');

@@ -58,7 +58,7 @@ const Tickets = () => {
 
   const checkMonthlyLimit = () => {
     // Mock check of monthly ticket usage
-    return memberTicketsThisMonth < 5;
+    return memberTicketsThisMonth < 4;
   };
 
   const handleMemberToggle = () => {
@@ -173,10 +173,10 @@ const Tickets = () => {
       ) : (
         <div className="member-tickets-section">
           <div className="ticket-card member-card">
-            <img src="/images/member-ticket.jpg" alt="Member Ticket" className="ticket-image" />
+            <img src="src\zoo_pictures\couple_birds_2.jpg" alt="Member Ticket" className="ticket-image" />
             <h2>Member Free Admission</h2>
             <p className="price">FREE</p>
-            <p className="description">Maximum 5 tickets per month</p>
+            <p className="description">Maximum 4 tickets per month</p>
             <div className="ticket-counter">
               <button onClick={() => handleDecrement('member')}>-</button>
               <span>{tickets.member}</span>
@@ -184,7 +184,7 @@ const Tickets = () => {
             </div>
             <div className="member-info">
               <p className="tickets-remaining">
-                {5 - memberTicketsThisMonth} free tickets remaining this month
+                {4 - memberTicketsThisMonth} free tickets remaining this month
               </p>
               {lastRedemptionDate && (
                 <p className="last-redemption">
@@ -226,7 +226,7 @@ const Tickets = () => {
           {isMemberView && (
             <>
               <li>Member ID required at entrance</li>
-              <li>Maximum 5 free tickets per month</li>
+              <li>Maximum 4 free tickets per month</li>
               <li>Monthly limit resets on the 1st of each month</li>
             </>
           )}

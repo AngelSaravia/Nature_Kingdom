@@ -23,8 +23,7 @@
   max-width: 485.5px;
 }
 
-
-.brand-name{
+.brand-name {
   font-size: clamp(45px, 3.5vw, 50px);
 }
 
