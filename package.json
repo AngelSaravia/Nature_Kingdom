@@ -27,11 +27,14 @@
     "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
+    "body-parser": "^1.20.3",
     "brcypt": "^1.0.1",
     "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.13.0",
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "react-big-calendar": "^1.18.0"
   }
 }

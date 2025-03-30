@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
   { label: "ENCLOSURE NAME", type: "text", name: "name" },
@@ -59,7 +60,7 @@ const EnclosureQueryReport = () => {
             }
         });
 
-        const response = await fetch(`http://localhost:5004/query_report/enclosures`, {
+        const response = await fetch(`${API_BASE_URL}/query_report/enclosures`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(queryParams),

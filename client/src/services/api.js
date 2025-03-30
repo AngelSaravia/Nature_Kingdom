@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Define API base URL
-const API_BASE_URL = "http://localhost:5004";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 // Create axios instance with default config
 const apiClient = axios.create({
@@ -62,10 +62,12 @@ export const getDashboardData = async () => {
     const username = localStorage.getItem('username');
     const ticketsResponse = await apiClient.get(`/api/tickets/user/${username}`);
     const membershipResponse = await apiClient.get(`/api/membership/check?username=${username}`);
+    const visitorResponse = await apiClient.get(`/api/checkvisitor?username=${username}`);
     
     return {
       tickets: ticketsResponse.data,
-      membership: membershipResponse.data
+      membership: membershipResponse.data,
+      visitor: visitorResponse.data
     };
   } catch (error) {
     console.error('Error fetching dashboard data:', error);
