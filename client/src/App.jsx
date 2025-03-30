@@ -27,6 +27,7 @@ import EventsPage from "./pages/events/EventsPage";
 import AnimalQueryReport from "./pages/dataQueryReports/animal_queryReport";
 import EventQueryReport from "./pages/dataQueryReports/event_queryReport";
 import EnclosureQueryReport from "./pages/dataQueryReports/enclosure_queryReport";
+import EmployeeQueryReport from "./pages/dataQueryReports/employee_queryReport";
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
 
@@ -130,6 +131,7 @@ function AppContent() {
               <Route path="/animal_form" element={<AnimalForm />} />
               <Route path="/enclosure_form" element={<EnclosureForm />} />
               <Route path="/event_form" element={<EventForm />} />
+<<<<<<< HEAD
               <Route
                 path="/query_report/animals"
                 element={<AnimalQueryReport />}
@@ -142,6 +144,12 @@ function AppContent() {
                 path="/query_report/enclosures"
                 element={<EnclosureQueryReport />}
               />
+=======
+              <Route path="/query_report/animals" element={<AnimalQueryReport />} />
+              <Route path="/query_report/events" element={<EventQueryReport />} />
+              <Route path="/query_report/enclosures" element={<EnclosureQueryReport />} />
+              <Route path="/query_report/employees" element={<EmployeeQueryReport />} />
+>>>>>>> 5dd7ce1d4603aafc66926971fe0f92d6fb053c34
               <Route path="/:type/checkout" element={<Checkout />} />
               <Route path="/calendar" element={<EventsPage />} />
               <Route path="/dashboard" element={<Dashboard />} />

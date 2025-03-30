@@ -7,6 +7,7 @@ import './dashboard.css';
 const Dashboard = () => {
     const navigate = useNavigate();
     const [dashboardData, setDashboardData] = useState({
+        user: [],
         tickets: [],
         activeTicketsCount: 0,
         hasMembership: false,
@@ -19,7 +20,8 @@ const Dashboard = () => {
             setDashboardData({
               tickets: data.tickets.tickets || [],
               activeTicketsCount: data.tickets.activeCount || 0,
-              hasMembership: data.membership.hasMembership || false
+              membership: data.membership || [],
+              user: data.visitor || []
             });
           } catch (error) {
             console.error('Error:', error);
@@ -28,13 +30,27 @@ const Dashboard = () => {
       
         fetchDashboardData();
       }, []);
-    
-    // useEffect(() => {
-    //     // Fetch tickets and membership info
-    //     fetch("/api/tickets").then(res => res.json()).then(setTickets);
-    //     fetch("/api/membership").then(res => res.json()).then(setMembership);
-    // }, []);
+      
+      console.log("member", dashboardData.membership)
+      
+      console.log("user",dashboardData.user)
 
+      const capitalizeFirstLetter = (str) => {
+        if (!str) return str; // Handle empty string or null
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      };
+
+      const formatPhoneNumber = (phoneNumber) => {
+        const cleaned = ('' + phoneNumber).replace(/\D/g, ''); // Remove non-numeric characters
+        const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/); // Match the phone number
+      
+        if (match) {
+          return `(${match[1]}) ${match[2]}-${match[3]}`;
+        }
+      
+        return null; // Return null if the phone number is invalid
+      };
+    
     return (
         <div className="dashboard-container">
         <div className="dashboard-card">
@@ -43,7 +59,10 @@ const Dashboard = () => {
             {/* Quick Summary */}
             <div className="dashboard-box single">
             <h2 className="dashboard-heading">Your Account</h2>
-            <p className="dashboard-text">Display User info here</p>
+            <p className="dashboard-text">Username: {dashboardData.user.username}</p>
+            <p className="dashboard-text">Full Name: {capitalizeFirstLetter(dashboardData.user.first_name)} {capitalizeFirstLetter(dashboardData.user.Minit_name)} {capitalizeFirstLetter(dashboardData.user.last_name)}</p>
+            <p className="dashboard-text">Email: {dashboardData.user.email}</p>
+            <p className="dashboard-text">Phone: {formatPhoneNumber(dashboardData.user.phone_number)}</p>
             </div>
             <div className="dashboard-grid">
             <div className="dashboard-box">
@@ -54,7 +73,7 @@ const Dashboard = () => {
             </div>
             <div className="dashboard-box">
                 <h2 className="dashboard-heading">My Membership</h2>
-                <p className="dashboard-text">{dashboardData.hasMembership ? "Active membership" : "No active membership"}</p>
+                <p className="dashboard-text">{dashboardData.membership ? "Active membership" : "No active membership"}</p>
                 <button onClick={() => navigate("/my-membership", { state: { dashboardData } })} 
                         className="dashboard-button">View Membership</button>
             </div>
