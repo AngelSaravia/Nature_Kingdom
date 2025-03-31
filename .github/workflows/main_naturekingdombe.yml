@@ -26,8 +26,6 @@ jobs:
           find . -maxdepth 3 -type f -name "*.js" | grep -v "node_modules"
           echo "Package files:"
           find . -name "package.json" -type f
-          echo "Env files:"
-          find . -name ".env*" | grep -v "node_modules"
 
       - name: Locate and validate server directory
         run: |
