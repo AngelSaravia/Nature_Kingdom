@@ -11,22 +11,24 @@ function Login() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [visible, setVisible] = useState(false);
-  // const API_BASE_URL = import.meta.env.VITE_API_URL;
-  
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      console.log("Sending login request with:", { username, password }, " apibaseurl ", API_BASE_URL);
-      const res = await axios.post(
-        `${API_BASE_URL}/login`,
-        {
-          username,
-          password,
-        }
+      console.log(
+        "Sending login request with:",
+        { username, password },
+        " apibaseurl ",
+        API_BASE_URL
       );
+      const res = await axios.post(`${API_BASE_URL}/login`, {
+        username,
+        password,
+      });
 
       console.log("Login response:", res.data);
 
