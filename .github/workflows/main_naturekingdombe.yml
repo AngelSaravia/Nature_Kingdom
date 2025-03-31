@@ -81,10 +81,10 @@ jobs:
       # Create a port adapter to ensure app listens on the right port
       - name: Create port adapter
         run: |
-          cd ${{ env.SERVER_DIR }}
-
-          # Create a wrapper script that ensures we listen on the right port
-          cat > port-adapter.js << 'EOL'
+          cd ${{ env.SERVER_DIR }}  # Change into the server directory (if not already)
+          
+          # Create a wrapper script that ensures we listen on the correct port
+          cat > server/port-adapter.js << 'EOL'
           // This script ensures the app listens on the correct port in Azure
           const fs = require('fs');
           const path = require('path');
@@ -125,11 +125,11 @@ jobs:
             const fs = require('fs');
             const pkg = JSON.parse(fs.readFileSync('./package.json'));
             if (!pkg.scripts) pkg.scripts = {};
-            pkg.scripts.start = 'node port-adapter.js';
+            pkg.scripts.start = 'node server/port-adapter.js';
             fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
           "
 
-          echo "Created port adapter and updated package.json"
+          echo "Created port adapter in server directory and updated package.json"
 
       - name: Create deployment package
         run: |
