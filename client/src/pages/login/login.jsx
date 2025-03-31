@@ -19,10 +19,13 @@ function Login() {
     try {
       console.log("Sending login request with:", { username, password });
 
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
-        username,
-        password,
-      });
+      const res = await axios.post(
+        `${import.meta.env.REACT_APP_API_URL}/login`,
+        {
+          username,
+          password,
+        }
+      );
 
       console.log("Login response:", res.data);
 
