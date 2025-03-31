@@ -23,7 +23,7 @@ const server = http.createServer(async (req, res) => {
   // Enable CORS
   const allowedOrigins = [
     "http://localhost:5173",
-    "https://black-river-089b82310.6.azurestaticapps.net/",
+    "https://black-river-089b82310.6.azurestaticapps.net",
   ];
   if (allowedOrigins.includes(req.headers.origin)) {
     res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
@@ -46,7 +46,7 @@ const server = http.createServer(async (req, res) => {
 
   const parsedUrl = url.parse(req.url, true);
   const path = parsedUrl.pathname;
-  console.log("path ", path)
+  console.log("path ", path);
 
   if (path === "/" && req.method === "GET") {
     res.writeHead(200, { "Content-Type": "text/plain" });
