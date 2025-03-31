@@ -38,7 +38,7 @@ function AdminHeader() {
       </div>
 
       <nav className="nav-links">
-        <Link to="/dashboard">Dashboard</Link>
+        <Link to="/admin_dash">Dashboard</Link>
         <Link to="/event_form">Events Form</Link>
         <Link to="/enclosure_form">Enclosure Form</Link>
         <Link to="/animal_form">Animal Form</Link>

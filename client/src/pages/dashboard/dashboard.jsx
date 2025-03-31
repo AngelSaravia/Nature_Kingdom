@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { checkMembershipStatus, getDashboardData } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
-import './dashboard.css';
+import "./dashboard.css";
 
 const Dashboard = () => {
     const navigate = useNavigate();
