@@ -64,24 +64,12 @@ jobs:
             echo "Creating ZIP from root directory"
             # Exclude frontend folders and node_modules
             zip -r deploy.zip . -x "node_modules/*" "client/*" ".git*"
-          elif [ -d "server" ] && [ -f "server/package.json" ]; then
-            echo "Creating ZIP from server directory"
-            cd server
-            zip -r ../deploy.zip .
-          elif [ -d "api" ] && [ -f "api/package.json" ]; then
-            echo "Creating ZIP from api directory"
-            cd api
-            zip -r ../deploy.zip .
-          elif [ -d "backend" ] && [ -f "backend/package.json" ]; then
-            echo "Creating ZIP from backend directory"
-            cd backend
-            zip -r ../deploy.zip .
           else
             # If we get here, package.json must exist elsewhere
             echo "Creating ZIP from entire project as fallback"
             zip -r deploy.zip . -x ".git*"
           fi
-
+          
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
