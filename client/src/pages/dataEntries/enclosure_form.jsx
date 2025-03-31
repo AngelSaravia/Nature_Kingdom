@@ -24,7 +24,7 @@ const EnclosureForm = () => {
     const [enclosures, setEnclosures] = useState([]);
 
     useEffect(() => {
-            fetch("${API_BASE_URL}/get_enclosures")
+            fetch(`${API_BASE_URL}/get_enclosures`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) setEnclosures(data.data);

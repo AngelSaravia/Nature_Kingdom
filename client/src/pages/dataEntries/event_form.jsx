@@ -23,7 +23,7 @@ const EventForm = () => {
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
-        fetch("${API_BASE_URL}/get_events")
+        fetch(`${API_BASE_URL}/get_events`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {

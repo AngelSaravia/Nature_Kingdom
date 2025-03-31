@@ -21,7 +21,7 @@ const AnimalForm = () => {
 
     // Fetch all animals to populate dropdown
     useEffect(() => {
-        fetch("${API_BASE_URL}/get_animals")
+        fetch(`${API_BASE_URL}/get_animals`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) setAnimals(data.data);
