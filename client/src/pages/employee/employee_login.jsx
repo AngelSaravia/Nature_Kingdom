@@ -38,9 +38,9 @@ function EmployeeLogin() {
 
       // Navigate based on user role
       if (isAdmin || isManager) {
-        navigate("/admin", { replace: true });
+        navigate("/admin_dash", { replace: true });
       } else {
-        navigate("/dashboard", { replace: true });
+        navigate("/employee_dash", { replace: true });
       }
     } catch (e) {
       console.error("Login error:", e);
