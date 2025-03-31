@@ -11,7 +11,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [visible, setVisible] = useState(false);
-  const API_BASE_URL = import.meta.env.VITE_API_URL;
+  // const API_BASE_URL = import.meta.env.VITE_API_URL;
   
   const navigate = useNavigate();
 
