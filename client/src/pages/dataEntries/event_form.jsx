@@ -3,6 +3,7 @@ import InputFields from "./inputs.jsx";
 import styles from "./forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const EventForm = () => {
     const [formData, setFormData] = useState({

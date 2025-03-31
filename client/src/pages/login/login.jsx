@@ -4,7 +4,6 @@ import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 function Login() {
   const [username, setUsername] = useState("");
