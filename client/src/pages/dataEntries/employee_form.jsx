@@ -12,6 +12,7 @@ const EmployeeForm = () => {
         Minit_name: "",
         last_name: "",
         user_name: "",
+        password: "",
         department_id: "",
         date_of_birth: "",
         street_address: "",
@@ -68,6 +69,7 @@ const EmployeeForm = () => {
             Minit_name: employee.Minit_name || "",
             last_name: employee.last_name || "",
             user_name: employee.user_name || "",
+            password: employee.password || "",
             department_id: employee.department_id || "",
             date_of_birth: formattedDate || "",
             street_address: employee.street_address || "",
@@ -88,7 +90,7 @@ const EmployeeForm = () => {
         if (action !== "delete") {
             const requiredFields = [
                 'first_name', 'last_name', 'date_of_birth', 'salary',
-                'user_name', 'department_id', 'gender', 'email', 'phone'
+                'user_name', 'password', 'department_id', 'gender', 'email', 'phone'
             ];
             
             const missingFields = requiredFields.filter(field => {
@@ -143,6 +145,7 @@ const EmployeeForm = () => {
                         Minit_name: "",
                         last_name: "",
                         user_name: "",
+                        password: "",
                         department_id: "",
                         date_of_birth: "",
                         street_address: "",
@@ -189,6 +192,7 @@ const EmployeeForm = () => {
                 </div>
                 <div className={styles.formRow}>
                     <InputFields label="USER NAME *" name="user_name" value={formData.user_name} onChange={handleChange} pattern="[A-Za-z0-9_-]+" autoComplete="off"/>
+                    <InputFields label="PASSWORD *" name="password" value={formData.user_name} onChange={handleChange} pattern="[A-Za-z0-9_-]+" autoComplete="off"/>
                     <InputFields label="DEPARTMENT ID *" name="department_id" type="text" value={formData.department_id} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autoComplete="off"/>
                 </div>
 
