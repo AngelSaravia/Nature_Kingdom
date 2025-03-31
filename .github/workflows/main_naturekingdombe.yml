@@ -22,65 +22,122 @@ jobs:
 
       - name: Debug project structure
         run: |
-          echo "Root directory contents:"
-          ls -la
-          echo "Finding all package.json files:"
+          echo "Project structure:"
+          find . -maxdepth 3 -type f -name "*.js" | grep -v "node_modules"
+          echo "Package files:"
           find . -name "package.json" -type f
-          echo "Finding all server directories:"
-          find . -name "server" -type d
+          echo "Env files:"
+          find . -name ".env*" | grep -v "node_modules"
 
-      # Determine if package.json is at the root level
+      - name: Locate and validate server directory
+        run: |
+          # Try to find the correct server directory
+          if [ -d "server" ] && [ -f "server/package.json" ]; then
+            SERVER_DIR="server"
+          elif [ -f "package.json" ]; then
+            # Root directory contains package.json
+            SERVER_DIR="."
+          else
+            echo "ERROR: Cannot locate server package.json"
+            exit 1
+          fi
+
+          echo "SERVER_DIR=$SERVER_DIR" >> $GITHUB_ENV
+          echo "Using server directory: $SERVER_DIR"
+
       - name: Install dependencies
         run: |
-          if [ -f "package.json" ]; then
-            echo "Found package.json at root level"
-            npm ci
+          cd ${{ env.SERVER_DIR }}
+          npm ci
+
+      # Create a production .env file to ensure correct port
+      - name: Prepare environment
+        run: |
+          cd ${{ env.SERVER_DIR }}
+
+          # Create a production .env file if it doesn't exist
+          if [ ! -f ".env" ]; then
+            echo "Creating .env file for production"
+            echo "PORT=80" > .env
+            echo "NODE_ENV=production" >> .env
           else
-            echo "No package.json at root level, checking possible locations..."
-            # Try to find the right directory with package.json
-            if [ -d "server" ] && [ -f "server/package.json" ]; then
-              echo "Found package.json in server directory"
-              cd server
-              npm ci
-            elif [ -d "api" ] && [ -f "api/package.json" ]; then
-              echo "Found package.json in api directory"
-              cd api
-              npm ci
-            elif [ -d "backend" ] && [ -f "backend/package.json" ]; then
-              echo "Found package.json in backend directory"
-              cd backend
-              npm ci
+            echo "Updating existing .env file"
+            # Replace port value or add it if missing
+            if grep -q "PORT=" .env; then
+              sed -i 's/PORT=.*/PORT=80/' .env
             else
-              echo "ERROR: Could not locate package.json in expected locations"
-              exit 1
+              echo "PORT=80" >> .env
+            fi
+            # Set NODE_ENV to production
+            if grep -q "NODE_ENV=" .env; then
+              sed -i 's/NODE_ENV=.*/NODE_ENV=production/' .env
+            else
+              echo "NODE_ENV=production" >> .env
             fi
           fi
 
-      # Create deployment package with the correct directory
+          # Display .env file (with sensitive data masked)
+          echo "Contents of .env (sanitized):"
+          cat .env | grep -v "PASSWORD\|SECRET\|KEY" || echo "No .env file created"
+
+      # Create a port adapter to ensure app listens on the right port
+      - name: Create port adapter
+        run: |
+          cd ${{ env.SERVER_DIR }}
+
+          # Create a wrapper script that ensures we listen on the right port
+          cat > port-adapter.js << 'EOL'
+          // This script ensures the app listens on the correct port in Azure
+          const fs = require('fs');
+          const path = require('path');
+
+          // Try to determine the main entry file
+          let mainFile;
+          try {
+            const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+            mainFile = packageJson.main || './index.js';
+          } catch (err) {
+            // If package.json can't be parsed, try common server file names
+            const possibleFiles = ['./index.js', './server.js', './app.js'];
+            for (const file of possibleFiles) {
+              if (fs.existsSync(file)) {
+                mainFile = file;
+                break;
+              }
+            }
+          }
+
+          if (!mainFile) {
+            console.error('Could not determine main entry file');
+            process.exit(1);
+          }
+
+          console.log(`Starting with main file: ${mainFile}`);
+          console.log(`Environment: PORT=${process.env.PORT}, NODE_ENV=${process.env.NODE_ENV}`);
+
+          // Ensure PORT is set to Azure's expected value (80)
+          process.env.PORT = process.env.PORT || 80;
+
+          // Load the application
+          require(mainFile);
+          EOL
+
+          # Update package.json to use the adapter as the start script
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('./package.json'));
+            if (!pkg.scripts) pkg.scripts = {};
+            pkg.scripts.start = 'node port-adapter.js';
+            fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
+          "
+
+          echo "Created port adapter and updated package.json"
+
       - name: Create deployment package
         run: |
-          # Determine which directory contains the backend code
-          if [ -f "package.json" ]; then
-            echo "Creating ZIP from root directory"
-            # Exclude frontend folders and node_modules
-            zip -r deploy.zip . -x "node_modules/*" "client/*" ".git*"
-          elif [ -d "server" ] && [ -f "server/package.json" ]; then
-            echo "Creating ZIP from server directory"
-            cd server
-            zip -r ../deploy.zip .
-          elif [ -d "api" ] && [ -f "api/package.json" ]; then
-            echo "Creating ZIP from api directory"
-            cd api
-            zip -r ../deploy.zip .
-          elif [ -d "backend" ] && [ -f "backend/package.json" ]; then
-            echo "Creating ZIP from backend directory"
-            cd backend
-            zip -r ../deploy.zip .
-          else
-            # If we get here, package.json must exist elsewhere
-            echo "Creating ZIP from entire project as fallback"
-            zip -r deploy.zip . -x ".git*"
-          fi
+          cd ${{ env.SERVER_DIR }}
+          # Include .env file but exclude node_modules
+          zip -r ../deploy.zip . -x "node_modules/*" ".git*"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -111,19 +168,17 @@ jobs:
           echo "Contents of deployment folder:"
           ls -la deploy-app
 
-          # Check if package.json exists in the extracted directory
-          if [ ! -f "deploy-app/package.json" ]; then
-            echo "ERROR: package.json not found in deployment directory"
-            echo "Looking for package.json in subdirectories:"
-            find deploy-app -name "package.json" -type f
-            exit 1
+          # Show .env file (if exists)
+          if [ -f "deploy-app/.env" ]; then
+            echo ".env file exists in deployment package"
+          else
+            echo "WARNING: No .env file in deployment package"
           fi
 
-      # Install production dependencies
       - name: Install production dependencies
         run: |
           cd deploy-app
-          npm install --omit=dev
+          npm install --only=production
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -131,6 +186,18 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_1B4AE99ADEE44A9D9EF339FBACE118DF }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_6D9B96F60759422C9AC522B18653A441 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9845D10D63E3497A8FF956C1CEDB6E34 }}
+
+      # Configure critical application settings in Azure
+      - name: Configure Azure App Settings
+        run: |
+          az webapp config appsettings set --resource-group naturekingdom-rg --name naturekingdomBE \
+            --settings \
+              WEBSITE_NODE_DEFAULT_VERSION=~18 \
+              PORT=80 \
+              NODE_ENV=production \
+              WEBSITES_PORT=80 \
+              WEBSITES_CONTAINER_START_TIME_LIMIT=300
+        continue-on-error: true
 
       # Deploy the app
       - name: "Deploy to Azure Web App"
@@ -141,8 +208,18 @@ jobs:
           slot-name: "Production"
           package: deploy-app
 
+      # Check deployment status
       - name: "Post-deployment verification"
         run: |
           echo "Deployed successfully to ${{ steps.deploy-to-webapp.outputs.webapp-url }}"
-          sleep 30 # Give the app time to start
+          echo "Waiting 60 seconds for app to initialize..."
+          sleep 60
+          echo "Checking app status..."
           curl -sSf "${{ steps.deploy-to-webapp.outputs.webapp-url }}" || echo "Website might still be starting up"
+
+      # Check logs if available
+      - name: "Check deployment logs"
+        run: |
+          echo "Fetching recent logs..."
+          az webapp log tail --name naturekingdomBE --resource-group naturekingdom-rg --lines 50 || echo "Could not fetch logs"
+        continue-on-error: true
