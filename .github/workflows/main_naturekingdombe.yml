@@ -41,6 +41,7 @@ jobs:
       - name: Create deployment package
         run: |
           cd server
+          # Make sure package-lock.json is included in the ZIP
           zip -r ../release.zip . -x "node_modules/*" ".git*"
 
       - name: Upload artifact for deployment job
@@ -69,18 +70,23 @@ jobs:
         run: |
           mkdir -p server-deploy
           unzip release.zip -d server-deploy
-          cd server-deploy
+          ls -la server-deploy
 
       - name: Install production dependencies
         run: |
           cd server-deploy
-          npm ci --production
+          # Check if package-lock.json exists
+          if [ -f "package-lock.json" ]; then
+            echo "Found package-lock.json, running npm ci"
+            npm ci --omit=dev
+          else
+            echo "No package-lock.json found, using npm install instead"
+            npm install --omit=dev
+          fi
 
       - name: Setup Environment Variables
         run: |
           echo "NODE_ENV=production" >> $GITHUB_ENV
-          # Add any other environment variables needed by your application
-          # echo "DB_CONNECTION=${{ secrets.DB_CONNECTION }}" >> $GITHUB_ENV
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -102,8 +108,3 @@ jobs:
           echo "Deployed successfully to ${{ steps.deploy-to-webapp.outputs.webapp-url }}"
           sleep 30 # Give the app time to start
           curl -sSf "${{ steps.deploy-to-webapp.outputs.webapp-url }}" || echo "Website might still be starting up"
-
-      - name: Health check
-        run: |
-          # Adjust the endpoint based on your actual health check route
-          curl -sSf "${{ steps.deploy-to-webapp.outputs.webapp-url }}/api/health" || echo "Health endpoint not available or not configured"
