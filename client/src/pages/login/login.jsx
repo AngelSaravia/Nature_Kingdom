@@ -18,8 +18,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      console.log("Sending login request with:", { username, password });
-      console.log("apibaseurl ", API_BASE_URL);
+      console.log("Sending login request with:", { username, password }, " apibaseurl ", API_BASE_URL);
       const res = await axios.post(
         `${API_BASE_URL}/login`,
         {
