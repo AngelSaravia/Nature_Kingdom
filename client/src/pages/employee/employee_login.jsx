@@ -18,7 +18,7 @@ function EmployeeLogin() {
     console.log("Sending employee login request with email:", email);
     try {
       const res = await axios.post(
-        `${import.meta.env.REACT_APP_API_URL}/employee_login`,
+        `${API_BASE_URL}/employee_login`,
         {
           email,
           password,
