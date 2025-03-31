@@ -4,6 +4,7 @@ import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -18,9 +19,9 @@ function Login() {
 
     try {
       console.log("Sending login request with:", { username, password });
-
+      console.log("apibaseurl ", API_BASE_URL);
       const res = await axios.post(
-        `${import.meta.env.REACT_APP_API_URL}/login`,
+        `${API_BASE_URL}/login`,
         {
           username,
           password,
