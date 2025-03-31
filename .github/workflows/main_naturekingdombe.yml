@@ -1,4 +1,3 @@
-# Improved workflow for deploying Node.js backend to Azure Web App
 name: Build and deploy Node.js app to Azure Web App - naturekingdomBE
 
 on:
@@ -19,16 +18,30 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: "18.x" # Changed to 18.x as it's more stable than 22.x
+          node-version: "18.x"
+
+      - name: Cache Node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('server/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: npm ci # Use 'npm ci' for clean installs in CI environments
+        run: |
+          cd server
+          npm ci
 
       - name: Run tests (if applicable)
-        run: npm test || true # Add this if you have tests, '|| true' makes it non-blocking
+        run: |
+          cd server
+          npm test || true
 
       - name: Create deployment package
-        run: zip -r release.zip . -x "node_modules/*" ".git*" # Exclude node_modules and git files
+        run: |
+          cd server
+          zip -r ../release.zip . -x "node_modules/*" ".git*"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -53,10 +66,21 @@ jobs:
           name: node-app
 
       - name: Unzip artifact for deployment
-        run: unzip release.zip
+        run: |
+          mkdir -p server-deploy
+          unzip release.zip -d server-deploy
+          cd server-deploy
 
       - name: Install production dependencies
-        run: npm ci --production # Install only production dependencies
+        run: |
+          cd server-deploy
+          npm ci --production
+
+      - name: Setup Environment Variables
+        run: |
+          echo "NODE_ENV=production" >> $GITHUB_ENV
+          # Add any other environment variables needed by your application
+          # echo "DB_CONNECTION=${{ secrets.DB_CONNECTION }}" >> $GITHUB_ENV
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -71,9 +95,15 @@ jobs:
         with:
           app-name: "naturekingdomBE"
           slot-name: "Production"
-          package: .
+          package: server-deploy
 
       - name: "Post-deployment verification"
         run: |
           echo "Deployed successfully to ${{ steps.deploy-to-webapp.outputs.webapp-url }}"
+          sleep 30 # Give the app time to start
           curl -sSf "${{ steps.deploy-to-webapp.outputs.webapp-url }}" || echo "Website might still be starting up"
+
+      - name: Health check
+        run: |
+          # Adjust the endpoint based on your actual health check route
+          curl -sSf "${{ steps.deploy-to-webapp.outputs.webapp-url }}/api/health" || echo "Health endpoint not available or not configured"
