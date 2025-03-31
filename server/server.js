@@ -205,7 +205,7 @@ const server = http.createServer(async (req, res) => {
     );
   }
 });
-const port = process.env.PORT || 5004;
+const port = process.env.PORT;
 
 server.listen(port, () => {
   console.log(`Server running on port ${port}`);
