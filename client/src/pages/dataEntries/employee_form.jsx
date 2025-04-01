@@ -192,7 +192,7 @@ const EmployeeForm = () => {
                 </div>
                 <div className={styles.formRow}>
                     <InputFields label="USER NAME *" name="user_name" value={formData.user_name} onChange={handleChange} pattern="[A-Za-z0-9_-]+" autoComplete="off"/>
-                    <InputFields label="PASSWORD *" name="password" value={formData.user_name} onChange={handleChange} pattern="[A-Za-z0-9_-]+" autoComplete="off"/>
+                    <InputFields label="PASSWORD *" name="password" value={formData.password} onChange={handleChange} pattern="[A-Za-z0-9_-]+" autoComplete="off"/>
                     <InputFields label="DEPARTMENT ID *" name="department_id" type="text" value={formData.department_id} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autoComplete="off"/>
                 </div>
 
