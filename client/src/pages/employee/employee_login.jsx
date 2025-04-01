@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 function EmployeeLogin() {
   const [email, setEmail] = useState("");
@@ -17,13 +18,10 @@ function EmployeeLogin() {
 
     console.log("Sending employee login request with email:", email);
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/employee_login`,
-        {
-          email,
-          password,
-        }
-      );
+      const res = await axios.post(`${API_BASE_URL}/employee_login`, {
+        email,
+        password,
+      });
 
       console.log("Employee login response:", res.data);
 

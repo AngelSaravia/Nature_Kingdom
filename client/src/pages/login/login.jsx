@@ -10,6 +10,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [visible, setVisible] = useState(false);
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
 
   const navigate = useNavigate();
 
@@ -17,9 +18,13 @@ function Login() {
     e.preventDefault();
 
     try {
-      console.log("Sending login request with:", { username, password });
-
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
+      console.log(
+        "Sending login request with:",
+        { username, password },
+        " apibaseurl ",
+        API_BASE_URL
+      );
+      const res = await axios.post(`${API_BASE_URL}/login`, {
         username,
         password,
       });

@@ -8,21 +8,24 @@ const handleLogin = require("./helpers/login_helper");
 const db_connection = require("./database"); // Import the database connection
 const handleEmployeeLogin = require("./helpers/employee_login");
 const { handleQueryReport } = require("./helpers/queryReportHelper");
-const ticketHelper = require('./helpers/ticket_helper');
-const getParseData = require('./utils/getParseData');
-const membershipHelper = require('./helpers/membership_helper');
+const ticketHelper = require("./helpers/ticket_helper");
+const getParseData = require("./utils/getParseData");
+const membershipHelper = require("./helpers/membership_helper");
 const handleEnclosureForm = require("./helpers/enclosureFormHelper");
 const handleAnimalForm = require("./helpers/animalFormHelper");
 const handleEmployeeForm = require("./helpers/employeeFormHelper");
 const handleEventForm = require("./helpers/eventFormHelper");
-const handleCalendar = require('./helpers/calendar_helper');
+const handleCalendar = require("./helpers/calendar_helper");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
 const server = http.createServer(async (req, res) => {
   // Enable CORS
-  const allowedOrigins = ["http://localhost:5173", "https://zealous-tree-05afccc10.6.azurestaticapps.net/"];
-  if(allowedOrigins.includes(req.headers.origin)){
+  const allowedOrigins = [
+    "http://localhost:5173",
+    "https://black-river-089b82310.6.azurestaticapps.net",
+  ];
+  if (allowedOrigins.includes(req.headers.origin)) {
     res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
   }
   res.setHeader(
@@ -43,6 +46,7 @@ const server = http.createServer(async (req, res) => {
 
   const parsedUrl = url.parse(req.url, true);
   const path = parsedUrl.pathname;
+  console.log("path ", path);
 
   if (path === "/" && req.method === "GET") {
     res.writeHead(200, { "Content-Type": "text/plain" });
@@ -55,7 +59,8 @@ const server = http.createServer(async (req, res) => {
     handleCalendar(req, res);
   } else if (path === "/employee_login" && req.method === "POST") {
     handleEmployeeLogin(req, res);
-  } else if (path === "/query_report/animals" && req.method === "POST") { //Handle query reports
+  } else if (path === "/query_report/animals" && req.method === "POST") {
+    //Handle query reports
     handleQueryReport(req, res);
   } else if (path === "/query_report/events" && req.method === "POST") {
     handleQueryReport(req, res);
@@ -63,68 +68,61 @@ const server = http.createServer(async (req, res) => {
     handleQueryReport(req, res);
   } else if (path === "/query_report/enclosures" && req.method === "POST") {
     handleQueryReport(req, res);
-
   } else if (path === "/enclosure_form" && req.method === "POST") {
     handleEnclosureForm(req, res);
   } else if (path === "/get_enclosures" && req.method === "GET") {
     const sql = "SELECT * FROM enclosures"; // Query to fetch all enclosures
     db_connection.query(sql, (err, results) => {
-        if (err) {
-            console.error("Error fetching enclosures:", err);
-            res.writeHead(500, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ success: false, message: "Database error" }));
-            return;
-        }
-        res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ success: true, data: results }));
+      if (err) {
+        console.error("Error fetching enclosures:", err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Database error" }));
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: results }));
     });
-
-
   } else if (path === "/animal_form" && req.method === "POST") {
     handleAnimalForm(req, res);
   } else if (path === "/get_animals" && req.method === "GET") {
     const sql = "SELECT * FROM animals"; // Query to fetch all animals
     db_connection.query(sql, (err, results) => {
-        if (err) {
-            console.error("Error fetching animals:", err);
-            res.writeHead(500, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ success: false, message: "Database error" }));
-            return;
-        }
-        res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ success: true, data: results }));
+      if (err) {
+        console.error("Error fetching animals:", err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Database error" }));
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: results }));
     });
-
-
   } else if (path === "/employee_form" && req.method === "POST") {
     handleEmployeeForm(req, res);
   } else if (path === "/get_employees" && req.method === "GET") {
     const sql = "SELECT * FROM employees";
     db_connection.query(sql, (err, results) => {
-        if (err) {
-            console.error("Error fetching employees:", err);
-            res.writeHead(500, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ success: false, message: "Database error" }));
-            return;
-        }
-        res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ success: true, data: results }));
+      if (err) {
+        console.error("Error fetching employees:", err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Database error" }));
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: results }));
     });
-
-
   } else if (path === "/event_form" && req.method === "POST") {
     handleEventForm(req, res);
   } else if (path === "/get_events" && req.method === "GET") {
     const sql = "SELECT * FROM events"; // Query to fetch all events
     db_connection.query(sql, (err, results) => {
-        if (err) {
-            console.error("Error fetching events:", err);
-            res.writeHead(500, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ success: false, message: "Database error" }));
-            return;
-        }
-        res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ success: true, data: results }));
+      if (err) {
+        console.error("Error fetching events:", err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Database error" }));
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: results }));
     });
   }
   // Add new ticket purchase route
@@ -169,53 +167,57 @@ const server = http.createServer(async (req, res) => {
     });
   }
   else if (path.startsWith("/api/tickets/user/") && req.method === "GET") {
+
     try {
       const username = path.split("/").pop();
       const result = await ticketHelper.getUserActiveTickets(username);
-      
+
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify(result));
     } catch (error) {
       res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({
-        success: false,
-        message: error.message
-      }));
+      res.end(
+        JSON.stringify({
+          success: false,
+          message: error.message,
+        })
+      );
     }
-  }
-  else if (path === "/api/membership/check" && req.method === "GET") {
+  } else if (path === "/api/membership/check" && req.method === "GET") {
     try {
       const username = url.parse(req.url, true).query.username;
       const result = await membershipHelper.checkExistingMembership(username);
-      
+
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify(result));
     } catch (error) {
-      console.error('Error checking membership:', error);
+      console.error("Error checking membership:", error);
       res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({
-        success: false,
-        message: error.message || 'Error checking membership status'
-      }));
+      res.end(
+        JSON.stringify({
+          success: false,
+          message: error.message || "Error checking membership status",
+        })
+      );
     }
-  }
-  else if (path === "/api/checkvisitor" && req.method === "GET") {
+  } else if (path === "/api/checkvisitor" && req.method === "GET") {
     try {
       const username = url.parse(req.url, true).query.username;
       const result = await handleLogin.checkExistingVisitor(username);
-      
+
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify(result));
     } catch (error) {
-      console.error('Error checking visitor:', error);
+      console.error("Error checking visitor:", error);
       res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({
-        success: false,
-        message: error.message || 'Error checking visitor status'
-      }));
+      res.end(
+        JSON.stringify({
+          success: false,
+          message: error.message || "Error checking visitor status",
+        })
+      );
     }
-  }
-  else {
+  } else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(
       JSON.stringify({
@@ -224,10 +226,9 @@ const server = http.createServer(async (req, res) => {
       })
     );
   }
-  
 });
+const port = process.env.PORT;
 
-const PORT = 5004;
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+server.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });

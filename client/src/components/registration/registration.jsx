@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./registration.css"; // Make sure to create this CSS file
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 function Registration() {
   // Form state management
@@ -206,7 +207,7 @@ function Registration() {
         console.log(correctedFormData);
         console.log(formData);
         const response = await axios.post(
-          "${API_BASE_URL}/signup",
+          `${API_BASE_URL}/signup`,
           correctedFormData
         );
         setSubmitStatus({
