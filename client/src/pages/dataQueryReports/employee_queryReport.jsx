@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
+import { Link } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
@@ -87,8 +88,13 @@ const EmployeeQueryReport = () => {
       return (
         <div className="employee-query-report">
           <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} filterOptions={filterOptions} />
+          <div className="report-table-container">
           <ReportTable data={reportData} columns={columnHeaders} />
+          <div className="edit-employee-button-container">
+            <Link to="/employee_form" className="edit-employee-button">Edit Employee</Link>
+          </div>
         </div>
-      );
+        </div>
+      );  
 };
 export default EmployeeQueryReport;

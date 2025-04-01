@@ -10,7 +10,7 @@ const Dashboard = () => {
         user: [],
         tickets: [],
         activeTicketsCount: 0,
-        hasMembership: false,
+        membership: [],
       });
     
     useEffect(() => {
@@ -31,10 +31,11 @@ const Dashboard = () => {
         fetchDashboardData();
       }, []);
       
-      console.log("member", dashboardData.membership)
       
       console.log("user",dashboardData.user)
-
+      console.log("member", dashboardData.membership)
+      // console.log("member", dashboardData.membership.length)
+      
       const capitalizeFirstLetter = (str) => {
         if (!str) return str; // Handle empty string or null
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -73,7 +74,7 @@ const Dashboard = () => {
             </div>
             <div className="dashboard-box">
                 <h2 className="dashboard-heading">My Membership</h2>
-                <p className="dashboard-text">{dashboardData.membership ? "Active membership" : "No active membership"}</p>
+                <p className="dashboard-text">{dashboardData.membership.length ? "Active membership" : "No active membership"}</p>
                 <button onClick={() => navigate("/my-membership", { state: { dashboardData } })} 
                         className="dashboard-button">View Membership</button>
             </div>

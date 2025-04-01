@@ -7,6 +7,7 @@ import getDay from 'date-fns/getDay';
 import { enUS } from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './calendar.css';
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const locales = {
   'en-US': enUS,
@@ -93,7 +94,7 @@ const MyCalendar = () => {
   };
 
   return (
-    <div style={{ height: 500 }}>
+    <div className='calendar-container'>
       <Calendar
         localizer={localizer}
         events={events}
