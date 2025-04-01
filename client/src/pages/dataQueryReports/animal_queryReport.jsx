@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
+import { Link } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
@@ -77,8 +78,13 @@ const AnimalQueryReport = () => {
   return (
     <div className="animal-query-report">
       <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} filterOptions={filterOptions} />
-      <ReportTable data={reportData} columns={columnHeaders} />
-    </div>
+      <div className="report-table-container">
+        <ReportTable data={reportData} columns={columnHeaders} />
+        <div className="edit-animal-button-container">
+          <Link to="/animal_form" className="edit-animal-button">Edit Animal</Link>
+        </div>
+      </div>
+      </div>
   );
 };
 
