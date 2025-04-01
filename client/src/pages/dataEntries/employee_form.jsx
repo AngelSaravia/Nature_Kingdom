@@ -209,7 +209,7 @@ const EmployeeForm = () => {
                 </div>
 
                 <div className={styles.formRow}>
-                    <label htmlFor="roleDropdown" className={styles.label}>ROLE (choose one)</label>
+                    {/* <label htmlFor="roleDropdown" className={styles.label}>ROLE (choose one)</label> */}
                     {/* <Dropdown
                         label={formData.role || "Select role *"}
                         onSelect={(value) => handleSelect("role", value)}
