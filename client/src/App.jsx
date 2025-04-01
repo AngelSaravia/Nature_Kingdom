@@ -18,6 +18,7 @@ import Dashboard from "./pages/dashboard/dashboard";
 import Checkout from "./pages/checkout/checkout";
 import MyTickets from "./pages/dashboard/my-tickets/my-tickets";
 import MyMembership from "./pages/dashboard/my-membership/my-membership";
+import AdminDash from "./pages/employee_dash/admin_dash";
 
 import EmployeeForm from "./pages/dataEntries/employee_form";
 import AnimalForm from "./pages/dataEntries/animal_form";
@@ -127,6 +128,8 @@ function AppContent() {
               <Route path="/membership" element={<Membership />} />
               <Route path="/login" element={<Login />} />
               <Route path="/employee_login" element={<EmployeeLogin />} />
+              <Route path="/admin_dash" element={<AdminDash />} />
+              
               <Route path="/employee_form" element={<EmployeeForm />} />
               <Route path="/animal_form" element={<AnimalForm />} />
               <Route path="/enclosure_form" element={<EnclosureForm />} />
@@ -136,8 +139,8 @@ function AppContent() {
               <Route path="/query_report/enclosures" element={<EnclosureQueryReport />} />
               <Route path="/query_report/employees" element={<EmployeeQueryReport />} />
               <Route path="/:type/checkout" element={<Checkout />} />
-              <Route path="/calendar" element= {<EventsPage/>}/>
-              <Route path="/dashboard"element={<Dashboard />}/> 
+              <Route path="/calendar" element={<EventsPage />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/my-tickets" element={<MyTickets />} />
               <Route path="/my-membership" element={<MyMembership />} />
             </Routes>
