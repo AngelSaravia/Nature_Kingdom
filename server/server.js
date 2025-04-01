@@ -129,23 +129,44 @@ const server = http.createServer(async (req, res) => {
   }
   // Add new ticket purchase route
   else if (path === "/api/tickets/purchase" && req.method === "POST") {
-    try {
-      const query = "SELECT * FROM events";
-      db_connection.query(query, (err, results) => {
-        if (err) {
-          console.error("Error fetching events:", err);
-          res.writeHead(500, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ success: false, message: "Database error" }));
-          return;
-        }
+    let body = "";
+    req.on("data", chunk => {
+      body += chunk.toString();
+    });
+    req.on("end", async () => {
+      try {
+        const ticketData = JSON.parse(body);
+        console.log("Received request body:", ticketData);
+        const response = await ticketHelper.processTicketPurchase(ticketData);
+        
         res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ success: true, events: results }));
-      });
-    } catch (error) {
-      console.error("Error:", error);
-      res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ success: false, message: "Server error" }));
-    }
+        res.end(JSON.stringify(response));
+      } catch (error) {
+        console.error("Error processing ticket purchase:", error);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Server error" }));
+      }
+    });
+  }
+  else if (path === "/api/membership/purchase" && req.method === "POST") {
+    let body = "";
+    req.on("data", chunk => {
+        body += chunk.toString();
+    });
+    req.on("end", async () => {
+        try {
+            const membershipData = JSON.parse(body);
+            console.log("Received request body:", membershipData);
+            const response = await membershipHelper.processMembershipPurchase(membershipData);
+
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify(response));
+        } catch (error) {
+            console.error("Error processing membership purchase:", error);
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: false, message: "Server error" }));
+        }
+    });
   }
   else if (path.startsWith("/api/tickets/user/") && req.method === "GET") {
     try {

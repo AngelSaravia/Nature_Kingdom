@@ -30,6 +30,7 @@ const MyMembership = () => {
         ? dashboardData.membership.sort((a, b) => new Date(b.end_date) - new Date(a.end_date))[0] 
         : null
     console.log(dashboardData.membership)
+    console.log(dashboardData.membership.length)
     return (
         <div className="membership-container">
             <div className="membership-card">
