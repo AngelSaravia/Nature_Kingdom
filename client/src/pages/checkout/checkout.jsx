@@ -197,9 +197,10 @@ const Checkout = () => {
           } else if (purchaseType === 'membership') {
             // Check membership status first
             const hasMembership = await checkMembershipStatus();
-            if (hasMembership) {
+            // console.log("hasMembership ", hasMembership>0)
+            if (hasMembership > 0) {
               setShowProcessing(false);
-              alert('You already have an active membership.');
+              alert('You already have an active membership.');                      
               return;
             }
     
@@ -209,11 +210,12 @@ const Checkout = () => {
             };
     
             const response = await purchaseMembership(membershipPurchaseData);
-            if (response.success) {
+            console.log("response ", response)
+            if (response.success) { 
               setTimeout(() => {
                 setShowProcessing(false);
                 setShowConfirmation(true);
-              }, 6000);
+              }, 4000);
             } else {
               setShowProcessing(false);
               alert(response.message);

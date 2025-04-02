@@ -3,6 +3,7 @@ import InputFields from "./inputs.jsx";
 import styles from "./forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const EventForm = () => {
     const [formData, setFormData] = useState({
@@ -22,7 +23,7 @@ const EventForm = () => {
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
-        fetch("${API_BASE_URL}/get_events")
+        fetch(`${API_BASE_URL}/get_events`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -96,7 +97,7 @@ const EventForm = () => {
         }
 
         try {
-            const response = await fetch("${API_BASE_URL}/event_form", { //const response = await fetch("${API_BASE_URL}/event_form", {
+            const response = await fetch(`${API_BASE_URL}/event_form`, { //const response = await fetch("${API_BASE_URL}/event_form", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

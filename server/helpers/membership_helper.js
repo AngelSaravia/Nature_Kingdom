@@ -37,14 +37,6 @@ const checkExistingMembership = async (username) => {
   // Add to processMembershipPurchase function
 const processMembershipPurchase = async (membershipData) => {
     try {
-    // Check for existing active membership
-        const hasActiveMembership = await checkExistingMembership(membershipData.username);
-            if (hasActiveMembership) {
-                return {
-                success: false,
-                message: 'You already have an active membership'
-            };
-        }
     // Log received data
     console.log('Received membership purchase data:', {
       username: membershipData.username,

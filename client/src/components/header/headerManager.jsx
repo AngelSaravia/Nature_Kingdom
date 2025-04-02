@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import Header from "./header";
 import AuthHeader from "./auth/authHeader";
 import AdminHeader from "./admin/adminHeader";
+import ManagerHeader from "./manager/managerHeader";
+import StaffHeader from "./staff/staffheader";
 
 function HeaderManager() {
   const location = useLocation();
@@ -24,13 +26,13 @@ function HeaderManager() {
   ];
 
   const authPaths = [
-    "/dashboard", 
-    "/profile", 
+    "/dashboard",
+    "/profile",
     "/tickets",
     "/membership",
     "/checkout",
     "/my-tickets",
-    "/my-membership"
+    "/my-membership",
   ];
 
   const isAdminPath = adminPaths.some(
@@ -44,21 +46,22 @@ function HeaderManager() {
   console.log("Is admin path:", isAdminPath);
   console.log("Is auth path:", isAuthPath);
 
-  const isStaff =
-    email &&
-    (email.endsWith("@admin.naturekingdom.com") ||
-      email.endsWith("@manager.naturekingdom.com") ||
-      email.endsWith("@staff.naturekingdom.com"));
+  const isAdmin = email && email.endsWith("@admin.naturekingdom.com");
 
-  console.log("Is staff:", isStaff);
+  const isManager = email && email.endsWith("@manager.naturekingdom.com");
+
+  const isStaff = email && email.endsWith("@staff.naturekingdom.com");
 
   if (isLoggedIn) {
-    if (isStaff) {
+    if (isAdmin) {
       console.log("Showing AdminHeader");
       return <AdminHeader />;
-    } else {
-      console.log("Showing AuthHeader");
-      return <AuthHeader />;
+    } else if (isManager) {
+      console.log("Showing ManagerHeader");
+      return <ManagerHeader />;
+    } else if (isStaff) {
+      console.log("Showing ManagerHeader");
+      return <StaffHeader />;
     }
   } else {
     console.log("Showing regular Header");

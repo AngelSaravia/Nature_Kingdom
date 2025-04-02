@@ -3,6 +3,7 @@ import InputFields from "./inputs.jsx";
 import styles from "./forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const EnclosureForm = () => {
     const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ const EnclosureForm = () => {
     const [enclosures, setEnclosures] = useState([]);
 
     useEffect(() => {
-            fetch("${API_BASE_URL}/get_enclosures")
+            fetch(`${API_BASE_URL}/get_enclosures`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) setEnclosures(data.data);
