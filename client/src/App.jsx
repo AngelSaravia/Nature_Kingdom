@@ -141,6 +141,7 @@ function AppContent() {
               <Route path="/query_report/employees" element={<EmployeeQueryReport />} />
               <Route path="/:type/checkout" element={<Checkout />} />
               <Route path="/calendar" element={<EventsPage />} />
+              <Route path="/giftshop" element={<GiftShop />}/>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/my-tickets" element={<MyTickets />} />
               <Route path="/my-membership" element={<MyMembership />} />
