@@ -75,4 +75,19 @@ export const getDashboardData = async () => {
   }
 };
 
+export const getProducts = async (category = "", name = "") => {
+  try {
+      console.log("sending axios reques for giftshop");
+      const response = await apiClient.get(`/api/giftshop`, {
+          params: { category, name }
+      });
+      console.log("response ",response.data.products);
+      return response.data.products; // Extract the products array
+  } catch (error) {
+      console.error("Error fetching products:", error);
+      return [];
+  }
+};
+
+
 export default apiClient;

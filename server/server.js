@@ -16,6 +16,7 @@ const handleAnimalForm = require("./helpers/animalFormHelper");
 const handleEmployeeForm = require("./helpers/employeeFormHelper");
 const handleEventForm = require("./helpers/eventFormHelper");
 const handleCalendar = require("./helpers/calendar_helper");
+const handleGiftShop = require("./helpers/giftShop_helper");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -57,6 +58,8 @@ const server = http.createServer(async (req, res) => {
     handleLogin.handleLogin(req, res);
   } else if (path === "/calendar" && req.method === "GET") {
     handleCalendar(req, res);
+  } else if (path === "/api/giftshop" && req.method === "GET") {
+    handleGiftShop(req, res);
   } else if (path === "/employee_login" && req.method === "POST") {
     handleEmployeeLogin(req, res);
   } else if (path === "/query_report/animals" && req.method === "POST") {
