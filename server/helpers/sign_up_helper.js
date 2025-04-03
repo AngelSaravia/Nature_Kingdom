@@ -19,7 +19,7 @@ const handleSignUp = (req, res) => {
         city,
         state,
         zipcode,
-        country
+        country,
       } = data;
 
       // Hash the password before saving it to the database
@@ -62,7 +62,7 @@ const handleSignUp = (req, res) => {
             city,
             state,
             zipcode,
-            country
+            country,
           ],
           (err, result) => {
             if (err) {

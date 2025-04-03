@@ -3,6 +3,7 @@ import InputFields from "./inputs.jsx";
 import styles from "./forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const AnimalForm = () => {
     const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ const AnimalForm = () => {
 
     // Fetch all animals to populate dropdown
     useEffect(() => {
-        fetch("${API_BASE_URL}/get_animals")
+        fetch(`${API_BASE_URL}/get_animals`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) setAnimals(data.data);

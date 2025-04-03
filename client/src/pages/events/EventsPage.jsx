@@ -4,8 +4,8 @@ import './calendar.css';
 
 const EventsPage = () => {
   return (
-    <div>
-      <h1>Nature Kingdom Events</h1>
+    <div className='calendar-page'>
+      <h1 className='calendar-title'>Nature Kingdom Events</h1>
       <MyCalendar />
     </div>
   );
