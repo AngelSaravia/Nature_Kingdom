@@ -89,5 +89,16 @@ export const getProducts = async (category = "", name = "") => {
   }
 };
 
+export const createGiftOrder = async (orderData) => {
+  try {
+    console.log(orderData)
+    const response = await apiClient.post('/api/giftshop/order', orderData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating gift order:', error);
+    throw error;
+  }
+};
+
 
 export default apiClient;

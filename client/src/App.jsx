@@ -31,7 +31,7 @@ import EnclosureQueryReport from "./pages/dataQueryReports/enclosure_queryReport
 import EmployeeQueryReport from "./pages/dataQueryReports/employee_queryReport";
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
-import GiftShop from "./pages/giftshop/giftshop";
+import GiftShop from "./pages/giftshop/GiftShop";
 
 // Performance monitoring callback
 function onRenderCallback(id, phase, actualDuration) {

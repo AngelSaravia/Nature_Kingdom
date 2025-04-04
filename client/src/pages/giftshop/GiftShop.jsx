@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'; // Adde
 import { FiShoppingCart, FiSearch, FiX, FiPlus, FiMinus } from 'react-icons/fi';
 import debounce from 'lodash/debounce';
 import { getProducts } from '../../services/api';
+import { useNavigate } from 'react-router-dom';
 import './GiftShop.css';
 
 const GiftShop = () => {
@@ -13,6 +14,25 @@ const GiftShop = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   
   const searchInputRef = useRef(null);
+
+  const navigate = useNavigate()
+
+  const handleCheckout = () => {
+    if (cart.length === 0) return;
+    
+    // Store cart data in localStorage
+    localStorage.setItem('cartItems', JSON.stringify(cart));
+    localStorage.setItem('cartTotal', subtotal.toString());
+    
+    // Navigate to checkout
+    navigate('/giftshop/checkout', { 
+      state: { 
+        items: cart,
+        total: subtotal,
+        type: 'gift'
+      }
+    });
+  };
 
   // Create debounced fetch function
   const debouncedFetch = useCallback(
@@ -224,7 +244,13 @@ const GiftShop = () => {
                     <span>Subtotal:</span>
                     <span>${subtotal.toFixed(2)}</span>
                   </div>
-                  <button className="checkout-button">Proceed to Checkout</button>
+                  <button 
+                    className="checkout-button"
+                    onClick={handleCheckout}
+                    disabled={cart.length === 0}
+                  >
+                    Proceed to Checkout
+                  </button>
                 </div>
               </>
             )}
