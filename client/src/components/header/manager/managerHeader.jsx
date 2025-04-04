@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./manager.css";
 import logoImage from "../../../zoo_pictures/Nature's_Kingdom.jpeg";
 import { useAuth } from "../../../context/Authcontext";
+import apiClient from "../../../services/api";
 
 function managerHeader() {
   const navigate = useNavigate();
@@ -17,6 +18,10 @@ function managerHeader() {
     } else {
       localStorage.removeItem("token");
       localStorage.removeItem("username");
+      localStorage.removeItem("role");
+      localStorage.removeItem("email");
+
+      delete apiClient.defaults.headers.common["Authorization"];
       navigate("/employee_login");
     }
   };

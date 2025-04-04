@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import "./manager_dash.css";
+import "./staff_dash.css";
 
-const ManagerDash = () => {
+const StaffDash = () => {
   const navigate = useNavigate();
 
   return (
     <div className="dashboard-container">
       <div className="dashboard-card">
-        <h1 className="dashboard-title">Manager Dashboard</h1>
+        <h1 className="dashboard-title">Staff Dashboard</h1>
 
         {/* Dashboard Buttons */}
         <div className="dashboard-grid">
@@ -99,4 +99,4 @@ const ManagerDash = () => {
   );
 };
 
-export default ManagerDash;
+export default StaffDash;

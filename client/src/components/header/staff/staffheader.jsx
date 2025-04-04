@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./staffheader.css";
 import logoImage from "../../../zoo_pictures/Nature's_Kingdom.jpeg";
 import { useAuth } from "../../../context/Authcontext";
+import apiClient from "../../../services/api";
 
 function staffHeader() {
   const navigate = useNavigate();
@@ -17,6 +18,11 @@ function staffHeader() {
     } else {
       localStorage.removeItem("token");
       localStorage.removeItem("username");
+      localStorage.removeItem("role");
+      localStorage.removeItem("email");
+
+      delete apiClient.defaults.headers.common["Authorization"];
+
       navigate("/employee_login");
     }
   };
@@ -38,7 +44,7 @@ function staffHeader() {
       </div>
 
       <nav className="nav-links">
-        <Link to="/manager_dash">Dashboard</Link>
+        <Link to="/staff_dash">Dashboard</Link>
         <Link to="/event_form">Events Form</Link>
       </nav>
       <div className="user-menu">

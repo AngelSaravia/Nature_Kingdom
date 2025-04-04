@@ -74,6 +74,7 @@ const handleLogin = (req, res) => {
               id: user.id,
               username: user.username,
               email: user.email,
+              role: user.role,
             },
             SECRET_KEY,
             { expiresIn: "1h" }
@@ -86,6 +87,7 @@ const handleLogin = (req, res) => {
               token,
               username: user.username,
               email: user.email,
+              role: user.role,
               // Include any other user info you need, but don't include password
             })
           );

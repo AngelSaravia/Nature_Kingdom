@@ -47,9 +47,13 @@ const handleEmployeeLogin = (req, res) => {
             return res.end(JSON.stringify({ error: "Invalid credentials" }));
           }
 
-          const token = jwt.sign({ email: user.email }, SECRET_KEY, {
-            expiresIn: "1h",
-          });
+          const token = jwt.sign(
+            { email: user.email, role: user.role },
+            SECRET_KEY,
+            {
+              expiresIn: "1h",
+            }
+          );
 
           res.writeHead(200, { "Content-Type": "application/json" });
 
@@ -59,6 +63,7 @@ const handleEmployeeLogin = (req, res) => {
               username: user.first_name
                 ? `${user.first_name} ${user.last_name || ""}`.trim()
                 : user.email,
+              role: user.role,
             })
           );
         }
