@@ -31,6 +31,7 @@ import EnclosureQueryReport from "./pages/dataQueryReports/enclosure_queryReport
 import EmployeeQueryReport from "./pages/dataQueryReports/employee_queryReport";
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
+import GiftShop from "./pages/giftshop/GiftShop";
 
 // Performance monitoring callback
 function onRenderCallback(id, phase, actualDuration) {
@@ -140,6 +141,7 @@ function AppContent() {
               <Route path="/query_report/employees" element={<EmployeeQueryReport />} />
               <Route path="/:type/checkout" element={<Checkout />} />
               <Route path="/calendar" element={<EventsPage />} />
+              <Route path="/giftshop" element={<GiftShop />}/>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/my-tickets" element={<MyTickets />} />
               <Route path="/my-membership" element={<MyMembership />} />

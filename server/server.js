@@ -16,6 +16,8 @@ const handleAnimalForm = require("./helpers/animalFormHelper");
 const handleEmployeeForm = require("./helpers/employeeFormHelper");
 const handleEventForm = require("./helpers/eventFormHelper");
 const handleCalendar = require("./helpers/calendar_helper");
+const handleGiftShop = require("./helpers/giftShop_helper");
+const handleGiftOrder = require("./helpers/order_helper");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -57,6 +59,8 @@ const server = http.createServer(async (req, res) => {
     handleLogin.handleLogin(req, res);
   } else if (path === "/calendar" && req.method === "GET") {
     handleCalendar(req, res);
+  } else if (path === "/api/giftshop" && req.method === "GET") {
+    handleGiftShop(req, res);
   } else if (path === "/employee_login" && req.method === "POST") {
     handleEmployeeLogin(req, res);
   } else if (path === "/query_report/animals" && req.method === "POST") {
@@ -217,6 +221,24 @@ const server = http.createServer(async (req, res) => {
         })
       );
     }
+  } 
+  else if (path === "/api/giftshop/order" && req.method === "POST") {
+    let body = "";
+    req.on("data", chunk => {
+        body += chunk;
+    });
+    req.on("end", async () => {
+        try {
+            const orderData = JSON.parse(body);
+            console.log("Received gift order data:", orderData);
+            await handleGiftOrder.handleGiftOrder(req,res,orderData);
+
+        } catch (error) {
+            console.error("Error processing gift order:", error);
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: false, message: "Server error" }));
+        }
+    });
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(
