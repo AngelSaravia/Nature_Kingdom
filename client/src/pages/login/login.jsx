@@ -1,5 +1,6 @@
 import "./login.css";
 import { FaUserAlt, FaLock } from "react-icons/fa";
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -8,53 +9,45 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [visible, setVisible] = useState(false);
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // prevents the default page from being reloaded
+    e.preventDefault();
 
-    console.log(import.meta.env.VITE_API_URL);
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
+      console.log(
+        "Sending login request with:",
+        { username, password },
+        " apibaseurl ",
+        API_BASE_URL
+      );
+      const res = await axios.post(`${API_BASE_URL}/login`, {
         username,
         password,
       });
 
-      // Store token and username
-      localStorage.setItem("username", username);
-      localStorage.setItem("token", res.data.token);
+      console.log("Login response:", res.data);
 
-      // Store email when it's included in the response
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("username", username);
+
       if (res.data.email) {
         localStorage.setItem("email", res.data.email);
-      } else {
-        // If email isn't in the response, check if it's a special admin username
-        // This is a temporary solution until your backend sends email
-        if (username === "mrodriguez") {
-          localStorage.setItem("email", "mrodriguez@admin.naturekingdom.com");
-        } else {
-          // Set a default email domain for regular users
-          localStorage.setItem("email", `${username}@user.naturekingdom.com`);
-        }
       }
 
       setMessage("Login Successful");
 
-      // Check if user is staff by email domain to determine redirect
-      const email = res.data.email || localStorage.getItem("email");
-      const isStaff =
-        email &&
-        (email.endsWith("@admin.naturekingdom.com") ||
-          email.endsWith("@manager.naturekingdom.com") ||
-          email.endsWith("@staff.naturekingdom.com"));
-
-      if (isStaff) {
-        navigate("/admin", { replace: true });
-      } else {
-        navigate("/dashboard", { replace: true });
-      }
+      // All regular users go to the dashboard
+      navigate("/dashboard", { replace: true });
     } catch (e) {
-      setMessage(e.response?.data?.error || "Login failed");
+      console.error("Login error:", e);
+      setMessage(
+        e.response?.data?.error ||
+          "Login failed. Please check your credentials and try again."
+      );
     }
   };
 
@@ -76,12 +69,15 @@ function Login() {
             </div>
             <div className="input-box">
               <input
-                type="password" // Changed to password to hide input
+                type={visible ? "text" : "password"}
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+              <div className="p-2" onClick={() => setVisible(!visible)}>
+                {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+              </div>
               <FaLock />
             </div>
           </div>

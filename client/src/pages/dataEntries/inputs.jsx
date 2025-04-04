@@ -10,7 +10,7 @@ const InputFields = ({label, type="text", name, value, onChange, required=true, 
                 id={name}
                 type={type}
                 name={name}
-                value={value}
+                value={value || ""}
                 onChange={onChange}
                 required={required}
                 autoComplete={autoComplete}

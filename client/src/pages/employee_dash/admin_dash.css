@@ -39,12 +39,19 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: left;
-    height: 140px;
+    height: auto;
+    width: auto;
     }
   
   .dashboard-box.single {
     margin-bottom: 20px;
     height: auto; 
+
+  }
+  
+  .dashboard-single{
+    display: flex;
+    align-items: center;
   }
 
   .dashboard-heading {
@@ -60,16 +67,18 @@
   }
   
   .dashboard-button {
-    display: inline-block;
+    display: flex;
+    justify-content: center;
     margin-top: 10px;
-    padding: 8px 12px;
     font-size: 14px;
     color: #ffffff;
-    background-color: #555555;
+    background-color: #3c443d;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    height: fit-content;
+    width: 120px;
   }
   
   .dashboard-button:hover {

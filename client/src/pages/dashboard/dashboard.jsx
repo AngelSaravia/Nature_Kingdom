@@ -1,20 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { checkMembershipStatus } from '../../services/api';
+import { checkMembershipStatus, getDashboardData } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
-import './dashboard.css';
+import "./dashboard.css";
 
 const Dashboard = () => {
     const navigate = useNavigate();
-    const [tickets, setTickets] = useState([]);
-    const [membership, setMembership] = useState(null);
-
+    const [dashboardData, setDashboardData] = useState({
+        user: [],
+        tickets: [],
+        activeTicketsCount: 0,
+        membership: [],
+      });
+    
     useEffect(() => {
-        // Fetch tickets and membership info
-        fetch("/api/tickets").then(res => res.json()).then(setTickets);
-        fetch("/api/membership").then(res => res.json()).then(setMembership);
-    }, []);
+        const fetchDashboardData = async () => {
+          try {
+            const data = await getDashboardData();
+            setDashboardData({
+              tickets: data.tickets.tickets || [],
+              activeTicketsCount: data.tickets.activeCount || 0,
+              membership: data.membership || [],
+              user: data.visitor || []
+            });
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        };
+      
+        fetchDashboardData();
+      }, []);
+      
+      
+      console.log("user",dashboardData.user)
+      console.log("member", dashboardData.membership)
+      // console.log("member", dashboardData.membership.length)
+      
+      const capitalizeFirstLetter = (str) => {
+        if (!str) return str; // Handle empty string or null
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      };
 
+      const formatPhoneNumber = (phoneNumber) => {
+        const cleaned = ('' + phoneNumber).replace(/\D/g, ''); // Remove non-numeric characters
+        const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/); // Match the phone number
+      
+        if (match) {
+          return `(${match[1]}) ${match[2]}-${match[3]}`;
+        }
+      
+        return null; // Return null if the phone number is invalid
+      };
+    
     return (
         <div className="dashboard-container">
         <div className="dashboard-card">
@@ -23,19 +60,22 @@ const Dashboard = () => {
             {/* Quick Summary */}
             <div className="dashboard-box single">
             <h2 className="dashboard-heading">Your Account</h2>
-            <p className="dashboard-text">Display User info here</p>
+            <p className="dashboard-text">Username: {dashboardData.user.username}</p>
+            <p className="dashboard-text">Full Name: {capitalizeFirstLetter(dashboardData.user.first_name)} {capitalizeFirstLetter(dashboardData.user.Minit_name)} {capitalizeFirstLetter(dashboardData.user.last_name)}</p>
+            <p className="dashboard-text">Email: {dashboardData.user.email}</p>
+            <p className="dashboard-text">Phone: {formatPhoneNumber(dashboardData.user.phone_number)}</p>
             </div>
             <div className="dashboard-grid">
             <div className="dashboard-box">
                 <h2 className="dashboard-heading">My Tickets</h2>
-                <p className="dashboard-text">{tickets.length} active ticket(s)</p>
-                <button onClick={() => navigate("/my-tickets", { state: { tickets } })} 
+                <p className="dashboard-text">{dashboardData.activeTicketsCount} active ticket(s)</p>
+                <button onClick={() => navigate("/my-tickets", { state: { dashboardData } })} 
                         className="dashboard-button">View Tickets</button>
             </div>
             <div className="dashboard-box">
                 <h2 className="dashboard-heading">My Membership</h2>
-                <p className="dashboard-text">{membership ? membership.type : "No active membership"}</p>
-                <button onClick={() => navigate("/my-membership", { state: { membership } })} 
+                <p className="dashboard-text">{dashboardData.membership.length ? "Active membership" : "No active membership"}</p>
+                <button onClick={() => navigate("/my-membership", { state: { dashboardData } })} 
                         className="dashboard-button">View Membership</button>
             </div>
             </div>

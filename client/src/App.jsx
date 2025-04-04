@@ -18,6 +18,7 @@ import Dashboard from "./pages/dashboard/dashboard";
 import Checkout from "./pages/checkout/checkout";
 import MyTickets from "./pages/dashboard/my-tickets/my-tickets";
 import MyMembership from "./pages/dashboard/my-membership/my-membership";
+import AdminDash from "./pages/employee_dash/admin_dash";
 
 import EmployeeForm from "./pages/dataEntries/employee_form";
 import AnimalForm from "./pages/dataEntries/animal_form";
@@ -27,6 +28,7 @@ import EventsPage from "./pages/events/EventsPage";
 import AnimalQueryReport from "./pages/dataQueryReports/animal_queryReport";
 import EventQueryReport from "./pages/dataQueryReports/event_queryReport";
 import EnclosureQueryReport from "./pages/dataQueryReports/enclosure_queryReport";
+import EmployeeQueryReport from "./pages/dataQueryReports/employee_queryReport";
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
 import GiftShop from "./pages/giftshop/giftshop";
@@ -127,6 +129,8 @@ function AppContent() {
               <Route path="/membership" element={<Membership />} />
               <Route path="/login" element={<Login />} />
               <Route path="/employee_login" element={<EmployeeLogin />} />
+              <Route path="/admin_dash" element={<AdminDash />} />
+              
               <Route path="/employee_form" element={<EmployeeForm />} />
               <Route path="/animal_form" element={<AnimalForm />} />
               <Route path="/enclosure_form" element={<EnclosureForm />} />
@@ -134,6 +138,7 @@ function AppContent() {
               <Route path="/query_report/animals" element={<AnimalQueryReport />} />
               <Route path="/query_report/events" element={<EventQueryReport />} />
               <Route path="/query_report/enclosures" element={<EnclosureQueryReport />} />
+              <Route path="/query_report/employees" element={<EmployeeQueryReport />} />
               <Route path="/:type/checkout" element={<Checkout />} />
               <Route path="/calendar" element= {<EventsPage/>}/>
               <Route path="/giftshop" element= {<GiftShop/>}/>
@@ -142,6 +147,8 @@ function AppContent() {
                 element={<div>Dashboard Page</div>}
               />{" "}
               <Route path="/dashboard"element={<Dashboard />}/> 
+              <Route path="/calendar" element={<EventsPage />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/my-tickets" element={<MyTickets />} />
               <Route path="/my-membership" element={<MyMembership />} />
             </Routes>

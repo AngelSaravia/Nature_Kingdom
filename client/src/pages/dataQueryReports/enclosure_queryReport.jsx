@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
+import { Link } from "react-router-dom";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
   { label: "ENCLOSURE NAME", type: "text", name: "name" },
@@ -80,8 +82,13 @@ const EnclosureQueryReport = () => {
   return (
     <div className="enclosure-query-report">
       <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} filterOptions={filterOptions} />
-      <ReportTable data={reportData} columns={columnHeaders} />
-    </div>
+      <div className="report-table-container">
+        <ReportTable data={reportData} columns={columnHeaders} />
+        <div className="edit-enclosure-button-container">
+          <Link to="/enclosure_form" className="edit-enclosure-button">Edit Enclosure</Link>
+        </div>
+      </div>
+      </div>
   );
 };
 

@@ -3,9 +3,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  min-height: 80px;
-  background-color: #182119;
+  background-color: #182119; /* Dark green background */
+  color: white;
+  padding: 30px 20px;
 }
 
 /* Logo section */
@@ -23,22 +23,21 @@
   max-width: 485.5px;
 }
 
-
-.brand-name{
-  font-size: clamp(45px, 3.5vw, 50px);
+.brand-name {
+  font-size: clamp(30px, 40px, 50px);
 }
 
 .logo-image {
-  width: clamp(100px, 10vw, 150px);
-  height: clamp(100px, 10vw, 150px);
+  width: clamp(85px, 7vw, 150px);
+  height: clamp(85px, 7vw, 150px);
 }
 
 /* Navigation links */
 .nav-links {
   display: flex;
   gap: clamp(10px, 3vw, 50px);
-  align-items: center;
-  margin: 0 auto;
+  align-items: flex-end;
+  /* margin: 0 auto; */
 }
 
 .nav-links a {
@@ -46,7 +45,7 @@
   text-decoration: none;
   white-space: nowrap;
   padding: 8px 12px;
-  font-size: clamp(14px, 1.5vw, 24px);
+  font-size: clamp(14px, 22px, 30px);
 }
 
 .nav-links a:hover {
@@ -60,17 +59,17 @@
   display: flex;
   align-items: center;
   gap: clamp(15px, 2vw, 30px);
-  margin-left: auto;
+  /* margin-left: auto; */
   white-space: nowrap;
 }
 
 .username {
   color: white;
-  font-size: clamp(16px, 2vw, 28px);
+  font-size: clamp(16px, 22px, 28px);
 }
 
 .logout-btn {
-  font-size: clamp(14px, 1.5vw, 20px);
+  font-size: clamp(16px, 20px, 28px);
   padding: 8px 16px;
   border-radius: 10px;
   border: none;
@@ -90,7 +89,7 @@
   }
 }
 
-@media (max-width: 1270px) {
+@media (max-width: 1510px) {
   .user-menu {
     margin: auto;
   }

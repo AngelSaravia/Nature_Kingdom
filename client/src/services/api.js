@@ -57,4 +57,22 @@ export const checkMembershipStatus = async () => {
   }
 };
 
+export const getDashboardData = async () => {
+  try {
+    const username = localStorage.getItem('username');
+    const ticketsResponse = await apiClient.get(`/api/tickets/user/${username}`);
+    const membershipResponse = await apiClient.get(`/api/membership/check?username=${username}`);
+    const visitorResponse = await apiClient.get(`/api/checkvisitor?username=${username}`);
+    
+    return {
+      tickets: ticketsResponse.data,
+      membership: membershipResponse.data,
+      visitor: visitorResponse.data
+    };
+  } catch (error) {
+    console.error('Error fetching dashboard data:', error);
+    throw error;
+  }
+};
+
 export default apiClient;

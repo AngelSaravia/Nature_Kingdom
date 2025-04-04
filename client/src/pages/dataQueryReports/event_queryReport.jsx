@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
+import { Link } from "react-router-dom";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
   { label: "EVENT NAME", type: "text", name: "eventName" },
@@ -80,8 +82,13 @@ const EventQueryReport = () => {
   return (
     <div className="event-query-report">
       <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} filterOptions={filterOptions} />
-      <ReportTable data={reportData} columns={columnHeaders} />
-    </div>
+      <div className="report-table-container">
+        <ReportTable data={reportData} columns={columnHeaders} />
+        <div className="edit-event-button-container">
+          <Link to="/event_form" className="edit-event-button">Edit Event</Link>
+        </div>
+      </div>
+      </div>
   );
 };
 
