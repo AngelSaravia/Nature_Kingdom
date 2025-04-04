@@ -20,6 +20,9 @@ import MyTickets from "./pages/dashboard/my-tickets/my-tickets";
 import MyMembership from "./pages/dashboard/my-membership/my-membership";
 import AdminDash from "./pages/employee_dash/admin_dash";
 
+import TicketForm from "./pages/dataEntries/ticket_form";
+import MembershipForm from "./pages/dataEntries/membership_form";
+import VisitorForm from "./pages/dataEntries/visitor_form";
 import EmployeeForm from "./pages/dataEntries/employee_form";
 import AnimalForm from "./pages/dataEntries/animal_form";
 import EnclosureForm from "./pages/dataEntries/enclosure_form";
@@ -130,6 +133,9 @@ function AppContent() {
               <Route path="/employee_login" element={<EmployeeLogin />} />
               <Route path="/admin_dash" element={<AdminDash />} />
               
+              <Route path="/ticket_form" element={<TicketForm />} />
+              <Route path="/membership_form" element={<MembershipForm />} />
+              <Route path="/visitor_form" element={<VisitorForm />} />
               <Route path="/employee_form" element={<EmployeeForm />} />
               <Route path="/animal_form" element={<AnimalForm />} />
               <Route path="/enclosure_form" element={<EnclosureForm />} />

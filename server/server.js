@@ -59,8 +59,9 @@ const server = http.createServer(async (req, res) => {
     handleCalendar(req, res);
   } else if (path === "/employee_login" && req.method === "POST") {
     handleEmployeeLogin(req, res);
+
+    // Query Reports
   } else if (path === "/query_report/animals" && req.method === "POST") {
-    //Handle query reports
     handleQueryReport(req, res);
   } else if (path === "/query_report/events" && req.method === "POST") {
     handleQueryReport(req, res);
@@ -68,10 +69,12 @@ const server = http.createServer(async (req, res) => {
     handleQueryReport(req, res);
   } else if (path === "/query_report/enclosures" && req.method === "POST") {
     handleQueryReport(req, res);
+
+    // Data Entry Forms
   } else if (path === "/enclosure_form" && req.method === "POST") {
     handleEnclosureForm(req, res);
   } else if (path === "/get_enclosures" && req.method === "GET") {
-    const sql = "SELECT * FROM enclosures"; // Query to fetch all enclosures
+    const sql = "SELECT * FROM enclosures";
     db_connection.query(sql, (err, results) => {
       if (err) {
         console.error("Error fetching enclosures:", err);
@@ -82,6 +85,7 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true, data: results }));
     });
+
   } else if (path === "/animal_form" && req.method === "POST") {
     handleAnimalForm(req, res);
   } else if (path === "/get_animals" && req.method === "GET") {
@@ -96,6 +100,7 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true, data: results }));
     });
+
   } else if (path === "/employee_form" && req.method === "POST") {
     handleEmployeeForm(req, res);
   } else if (path === "/get_employees" && req.method === "GET") {
@@ -110,6 +115,7 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true, data: results }));
     });
+
   } else if (path === "/event_form" && req.method === "POST") {
     handleEventForm(req, res);
   } else if (path === "/get_events" && req.method === "GET") {
@@ -124,6 +130,52 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true, data: results }));
     });
+
+  } else if (path === "/ticket_form" && req.method === "POST") {
+    handleTicketForm(req, res);
+  } else if (path === "/get_tickets" && req.method === "GET") {
+    const sql = "SELECT * FROM tickets"; // Query to fetch all tickets
+    db_connection.query(sql, (err, results) => {
+      if (err) {
+        console.error("Error fetching events:", err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Database error" }));
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: results }));
+    });
+
+  } else if (path === "/visitor_form" && req.method === "POST") {
+    handleVisitorForm(req, res);
+  } else if (path === "/get_visitors" && req.method === "GET") {
+    const sql = "SELECT * FROM visitors"; // Query to fetch all visitors
+    db_connection.query(sql, (err, results) => {
+      if (err) {
+        console.error("Error fetching events:", err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Database error" }));
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: results }));
+    });
+
+  } else if (path === "/membership_form" && req.method === "POST") {
+    handleMembershipForm(req, res);
+  } else if (path === "/get_memberships" && req.method === "GET") {
+    const sql = "SELECT * FROM memberships"; // Query to fetch all memberships
+    db_connection.query(sql, (err, results) => {
+      if (err) {
+        console.error("Error fetching events:", err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Database error" }));
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: results }));
+    });
+    
   }
   // Add new ticket purchase route
   else if (path === "/api/tickets/purchase" && req.method === "POST") {
