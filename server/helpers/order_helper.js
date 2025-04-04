@@ -59,48 +59,26 @@ function handleGiftOrder(req, res, data) {
                         });
                     }
 
-                    // Update product stock (optional)
-                    const updateStockPromises = items.map(item => {
-                        return new Promise((resolve, reject) => {
-                            const updateStockQuery = `
-                                UPDATE products 
-                                SET amount_stock = amount_stock - ? 
-                                WHERE product_id = ?
-                            `;
-                            db_connection.query(updateStockQuery, [item.quantity, item.product_id], (err) => {
-                                if (err) reject(err);
-                                else resolve();
+                    // Commit transaction
+                    db_connection.commit((err) => {
+                        if (err) {
+                            return db_connection.rollback(() => {
+                                sendErrorResponse(res, 500, "Error committing transaction");
                             });
+                        }
+                        sendSuccessResponse(res, { 
+                            order_id,
+                            message: "Order created successfully" 
                         });
                     });
-
-                    Promise.all(updateStockPromises)
-                        .then(() => {
-                            db_connection.commit((err) => {
-                                if (err) {
-                                    return db_connection.rollback(() => {
-                                        sendErrorResponse(res, 500, "Error committing transaction");
-                                    });
-                                }
-                                sendSuccessResponse(res, { 
-                                    order_id,
-                                    message: "Order created successfully" 
-                                });
-                            });
-                        })
-                        .catch((err) => {
-                            db_connection.rollback(() => {
-                                sendErrorResponse(res, 500, "Error updating stock");
-                            });
-                        });
                 });
             });
         });
     });
-    } catch (error) {
-        console.error("Server error:", error);
-        sendErrorResponse(res, 500, "Server error");
-    }
+} catch (error) {
+    console.error("Server error:", error);
+    sendErrorResponse(res, 500, "Server error");
+}
 }
 
 function sendSuccessResponse(res, data = {}) {
