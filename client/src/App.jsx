@@ -32,6 +32,7 @@ import EmployeeQueryReport from "./pages/dataQueryReports/employee_queryReport";
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
 import GiftShop from "./pages/giftshop/giftshop";
+import EnclosuresPage from "./pages/enclosures/enclosures";
 
 // Performance monitoring callback
 function onRenderCallback(id, phase, actualDuration) {
@@ -151,6 +152,7 @@ function AppContent() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/my-tickets" element={<MyTickets />} />
               <Route path="/my-membership" element={<MyMembership />} />
+              <Route path="/enclosures" element={<EnclosuresPage />} />
             </Routes>
           </main>
           <Footer />
