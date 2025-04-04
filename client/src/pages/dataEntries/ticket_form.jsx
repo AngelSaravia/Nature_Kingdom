@@ -142,11 +142,11 @@ const TicketForm = () => {
                     <Dropdown
                         label="Select Ticket to Modify/Delete"
                         onSelect={(value) => handleTicketSelect(JSON.parse(value))}
-                        selectedLabel={formData.ticket_id ? `${formData.ticket_type} (ID: ${formData.ticket_id})` : "Select Ticket to Modify/Delete"}
+                        selectedLabel={formData.ticket_id ? `${formData.visitor_id} (ID: ${formData.ticket_id})` : "Select Ticket to Modify/Delete"}
                     >
                         {tickets.map(ticket => (
                             <DropdownItem key={ticket.ticket_id} value={JSON.stringify(ticket)}>
-                                {ticket.ticket_type} (ID: {ticket.ticket_id})
+                                (Visitor ID: {ticket.visitor_id}) (ID: {ticket.ticket_id})
                             </DropdownItem>
                         ))}
                     </Dropdown>

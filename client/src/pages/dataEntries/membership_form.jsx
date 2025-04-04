@@ -135,11 +135,11 @@ const MembershipForm = () => {
                     <Dropdown
                         label="Select Membership to Modify/Delete"
                         onSelect={(value) => handleMembershipSelect(JSON.parse(value))}
-                        selectedLabel={formData.membership_id ? `${formData.start_date} (ID: ${formData.membership_id})` : "Select Membership to Modify/Delete"}
+                        selectedLabel={formData.membership_id ? `${formData.visitor_id} (ID: ${formData.membership_id})` : "Select Membership to Modify/Delete"}
                     >
                         {memberships.map(membership => (
                             <DropdownItem key={membership.membership_id} value={JSON.stringify(membership)}>
-                                {membership.start_date} (ID: {membership.membership_id})
+                                (Visitor ID: {membership.visitor_id}) (ID: {membership.membership_id})
                             </DropdownItem>
                         ))}
                     </Dropdown>
@@ -147,8 +147,10 @@ const MembershipForm = () => {
                 <div className={styles.formRow}>
                     <InputFields label="VISITOR ID *" name="visitor_id" type="text" value={formData.visitor_id} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autoComplete="off"/>
                 </div>
-                <div className={styles.formRow}> //change to timestamp
+                <div className={styles.formRow}>
                     <InputFields label="START DATE" name="datetime-local" type="date" value={formData.start_date} onChange={handleChange} autoComplete="off"/>
+                </div>
+                <div className={styles.formRow}>
                     <InputFields label="END DATE" name="end_date" type="date" value={formData.end_date} onChange={handleChange} autoComplete="off"/>
                 </div>
                 <div className={styles.formRow}>
