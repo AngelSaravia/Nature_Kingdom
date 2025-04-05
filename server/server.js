@@ -248,9 +248,8 @@ const server = http.createServer(async (req, res) => {
     );
   }
 });
-const port = process.env.PORT;
+const PORT = process.env.PORT;
 
-const PORT = 5004;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
