@@ -16,6 +16,7 @@ const handleAnimalForm = require("./helpers/animalFormHelper");
 const handleEmployeeForm = require("./helpers/employeeFormHelper");
 const handleEventForm = require("./helpers/eventFormHelper");
 const handleCalendar = require("./helpers/calendar_helper");
+//const enclosureHelper = require("./helpers/enclosureHelper");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -217,7 +218,8 @@ const server = http.createServer(async (req, res) => {
         })
       );
     }
-  } else {
+  } 
+  else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(
       JSON.stringify({
