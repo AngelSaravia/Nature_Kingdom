@@ -21,6 +21,9 @@ import MyTickets from "./pages/dashboard/my-tickets/my-tickets";
 import MyMembership from "./pages/dashboard/my-membership/my-membership";
 import AdminDash from "./pages/employee_dash/admin_dash";
 import ManagerDash from "./pages/employee_dash/manager_dash";
+import TicketForm from "./pages/dataEntries/ticket_form";
+import MembershipForm from "./pages/dataEntries/membership_form";
+import VisitorForm from "./pages/dataEntries/visitor_form";
 import EmployeeForm from "./pages/dataEntries/employee_form";
 import AnimalForm from "./pages/dataEntries/animal_form";
 import EnclosureForm from "./pages/dataEntries/enclosure_form";
@@ -30,6 +33,8 @@ import AnimalQueryReport from "./pages/dataQueryReports/animal_queryReport";
 import EventQueryReport from "./pages/dataQueryReports/event_queryReport";
 import EnclosureQueryReport from "./pages/dataQueryReports/enclosure_queryReport";
 import EmployeeQueryReport from "./pages/dataQueryReports/employee_queryReport";
+import TicketQueryReport from "./pages/dataQueryReports/ticket_queryReport";
+import VisitorMembershipQueryReport from "./pages/dataQueryReports/visitormembership_queryReport";
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
 import GiftShop from "./pages/giftshop/GiftShop";
@@ -242,6 +247,30 @@ function AppContent() {
               <Route path="/membership" element={<Membership />} />
               <Route path="/login" element={<Login />} />
               <Route path="/employee_login" element={<EmployeeLogin />} />
+              <Route path="/admin_dash" element={<AdminDash />} />
+              
+
+              <Route path="/animal_form" element={<AnimalForm />} />
+              <Route path="/event_form" element={<EventForm />} />
+              <Route path="/enclosure_form" element={<EnclosureForm />} />
+              <Route path="/employee_form" element={<EmployeeForm />} />
+              <Route path="/ticket_form" element={<TicketForm />} />
+              <Route path="/visitor_form" element={<VisitorForm />} />
+              <Route path="/membership_form" element={<MembershipForm />} />
+                
+              <Route path="/query_report/animals" element={<AnimalQueryReport />} />
+              <Route path="/query_report/events" element={<EventQueryReport />} />
+              <Route path="/query_report/enclosures" element={<EnclosureQueryReport />} />
+              <Route path="/query_report/employees" element={<EmployeeQueryReport />} />
+              <Route path="/query_report/tickets" element={<TicketQueryReport />} />
+              <Route path="/query_report/visitors" element={<VisitorMembershipQueryReport />} />
+              
+              <Route path="/:type/checkout" element={<Checkout />} />
+              <Route path="/calendar" element={<EventsPage />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/my-tickets" element={<MyTickets />} />
+              <Route path="/my-membership" element={<MyMembership />} />
+
 
               {/* Customer protected routes */}
               <Route element={<ProtectedRoutes allowedRoles={["customer"]} />}>
@@ -250,6 +279,7 @@ function AppContent() {
                 <Route path="/my-membership" element={<MyMembership />} />
                 <Route path="/:type/checkout" element={<Checkout />} />
               </Route>
+
             </Routes>
           </main>
           <Footer />
