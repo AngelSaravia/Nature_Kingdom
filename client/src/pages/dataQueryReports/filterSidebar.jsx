@@ -26,6 +26,7 @@ const FilterSidebar = ({ filters, onFilterChange, onRunReport, filterOptions }) 
           <h4>{label}</h4>
           {type === "text" && <input type="text" name={name} value={filters[name] || ""} onChange={handleChange} />}
           {type === "date" && <input type="date" name={name} value={filters[name] || ""} onChange={handleChange} />}
+          {type === "datetime-local" && <input type="datetime-local" name={name} value={filters[name] || ""} onChange={handleChange} />}
           {type === "time" && <input type="time" name={name} value={filters[name] || ""} onChange={handleChange} />}
           {type === "number" && name !== "price" && name !== "duration" && 
             <input type="number" name={name} value={filters[name] || ""} onChange={handleChange} />}
@@ -56,8 +57,6 @@ const FilterSidebar = ({ filters, onFilterChange, onRunReport, filterOptions }) 
                 {option}
               </label>
             ))}
-
-
 
           {name === "price" && (
             <>

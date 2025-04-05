@@ -69,6 +69,10 @@ const server = http.createServer(async (req, res) => {
     handleQueryReport(req, res);
   } else if (path === "/query_report/enclosures" && req.method === "POST") {
     handleQueryReport(req, res);
+  } else if (path === "/query_report/tickets" && req.method === "POST") {
+    handleQueryReport(req, res);
+  } else if (path === "/query_report/visitors" && req.method === "POST") {
+    handleQueryReport(req, res);
 
     // Data Entry Forms
   } else if (path === "/enclosure_form" && req.method === "POST") {
@@ -175,7 +179,7 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true, data: results }));
     });
-    
+
   }
   // Add new ticket purchase route
   else if (path === "/api/tickets/purchase" && req.method === "POST") {

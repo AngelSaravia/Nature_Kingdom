@@ -57,8 +57,8 @@ const MembershipForm = () => {
         setFormData({
             membership_id: membership.membership_id || "",
             visitor_id: membership.visitor_id || "",
-            start_date: formattedDate || "",
-            end_date: membership.end_date || "",
+            start_date: formatDateTime(ticket.start_date) || "",
+            end_date: formattedDate || "",
             max_guests: membership.max_guests || "",
         });
     };
@@ -148,7 +148,7 @@ const MembershipForm = () => {
                     <InputFields label="VISITOR ID *" name="visitor_id" type="text" value={formData.visitor_id} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autoComplete="off"/>
                 </div>
                 <div className={styles.formRow}>
-                    <InputFields label="START DATE" name="datetime-local" type="date" value={formData.start_date} onChange={handleChange} autoComplete="off"/>
+                    <InputFields label="START DATE" name="start_date" type="datetime-local" value={formData.start_date} onChange={handleChange} autoComplete="off"/>
                 </div>
                 <div className={styles.formRow}>
                     <InputFields label="END DATE" name="end_date" type="date" value={formData.end_date} onChange={handleChange} autoComplete="off"/>

@@ -32,6 +32,8 @@ import AnimalQueryReport from "./pages/dataQueryReports/animal_queryReport";
 import EventQueryReport from "./pages/dataQueryReports/event_queryReport";
 import EnclosureQueryReport from "./pages/dataQueryReports/enclosure_queryReport";
 import EmployeeQueryReport from "./pages/dataQueryReports/employee_queryReport";
+import TicketQueryReport from "./pages/dataQueryReports/ticket_queryReport";
+import VisitorMembershipQueryReport from "./pages/dataQueryReports/visitormembership_queryReport";
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
 
@@ -144,6 +146,9 @@ function AppContent() {
               <Route path="/query_report/events" element={<EventQueryReport />} />
               <Route path="/query_report/enclosures" element={<EnclosureQueryReport />} />
               <Route path="/query_report/employees" element={<EmployeeQueryReport />} />
+              <Route path="/query_report/tickets" element={<TicketQueryReport />} />
+              <Route path="/query_report/visitors" element={<VisitorMembershipQueryReport />} />
+              
               <Route path="/:type/checkout" element={<Checkout />} />
               <Route path="/calendar" element={<EventsPage />} />
               <Route path="/dashboard" element={<Dashboard />} />
