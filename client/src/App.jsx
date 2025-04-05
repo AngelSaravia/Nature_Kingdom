@@ -33,6 +33,7 @@ import EmployeeQueryReport from "./pages/dataQueryReports/employee_queryReport";
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
 import GiftShop from "./pages/giftshop/GiftShop";
+import Enclosure from "./pages/enclosures/enclosures";
 
 // Performance monitoring callback
 function onRenderCallback(id, phase, actualDuration) {
@@ -242,6 +243,7 @@ function AppContent() {
               <Route path="/membership" element={<Membership />} />
               <Route path="/login" element={<Login />} />
               <Route path="/employee_login" element={<EmployeeLogin />} />
+              <Route path="/enclosures" element={<Enclosure />} />
 
               {/* Customer protected routes */}
               <Route element={<ProtectedRoutes allowedRoles={["customer"]} />}>
