@@ -12,17 +12,28 @@ const handleQueryReport = (req, res) => {
     req.on("end", () => {
         try {
             const queryParams = JSON.parse(body);
-            const { entity_type, ...filters } = queryParams;
+            const { entity_type, table1, table2, join_condition, ...filters } = queryParams;
 
-            if (!entity_type) {
-                res.writeHead(400, { "Content-Type": "application/json" });
-                res.end(JSON.stringify({ success: false, message: "Entity type is required" }));
-                return;
-            }
-
-            let sql = `SELECT * FROM ${entity_type}`;
+            let sql;
             const conditions = [];
             const values = [];
+            if (table1 && table2 && join_condition) {
+                // Handles join queries
+                sql = `
+                    SELECT * 
+                    FROM ${table1} 
+                    LEFT JOIN ${table2} 
+                    ON ${join_condition}
+                `;
+            } else if (entity_type) {
+                // Handles single-table queries
+                sql = `SELECT * FROM ${entity_type}`;
+            } else {
+                // If entity_type or join parameters are not provided, return error
+                res.writeHead(400, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({ success: false, message: "Either entity_type or table1, table2, and join_condition are required" }));
+                return;
+            }
 
             Object.keys(filters).forEach((key) => {
                 const value = filters[key];
