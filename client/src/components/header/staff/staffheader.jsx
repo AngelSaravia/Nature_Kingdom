@@ -1,11 +1,11 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./admin.css";
+import "./staffheader.css";
 import logoImage from "../../../zoo_pictures/Nature's_Kingdom.jpeg";
 import { useAuth } from "../../../context/Authcontext";
 import apiClient from "../../../services/api";
 
-function AdminHeader() {
+function staffHeader() {
   const navigate = useNavigate();
   const auth = useAuth();
 
@@ -22,6 +22,7 @@ function AdminHeader() {
       localStorage.removeItem("email");
 
       delete apiClient.defaults.headers.common["Authorization"];
+
       navigate("/employee_login");
     }
   };
@@ -43,11 +44,8 @@ function AdminHeader() {
       </div>
 
       <nav className="nav-links">
-        <Link to="/admin_dash">Dashboard</Link>
+        <Link to="/staff_dash">Dashboard</Link>
         <Link to="/event_form">Events Form</Link>
-        <Link to="/enclosure_form">Enclosure Form</Link>
-        <Link to="/animal_form">Animal Form</Link>
-        <Link to="/employee_form">Employee Form</Link>
       </nav>
       <div className="user-menu">
         <span className="username">Welcome, {username}</span>
@@ -59,4 +57,4 @@ function AdminHeader() {
   );
 }
 
-export default AdminHeader;
+export default staffHeader;

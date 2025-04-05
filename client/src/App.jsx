@@ -6,7 +6,8 @@ import {
   useLocation,
 } from "react-router-dom";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-
+import ProtectedRoutes from "./components/ProtectedRoute";
+import RoleProtectedRoute from "./components/RoleProtectedRoute";
 import Footer from "./components/footer/footer";
 import HomePage from "./pages/home/home";
 import Membership from "./pages/membership/membership";
@@ -19,7 +20,7 @@ import Checkout from "./pages/checkout/checkout";
 import MyTickets from "./pages/dashboard/my-tickets/my-tickets";
 import MyMembership from "./pages/dashboard/my-membership/my-membership";
 import AdminDash from "./pages/employee_dash/admin_dash";
-
+import ManagerDash from "./pages/employee_dash/manager_dash";
 import EmployeeForm from "./pages/dataEntries/employee_form";
 import AnimalForm from "./pages/dataEntries/animal_form";
 import EnclosureForm from "./pages/dataEntries/enclosure_form";
@@ -31,8 +32,7 @@ import EnclosureQueryReport from "./pages/dataQueryReports/enclosure_queryReport
 import EmployeeQueryReport from "./pages/dataQueryReports/employee_queryReport";
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
-import GiftShop from "./pages/giftshop/giftshop";
-import EnclosuresPage from "./pages/enclosures/enclosures";
+import GiftShop from "./pages/giftshop/GiftShop";
 
 // Performance monitoring callback
 function onRenderCallback(id, phase, actualDuration) {
@@ -117,42 +117,139 @@ function AppContent() {
           <HeaderManager />
           <main className="main-content">
             <Routes>
+              <Route path="/" element={<HomePage />} />
+
+              {/* Admin routes */}
               <Route
-                path="/"
+                path="/admin_dash"
                 element={
-                  <Profiler id="HomePage" onRender={onRenderCallback}>
-                    <HomePage />
-                  </Profiler>
+                  <RoleProtectedRoute allowedRoles={["admin"]}>
+                    <AdminDash />
+                  </RoleProtectedRoute>
                 }
               />
+              <Route
+                path="/employee_form"
+                element={
+                  <RoleProtectedRoute allowedRoles={["admin"]}>
+                    <EmployeeForm />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/query_report/employees"
+                element={
+                  <RoleProtectedRoute allowedRoles={["admin"]}>
+                    <EmployeeQueryReport />
+                  </RoleProtectedRoute>
+                }
+              />
+
+              {/* Admin and manager routes */}
+              <Route
+                path="/event_form"
+                element={
+                  <RoleProtectedRoute
+                    allowedRoles={["admin", "manager", "staff"]}
+                  >
+                    <EventForm />
+                  </RoleProtectedRoute>
+                }
+              />
+              {/* Admin routes */}
+              <Route
+                path="/staff_dash"
+                element={
+                  <RoleProtectedRoute allowedRoles={["staff"]}>
+                    <AdminDash />
+                  </RoleProtectedRoute>
+                }
+              />
+
+              {/* Manager routes */}
+              <Route
+                path="/manager_dash"
+                element={
+                  <RoleProtectedRoute allowedRoles={["manager"]}>
+                    <ManagerDash />
+                  </RoleProtectedRoute>
+                }
+              />
+
+              {/* Admin and manager routes */}
+              <Route
+                path="/event_form"
+                element={
+                  <RoleProtectedRoute
+                    allowedRoles={["admin", "manager", "staff"]}
+                  >
+                    <EventForm />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/enclosure_form"
+                element={
+                  <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
+                    <EnclosureForm />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/query_report/enclosures"
+                element={
+                  <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
+                    <EnclosureQueryReport />
+                  </RoleProtectedRoute>
+                }
+              />
+
+              {/* Admin, manager, and employee routes */}
+              <Route
+                path="/animal_form"
+                element={
+                  <RoleProtectedRoute
+                    allowedRoles={["admin", "manager", "staff"]}
+                  >
+                    <AnimalForm />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/query_report/animals"
+                element={
+                  <RoleProtectedRoute
+                    allowedRoles={["admin", "manager", "staff"]}
+                  >
+                    <AnimalQueryReport />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/query_report/events"
+                element={
+                  <RoleProtectedRoute
+                    allowedRoles={["admin", "manager", "staff"]}
+                  >
+                    <EventQueryReport />
+                  </RoleProtectedRoute>
+                }
+              />
+
+              {/* Public routes */}
               <Route path="/tickets" element={<Tickets />} />
               <Route path="/signup" element={<Sign_up />} />
               <Route path="/membership" element={<Membership />} />
               <Route path="/login" element={<Login />} />
               <Route path="/employee_login" element={<EmployeeLogin />} />
-              <Route path="/admin_dash" element={<AdminDash />} />
-              
-              <Route path="/employee_form" element={<EmployeeForm />} />
-              <Route path="/animal_form" element={<AnimalForm />} />
-              <Route path="/enclosure_form" element={<EnclosureForm />} />
-              <Route path="/event_form" element={<EventForm />} />
-              <Route path="/query_report/animals" element={<AnimalQueryReport />} />
-              <Route path="/query_report/events" element={<EventQueryReport />} />
-              <Route path="/query_report/enclosures" element={<EnclosureQueryReport />} />
-              <Route path="/query_report/employees" element={<EmployeeQueryReport />} />
-              <Route path="/:type/checkout" element={<Checkout />} />
-              <Route path="/calendar" element= {<EventsPage/>}/>
-              <Route path="/giftshop" element= {<GiftShop/>}/>
-              <Route
-                path="/dashboard"
-                element={<div>Dashboard Page</div>}
-              />{" "}
-              <Route path="/dashboard"element={<Dashboard />}/> 
-              <Route path="/calendar" element={<EventsPage />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/my-tickets" element={<MyTickets />} />
-              <Route path="/my-membership" element={<MyMembership />} />
-              <Route path="/enclosures" element={<EnclosuresPage />} />
+
+              {/* Customer protected routes */}
+              <Route element={<ProtectedRoutes allowedRoles={["customer"]} />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/my-tickets" element={<MyTickets />} />
+                <Route path="/my-membership" element={<MyMembership />} />
+                <Route path="/:type/checkout" element={<Checkout />} />
+              </Route>
             </Routes>
           </main>
           <Footer />
@@ -164,10 +261,10 @@ function AppContent() {
 
 function Root() {
   return (
-    <Router>
+    <>
       <BodyClassManager />
       <AppContent />
-    </Router>
+    </>
   );
 }
 

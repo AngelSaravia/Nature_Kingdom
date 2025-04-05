@@ -71,7 +71,7 @@ const AnimalForm = () => {
         }
 
         try {
-            const response = await fetch("${API_BASE_URL}/animal_form", {
+            const response = await fetch(`${API_BASE_URL}/animal_form`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ ...requestData, action}),

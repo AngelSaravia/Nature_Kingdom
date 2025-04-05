@@ -1,95 +1,94 @@
-// GiftShop.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react'; // Added useRef
 import { FiShoppingCart, FiSearch, FiX, FiPlus, FiMinus } from 'react-icons/fi';
+import debounce from 'lodash/debounce';
+import { getProducts } from '../../services/api';
+import { useNavigate } from 'react-router-dom';
 import './GiftShop.css';
 
 const GiftShop = () => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
   const [isCartOpen, setIsCartOpen] = useState(false);
+  
+  const searchInputRef = useRef(null);
 
-  // Mock data - replace with your API call
-  useEffect(() => {
-    const mockProducts = [
-      {
-        id: 1,
-        name: 'Zoo Plush Elephant',
-        description: 'Soft and cuddly elephant plush toy',
-        price: 24.99,
-        imageUrl: 'https://via.placeholder.com/300x300?text=Elephant+Plush',
-        category: 'plush',
-        stock: 15
-      },
-      {
-        id: 2,
-        name: 'Safari Hat',
-        description: 'Perfect for your zoo adventures',
-        price: 19.99,
-        imageUrl: 'https://via.placeholder.com/300x300?text=Safari+Hat',
-        category: 'clothing',
-        stock: 8
-      },
-      {
-        id: 3,
-        name: 'Animal Encyclopedia',
-        description: 'Learn about all the animals in our zoo',
-        price: 29.99,
-        imageUrl: 'https://via.placeholder.com/300x300?text=Animal+Book',
-        category: 'books',
-        stock: 12
-      },
-      {
-        id: 4,
-        name: 'Zoo Keychain Set',
-        description: 'Set of 5 animal keychains',
-        price: 12.99,
-        imageUrl: 'https://via.placeholder.com/300x300?text=Keychain+Set',
-        category: 'souvenirs',
-        stock: 20
-      },
-      {
-        id: 5,
-        name: 'Lion Plush',
-        description: 'King of the jungle plush toy',
-        price: 22.99,
-        imageUrl: 'https://via.placeholder.com/300x300?text=Lion+Plush',
-        category: 'plush',
-        stock: 10
-      },
-      {
-        id: 6,
-        name: 'Zoo T-Shirt',
-        description: 'Official zoo branded t-shirt',
-        price: 18.99,
-        imageUrl: 'https://via.placeholder.com/300x300?text=Zoo+T-Shirt',
-        category: 'clothing',
-        stock: 15
+  const navigate = useNavigate()
+
+  const handleCheckout = () => {
+    if (cart.length === 0) return;
+    
+    // Store cart data in localStorage
+    localStorage.setItem('cartItems', JSON.stringify(cart));
+    localStorage.setItem('cartTotal', subtotal.toString());
+    
+    // Navigate to checkout
+    navigate('/giftshop/checkout', { 
+      state: { 
+        items: cart,
+        total: subtotal,
+        type: 'gift'
       }
-    ];
+    });
+  };
 
-    setTimeout(() => {
-      setProducts(mockProducts);
+  // Create debounced fetch function
+  const debouncedFetch = useCallback(
+    debounce(async (searchValue, category) => {
+      setIsLoading(true);
+      try {
+        const fetchedProducts = await getProducts(
+          category === 'all' ? '' : category,
+          searchValue
+        );
+        setProducts(fetchedProducts);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
       setIsLoading(false);
-    }, 800); // Simulate loading delay
-  }, []);
+    }, 300),
+    []
+  );
 
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         product.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
-    return matchesSearch && matchesCategory;
-  });
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    e.preventDefault();
+    const value = e.target.value;
+    setSearchTerm(value);
+    debouncedFetch(value, activeCategory);
+  };
+
+  // Handle category change
+  const handleCategoryChange = (category) => {
+    setActiveCategory(category);
+    debouncedFetch(searchTerm, category);
+  };
+
+  // Initial load
+  useEffect(() => {
+    const initialFetch = async () => {
+      setIsLoading(true);
+      try {
+        const fetchedProducts = await getProducts('', '');
+        setProducts(fetchedProducts);
+      } catch (error) {
+        console.error('Error fetching initial products:', error);
+      }
+      setIsLoading(false);
+    };
+    
+    initialFetch();
+  }, []); // Only run on mount
 
   const addToCart = (product) => {
     setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.id === product.id);
+      const existingItem = prevCart.find(item => item.product_id === product.product_id);
       if (existingItem) {
         return prevCart.map(item =>
-          item.id === product.id 
-            ? { ...item, quantity: item.quantity + 1 } 
+          item.product_id === product.product_id
+            ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
@@ -98,38 +97,28 @@ const GiftShop = () => {
   };
 
   const removeFromCart = (productId) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== productId));
+    setCart(prevCart => prevCart.filter(item => item.product_id !== productId));
   };
 
   const updateQuantity = (productId, newQuantity) => {
     if (newQuantity < 1) return;
-    
-    setCart(prevCart => 
+    setCart(prevCart =>
       prevCart.map(item =>
-        item.id === productId 
-          ? { ...item, quantity: newQuantity } 
+        item.product_id === productId
+          ? { ...item, quantity: newQuantity }
           : item
       )
     );
   };
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-  if (isLoading) {
-    return (
-      <div className="loading-screen">
-        <div className="spinner"></div>
-        <p>Loading our wonderful zoo gifts...</p>
-      </div>
-    );
-  }
+  const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
 
   return (
     <div className="gift-shop-page">
       <header className="gift-shop-header">
         <div className="header-content">
-          <h1>Wild Treasures <span> Zoo Gift Shop</span></h1>
+          <h1>Wild Treasures <span>Zoo Gift Shop</span></h1>
           <p>Take home a piece of your zoo adventure</p>
         </div>
       </header>
@@ -137,59 +126,62 @@ const GiftShop = () => {
       <div className="shop-container">
         <aside className="sidebar">
           <div className="search-box">
-            <FiSearch className="search-icon" />
-            <input
-              type="text"
-              placeholder="Search gifts..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <form onSubmit={(e) => e.preventDefault()}>
+              <FiSearch className="search-icon" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder="Search gifts..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                autoComplete="off"
+              />
+            </form>
           </div>
 
           <div className="categories">
             <h3>Categories</h3>
             <ul>
-              <li className={activeCategory === 'all' ? 'active' : ''}>
-                <button onClick={() => setActiveCategory('all')}>All Items</button>
-              </li>
-              <li className={activeCategory === 'plush' ? 'active' : ''}>
-                <button onClick={() => setActiveCategory('plush')}>Plush Toys</button>
-              </li>
-              <li className={activeCategory === 'clothing' ? 'active' : ''}>
-                <button onClick={() => setActiveCategory('clothing')}>Clothing</button>
-              </li>
-              <li className={activeCategory === 'books' ? 'active' : ''}>
-                <button onClick={() => setActiveCategory('books')}>Books</button>
-              </li>
-              <li className={activeCategory === 'souvenirs' ? 'active' : ''}>
-                <button onClick={() => setActiveCategory('souvenirs')}>Souvenirs</button>
-              </li>
+              {['all', 'plush', 'clothing', 'books', 'souvenirs'].map(category => (
+                <li key={category} className={activeCategory === category ? 'active' : ''}>
+                  <button onClick={() => handleCategoryChange(category)}>
+                    {category === 'all' ? 'All Items' : category.charAt(0).toUpperCase() + category.slice(1)}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
         </aside>
 
         <main className="product-area">
-          <div className="product-grid">
-            {filteredProducts.length > 0 ? (
-              filteredProducts.map(product => (
-                <ProductCard 
-                  key={product.id} 
-                  product={product} 
-                  addToCart={addToCart}
-                />
-              ))
-            ) : (
-              <div className="no-results">
-                <h3>No products found</h3>
-                <p>Try adjusting your search or category filters</p>
-              </div>
-            )}
-          </div>
+          {isLoading ? (
+            <div className="loading-screen">
+              <div className="spinner"></div>
+              <p>Loading our wonderful zoo gifts...</p>
+            </div>
+          ) : (
+            <div className="product-grid">
+              {products.length > 0 ? (
+                products.map(product => (
+                  <ProductCard
+                    key={product.product_id}
+                    product={product}
+                    addToCart={addToCart}
+                  />
+                ))
+              ) : (
+                <div className="no-results">
+                  <h3>No products found</h3>
+                  <p>Try adjusting your search or category filters</p>
+                </div>
+              )}
+            </div>
+          )}
         </main>
       </div>
 
-      <button 
-        className="cart-button" 
+      <button
+        className="cart-button"
         onClick={() => setIsCartOpen(true)}
       >
         <FiShoppingCart />
@@ -201,8 +193,8 @@ const GiftShop = () => {
           <div className="cart-content">
             <div className="cart-header">
               <h2>Your Shopping Cart</h2>
-              <button 
-                className="close-cart" 
+              <button
+                className="close-cart"
                 onClick={() => setIsCartOpen(false)}
               >
                 <FiX />
@@ -212,7 +204,7 @@ const GiftShop = () => {
             {cart.length === 0 ? (
               <div className="empty-cart">
                 <p>Your cart is empty</p>
-                <button 
+                <button
                   className="continue-shopping"
                   onClick={() => setIsCartOpen(false)}
                 >
@@ -223,24 +215,23 @@ const GiftShop = () => {
               <>
                 <div className="cart-items">
                   {cart.map(item => (
-                    <div key={item.id} className="cart-item">
-                      <img src={item.imageUrl} alt={item.name} />
+                    <div key={item.product_id} className="cart-item">
                       <div className="item-details">
                         <h4>{item.name}</h4>
-                        <p>${item.price.toFixed(2)}</p>
+                        <p>${(parseFloat(item.price) || 0).toFixed(2)}</p>
                         <div className="quantity-controls">
-                          <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>
+                          <button onClick={() => updateQuantity(item.product_id, item.quantity - 1)}>
                             <FiMinus />
                           </button>
                           <span>{item.quantity}</span>
-                          <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>
+                          <button onClick={() => updateQuantity(item.product_id, item.quantity + 1)}>
                             <FiPlus />
                           </button>
                         </div>
                       </div>
-                      <button 
+                      <button
                         className="remove-item"
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => removeFromCart(item.product_id)}
                       >
                         <FiX />
                       </button>
@@ -253,7 +244,13 @@ const GiftShop = () => {
                     <span>Subtotal:</span>
                     <span>${subtotal.toFixed(2)}</span>
                   </div>
-                  <button className="checkout-button">Proceed to Checkout</button>
+                  <button 
+                    className="checkout-button"
+                    onClick={handleCheckout}
+                    disabled={cart.length === 0}
+                  >
+                    Proceed to Checkout
+                  </button>
                 </div>
               </>
             )}
@@ -268,23 +265,23 @@ const ProductCard = ({ product, addToCart }) => {
   return (
     <div className="product-card">
       <div className="product-image">
-        <img src={product.imageUrl} alt={product.name} />
-        <button 
-          className="add-to-cart-btn"
-          onClick={() => addToCart(product)}
-        >
-          Add to Cart
-        </button>
+        {/* <img src={product.imageUrl || "https://via.placeholder.com/300x300"} alt={product.name} /> */}
       </div>
       <div className="product-info">
         <h3>{product.name}</h3>
         <p className="product-description">{product.description}</p>
         <div className="product-footer">
-          <span className="price">${product.price.toFixed(2)}</span>
-          {product.stock < 5 && (
-            <span className="low-stock">Only {product.stock} left!</span>
+          <span className="price">${(parseFloat(product.price) || 0).toFixed(2)}</span>
+          {product.amount_stock < 5 && (
+            <span className="low-stock">Only {product.amount_stock} left!</span>
           )}
         </div>
+        <button
+          className="add-to-cart-btn"
+          onClick={() => addToCart(product)}
+        >
+          Add to Cart
+        </button>
       </div>
     </div>
   );
