@@ -11,7 +11,7 @@ const filterOptions = [
     { label: "END DATE", type: "datetime-local", name: "end_date" },
     { label: "PRICE (Min)", type: "number", name: "priceMin" },
     { label: "PRICE (Max)", type: "number", name: "priceMax" },
-    { label: "TICKET TYPE", type: "text", name: "ticket_type" },
+    { label: "TICKET TYPE", type: "checkbox", name: "ticket_type", options: ["Child", "Adult", "Senior", "Group", "Member"] },
     { label: "PURCHASE DATE", type: "datetime-local", name: "purchase_date" },
 ];
 
