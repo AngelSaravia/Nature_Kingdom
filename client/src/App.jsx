@@ -270,6 +270,7 @@ function AppContent() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/my-tickets" element={<MyTickets />} />
               <Route path="/my-membership" element={<MyMembership />} />
+              <Route path="/giftshop" element={<GiftShop />} />
 
 
               {/* Customer protected routes */}
