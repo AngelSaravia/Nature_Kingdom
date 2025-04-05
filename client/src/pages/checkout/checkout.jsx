@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './checkout.css';
-import { purchaseTickets, purchaseMembership, checkMembershipStatus } from '../../services/api';
+import { purchaseTickets, purchaseMembership, checkMembershipStatus, createGiftOrder } from '../../services/api';
 
 
 
@@ -11,8 +11,18 @@ const Checkout = () => {
   const { state } = location;
   const [showProcessing, setShowProcessing] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const purchaseType = location.pathname.includes('/tickets/') ? 'tickets' : 'membership';
+  const purchaseType = location.pathname.includes('/tickets/') 
+  ? 'tickets' 
+  : location.pathname.includes('/membership') 
+    ? 'membership'
+    : 'gift';
 
+  const cartItems = purchaseType === 'gift' 
+    ? JSON.parse(localStorage.getItem('cartItems') || '[]')
+    : [];
+  const cartTotal = purchaseType === 'gift'
+    ? parseFloat(localStorage.getItem('cartTotal') || '0')
+    : 0;
   // Add state for form fields
   const [paymentDetails, setPaymentDetails] = useState({
     cardNumber: '',
@@ -103,24 +113,27 @@ const Checkout = () => {
   };
 
 
-    useEffect(() => {
-      // Validate state and redirect if invalid access
-      if (!state) {
-        navigate(purchaseType === 'tickets' ? '/tickets' : '/membership');
-        return;
-      }
+  useEffect(() => {
+    if (!state && purchaseType !== 'gift') {
+      navigate(purchaseType === 'tickets' ? '/tickets' : '/membership');
+      return;
+    }
   
-      // Validate required data based on purchase type
-      if (purchaseType === 'tickets' && !state.tickets) {
-        navigate('/tickets');
-        return;
-      }
+    if (purchaseType === 'gift' && (!cartItems.length || !cartTotal)) {
+      navigate('/giftshop');
+      return;
+    }
   
-      if (purchaseType === 'membership' && !state.membershipDetails) {
-        navigate('/membership');
-        return;
-      }
-    }, [purchaseType, state, navigate]);
+    if (purchaseType === 'tickets' && !state?.tickets) {
+      navigate('/tickets');
+      return;
+    }
+  
+    if (purchaseType === 'membership' && !state?.membershipDetails) {
+      navigate('/membership');
+      return;
+    }
+  }, [purchaseType, state, navigate, cartItems, cartTotal]);
   
     const renderPurchaseDetails = () => {
       if (purchaseType === 'tickets') {
@@ -157,6 +170,23 @@ const Checkout = () => {
             </div>
             <div className='total'>
             <h4>Total: ${state?.membershipDetails.price}</h4>
+            </div>
+          </div>
+        );
+      }
+      else if (purchaseType === 'gift') {
+        return (
+          <div className="purchase-details">
+            <h3>Gift Shop Purchase Details</h3>
+            {cartItems.map((item) => (
+              <div key={item.product_id} className="cart-item">
+                <p>Item: {item.name}</p>
+                <p>Quantity: {item.quantity}</p>
+                <p>Price: ${(item.quantity * parseFloat(item.price)).toFixed(2)}</p>
+              </div>
+            ))}
+            <div className="total">
+              <h4>Total: ${cartTotal.toFixed(2)}</h4>
             </div>
           </div>
         );
@@ -221,6 +251,34 @@ const Checkout = () => {
               alert(response.message);
             }
           }
+          else if (purchaseType === 'gift') {
+            const orderData = {
+              username: localStorage.getItem('username'),
+              shop_id: 1,
+              total_amount: cartTotal,
+              payment_status: 'pending',
+              items: cartItems.map(item => ({
+                product_id: item.product_id,
+                quantity: item.quantity,
+                price: parseFloat(item.price),
+                total_amount: item.quantity * parseFloat(item.price)
+              }))
+            };
+    
+            const response = await createGiftOrder(orderData);
+            
+            if (response.success) {
+              localStorage.removeItem('cartItems');
+              localStorage.removeItem('cartTotal');
+              setTimeout(() => {
+                setShowProcessing(false);
+                setShowConfirmation(true);
+              }, 4000);
+            } else {
+              setShowProcessing(false);
+              alert(response.message || 'Failed to process order');
+            }
+          }
         } catch (error) {
           setShowProcessing(false);
           alert('Error processing purchase: ' + error.message);
@@ -238,7 +296,13 @@ const Checkout = () => {
           <div className="checkout-container">
             {/* <h2 className = "checkout-heading">Checkout</h2> */}
             <div className="purchase-type-indicator">
-              {purchaseType === 'tickets' ? 'Ticket Purchase' : 'Membership Purchase'}
+              {purchaseType === 'tickets' ? (
+                  'Tickets Purchase'
+                ) : purchaseType === 'membership' ? (
+                  'Membership Purchase'
+                ) : (
+                  'Gift Shop Purchase'
+                )}
             </div>
     
             {renderPurchaseDetails()}
@@ -319,25 +383,27 @@ const Checkout = () => {
         )}
           {showConfirmation && (
             <>
-            <div className="overlay"></div>
-            <div className="confirmation-popup success">
+              <div className="overlay"></div>
+              <div className="confirmation-popup success">
                 <div className="success-icon">✓</div>
                 <h3>Purchase Successful!</h3>
                 <p>Thank you for your purchase.</p>
                 {purchaseType === 'tickets' ? (
-                <p>Your tickets can be viewed from your dashboard.</p>
+                  <p>Your tickets can be viewed from your dashboard.</p>
+                ) : purchaseType === 'membership' ? (
+                  <p>Your membership has been activated.</p>
                 ) : (
-                <p>Your membership has been activated.</p>
+                  <p>Your order has been confirmed.</p>
                 )}
                 <button 
-                className="checkout-button"
-                onClick={handleConfirmationClose}
+                  className="checkout-button"
+                  onClick={handleConfirmationClose}
                 >
-                Done
+                  Done
                 </button>
-            </div>
+              </div>
             </>
-        )}
+          )}
         </>
       );
     };
