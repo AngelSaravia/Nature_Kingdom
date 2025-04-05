@@ -6,9 +6,8 @@ const jwt = require("jsonwebtoken");
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
-
 const checkExistingVisitor = async (username) => {
-  console.log('Checking visitor for username:', username);
+  console.log("Checking visitor for username:", username);
   const query = `
     SELECT * FROM visitors WHERE username = ?`;
 
@@ -16,18 +15,17 @@ const checkExistingVisitor = async (username) => {
     const [visitor] = await db_connection.promise().query(query, [username]);
 
     if (visitor.length === 0) {
-      console.log('No visitor found with username:', username);
-      return null;  // Or return a message to indicate no visitor found
+      console.log("No visitor found with username:", username);
+      return null; // Or return a message to indicate no visitor found
     }
 
-    console.log('visitor check result:', visitor);
+    console.log("visitor check result:", visitor);
     return visitor[0];
   } catch (error) {
-    console.error('Error checking visitor status:', error);
+    console.error("Error checking visitor status:", error);
     throw error;
   }
 };
-
 
 const handleLogin = (req, res) => {
   getParseData(req)
@@ -76,6 +74,7 @@ const handleLogin = (req, res) => {
               id: user.id,
               username: user.username,
               email: user.email,
+              role: user.role,
             },
             SECRET_KEY,
             { expiresIn: "1h" }
@@ -88,6 +87,7 @@ const handleLogin = (req, res) => {
               token,
               username: user.username,
               email: user.email,
+              role: user.role,
               // Include any other user info you need, but don't include password
             })
           );
@@ -103,5 +103,5 @@ const handleLogin = (req, res) => {
 
 module.exports = {
   handleLogin,
-  checkExistingVisitor
+  checkExistingVisitor,
 };

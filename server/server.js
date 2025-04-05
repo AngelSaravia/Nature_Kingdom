@@ -132,7 +132,7 @@ const server = http.createServer(async (req, res) => {
   // Add new ticket purchase route
   else if (path === "/api/tickets/purchase" && req.method === "POST") {
     let body = "";
-    req.on("data", chunk => {
+    req.on("data", (chunk) => {
       body += chunk.toString();
     });
     req.on("end", async () => {
@@ -140,7 +140,7 @@ const server = http.createServer(async (req, res) => {
         const ticketData = JSON.parse(body);
         console.log("Received request body:", ticketData);
         const response = await ticketHelper.processTicketPurchase(ticketData);
-        
+
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(response));
       } catch (error) {
@@ -149,29 +149,28 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({ success: false, message: "Server error" }));
       }
     });
-  }
-  else if (path === "/api/membership/purchase" && req.method === "POST") {
+  } else if (path === "/api/membership/purchase" && req.method === "POST") {
     let body = "";
-    req.on("data", chunk => {
-        body += chunk.toString();
+    req.on("data", (chunk) => {
+      body += chunk.toString();
     });
     req.on("end", async () => {
-        try {
-            const membershipData = JSON.parse(body);
-            console.log("Received request body:", membershipData);
-            const response = await membershipHelper.processMembershipPurchase(membershipData);
+      try {
+        const membershipData = JSON.parse(body);
+        console.log("Received request body:", membershipData);
+        const response = await membershipHelper.processMembershipPurchase(
+          membershipData
+        );
 
-            res.writeHead(200, { "Content-Type": "application/json" });
-            res.end(JSON.stringify(response));
-        } catch (error) {
-            console.error("Error processing membership purchase:", error);
-            res.writeHead(500, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ success: false, message: "Server error" }));
-        }
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(response));
+      } catch (error) {
+        console.error("Error processing membership purchase:", error);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Server error" }));
+      }
     });
-  }
-  else if (path.startsWith("/api/tickets/user/") && req.method === "GET") {
-
+  } else if (path.startsWith("/api/tickets/user/") && req.method === "GET") {
     try {
       const username = path.split("/").pop();
       const result = await ticketHelper.getUserActiveTickets(username);
@@ -251,6 +250,7 @@ const server = http.createServer(async (req, res) => {
 });
 const port = process.env.PORT;
 
-server.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+const PORT = 5004;
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./authHeader.css";
 import logoImage from "../../../zoo_pictures/Nature's_Kingdom.jpeg";
+import apiClient from "../../../services/api";
+import { useAuth } from "../../../context/Authcontext";
 
 function AuthHeader() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("User");
+  const { logout } = useAuth();
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
@@ -15,10 +18,7 @@ function AuthHeader() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
-    setUsername("User");
-    navigate("/login");
+    logout();
   };
 
   return (
