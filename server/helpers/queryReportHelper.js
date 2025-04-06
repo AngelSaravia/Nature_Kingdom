@@ -39,7 +39,15 @@ const handleQueryReport = (req, res) => {
                 const value = filters[key];
 
                 if (value !== undefined && value !== null && value !== "") {
-                    if (key.endsWith("Min")) {
+                    if (key === "start_date") {
+                        // Handle start_date as a range filter (greater than or equal)
+                        conditions.push(`start_date >= ?`);
+                        values.push(value);
+                    } else if (key === "end_date") {
+                        // Handle end_date as a range filter (less than or equal)
+                        conditions.push(`end_date <= ?`);
+                        values.push(value);
+                    } else if (key.endsWith("Min")) {
                         // Handling minimum range filtering
                         const field = key.replace("Min", ""); 
                         conditions.push(`${field} >= ?`);

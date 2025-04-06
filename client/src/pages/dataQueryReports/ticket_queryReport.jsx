@@ -6,16 +6,15 @@ import { Link } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
-    { label: "VISITOR ID", type: "number", name: "visitor_id" }, //remove id's from all query reports? Don't know if I need to take out primary key id's or foreign key id's
-    { label: "START DATE", type: "datetime-local", name: "start_date" },
-    { label: "END DATE", type: "datetime-local", name: "end_date" },
-    { label: "PRICE (Min)", type: "number", name: "priceMin" },
-    { label: "PRICE (Max)", type: "number", name: "priceMax" },
+    { label: "VISITOR ID", type: "number", name: "visitor_id" },
+    { label: "START DATE", type: "date", name: "start_date" },
+    { label: "END DATE", type: "date", name: "end_date" },
     { label: "TICKET TYPE", type: "checkbox", name: "ticket_type", options: ["Child", "Adult", "Senior", "Group", "Member"] },
-    { label: "PURCHASE DATE", type: "datetime-local", name: "purchase_date" },
+    { label: "BEGINNING PURCHASE DATE", type: "date", name: "purchase_dateMin" },
+    { label: "ENDING PURCHASE DATE", type: "date", name: "purchase_dateMax" },
 ];
 
-const columnHeaders = ["ticket_id", "visitor_id", "start_date", "end_date", "price", "ticket_type", "purchase_date"];
+const columnHeaders = ["ticket_id", "visitor_id", "start_date", "end_date", "ticket_type", "purchase_date"];
 
 const TicketQueryReport = () => {
     const [filters, setFilters] = useState({});
@@ -52,6 +51,14 @@ const TicketQueryReport = () => {
 
             const queryParams = { entity_type: "tickets", ...filters };
 
+            // Add time portion for compatibility with TIMESTAMP
+            if (queryParams.start_date) {
+                queryParams.start_date = `${queryParams.start_date} 00:00:00`; // Start of the day
+            }
+            if (queryParams.end_date) {
+                queryParams.end_date = `${queryParams.end_date} 23:59:59`; // End of the day
+            }
+
             Object.keys(queryParams).forEach((key) => {
                 if (Array.isArray(queryParams[key]) && queryParams[key].length > 0) {
                     queryParams[key] = queryParams[key].join(",");
@@ -66,14 +73,7 @@ const TicketQueryReport = () => {
 
             const data = await response.json();
             if (data.success) {
-                // Format TIMESTAMP fields to datetime-local format
-                const formattedData = data.data.map((row) => ({
-                ...row,
-                start_date: row.start_date ? new Date(row.start_date).toISOString().slice(0, 16) : "",
-                end_date: row.end_date ? new Date(row.end_date).toISOString().slice(0, 16) : "",
-                purchase_date: row.purchase_date ? new Date(row.purchase_date).toISOString().slice(0, 16) : "",
-            }));
-                setReportData(formattedData);
+                setReportData(data.data);
             } else {
                 console.error("Error fetching report:", data.message);
             }
