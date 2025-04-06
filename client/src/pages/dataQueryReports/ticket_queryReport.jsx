@@ -88,7 +88,7 @@ const TicketQueryReport = () => {
             <div className="report-table-container">
                 <ReportTable data={reportData} columns={columnHeaders} />
                 <div className="edit-ticket-button-container">
-                    <Link to="/ticket_form" className="edit-ticket-button">Edit Ticket</Link>
+                    <a href="/ticket_form" target="_blank" rel="noopener noreferrer" className="edit-ticket-button">Edit Ticket</a>
                 </div>
             </div>
         </div>
