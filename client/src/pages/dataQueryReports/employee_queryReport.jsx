@@ -91,7 +91,7 @@ const EmployeeQueryReport = () => {
           <div className="report-table-container">
           <ReportTable data={reportData} columns={columnHeaders} />
           <div className="edit-employee-button-container">
-            <Link to="/employee_form" className="edit-employee-button">Edit Employee</Link>
+            <a href="/employee_form" target="_blank" rel="noopener noreferrer" className="edit-employee-button">Edit Employee</a>
           </div>
         </div>
         </div>

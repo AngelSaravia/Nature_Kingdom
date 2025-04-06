@@ -44,10 +44,10 @@ function AdminHeader() {
 
       <nav className="nav-links">
         <Link to="/admin_dash">Dashboard</Link>
-        <Link to="/event_form">Events Form</Link>
+        {/* <Link to="/event_form">Events Form</Link>
         <Link to="/enclosure_form">Enclosure Form</Link>
         <Link to="/animal_form">Animal Form</Link>
-        <Link to="/employee_form">Employee Form</Link>
+        <Link to="/employee_form">Employee Form</Link> */}
       </nav>
       <div className="user-menu">
         <span className="username">Welcome, {username}</span>

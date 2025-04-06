@@ -85,7 +85,7 @@ const EventQueryReport = () => {
       <div className="report-table-container">
         <ReportTable data={reportData} columns={columnHeaders} />
         <div className="edit-event-button-container">
-          <Link to="/event_form" className="edit-event-button">Edit Event</Link>
+          <a href="/event_form" target="_blank" rel="noopener noreferrer" className="edit-event-button">Edit Event</a>
         </div>
       </div>
       </div>
