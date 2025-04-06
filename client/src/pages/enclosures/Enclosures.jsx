@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Enclosures.css"; // Regular CSS import
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -47,7 +47,7 @@ const Enclosure = () => {
     };
 
     const handleViewAnimals = (enclosureId) => {
-        navigate(`/animals?enclosure=${enclosureId}`);
+        navigate(`/animals/${enclosureId}`)
     };
 
     if (loading) {
@@ -100,13 +100,13 @@ const Enclosure = () => {
                                 <strong>Temperature Controlled:</strong> 
                                 {enclosure.temp_control ? " Yes" : " No"}
                             </p>
-                            
                             <button 
                                 className="view-animals-btn"
                                 onClick={() => handleViewAnimals(enclosure.enclosure_id)}
                             >
                                 View Animals
                             </button>
+    
                         </div>
                     </div>
                 ))}

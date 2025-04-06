@@ -34,6 +34,7 @@ import "./App.css";
 import HeaderManager from "./components/header/headerManager";
 import GiftShop from "./pages/giftshop/GiftShop";
 import Enclosure from "./pages/enclosures/enclosures";
+import AnimalsByEnclosure from "./pages/enclosures/AnimalsByEnclosure";
 
 // Performance monitoring callback
 function onRenderCallback(id, phase, actualDuration) {
@@ -244,6 +245,7 @@ function AppContent() {
               <Route path="/login" element={<Login />} />
               <Route path="/employee_login" element={<EmployeeLogin />} />
               <Route path="/enclosures" element={<Enclosure />} />
+              <Route path="/animals/:enclosureId" element={<AnimalsByEnclosure />} />
 
               {/* Customer protected routes */}
               <Route element={<ProtectedRoutes allowedRoles={["customer"]} />}>
