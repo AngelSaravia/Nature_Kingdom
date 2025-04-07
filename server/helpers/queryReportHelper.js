@@ -12,7 +12,7 @@ const handleQueryReport = (req, res) => {
     req.on("end", () => {
         try {
             const queryParams = JSON.parse(body);
-            const { entity_type, table1, table2, join_condition, ...filters } = queryParams;
+            const { entity_type, table1, table2, join_condition, additional_joins = [], computed_fields, ...filters } = queryParams;
 
             let sql;
             const conditions = [];
@@ -20,11 +20,21 @@ const handleQueryReport = (req, res) => {
             if (table1 && table2 && join_condition) {
                 // Handles join queries
                 sql = `
-                    SELECT * 
+                    SELECT ${computed_fields || `${table1}.*, ${table2}.*`} 
                     FROM ${table1} 
                     LEFT JOIN ${table2} 
                     ON ${join_condition}
                 `;
+
+                // Add additional joins dynamically
+                if (Array.isArray(additional_joins)) {
+                    additional_joins.forEach((join) => {
+                        sql += `
+                            LEFT JOIN ${join.table} 
+                            ON ${join.join_condition}
+                        `;
+                    });
+                }
             } else if (entity_type) {
                 // Handles single-table queries
                 sql = `SELECT * FROM ${entity_type}`;
@@ -39,7 +49,24 @@ const handleQueryReport = (req, res) => {
                 const value = filters[key];
 
                 if (value !== undefined && value !== null && value !== "") {
-                    if (key === "start_date") {
+                    if (key === "manager_name") {
+                        // Filter by manager name
+                        conditions.push(`CONCAT(employees.first_name, ' ', employees.last_name) LIKE ?`);
+                        values.push(`%${value}%`);
+                    } else if (key === "exhibit_name") {
+                        const exhibitsJoined = additional_joins.some(join => join.table === "exhibits");
+                        if (!exhibitsJoined) {
+                            sql += ` LEFT JOIN exhibits ON ${table1}.exhibit_id = exhibits.exhibits_id`;
+                        }
+                        conditions.push(`exhibits.name IN (${value.split(",").map(() => "?").join(", ")})`);
+                        values.push(...value.split(","));
+                    } else if (key === "membership_status") {
+                        // Filter by membership status (active or inactive)
+                        conditions.push(`CASE WHEN ${table2}.visitor_id IS NOT NULL THEN 'active' ELSE 'inactive' END = ?`);
+                        values.push(value);
+
+
+                    } else if (key === "start_date") {
                         // Handle start_date as a range filter (greater than or equal)
                         conditions.push(`start_date >= ?`);
                         values.push(value);
@@ -63,6 +90,7 @@ const handleQueryReport = (req, res) => {
                         conditions.push(`${key} IN (${valueArray.map(() => "?").join(", ")})`);
                         values.push(...valueArray);
                         
+                        
                     } else {
                         // Handling exact matches
                         conditions.push(`${key} = ?`);
@@ -74,6 +102,9 @@ const handleQueryReport = (req, res) => {
             if (conditions.length > 0) {
                 sql += ` WHERE ${conditions.join(" AND ")}`;
             }
+            // Log the generated SQL query for debugging
+            console.log("Generated SQL Query:", sql);
+            console.log("With Values:", values);
 
             db_connection.query(sql, values, (err, results) => {
                 if (err) {

@@ -9,16 +9,16 @@ const filterOptions = [
   { label: "ENCLOSURE NAME", type: "text", name: "name" },
   { label: "CURRENT CAPACITY", type: "number", name: "current_capacity" },
   { label: "MAXIMUM CAPACITY", type: "number", name: "capacity" },
-  { label: "LOCATION", type: "text", name: "location" },
   { label: "OPENING TIME", type: "time", name: "opens_at" },
   { label: "CLOSING TIME", type: "time", name: "closes_at" },
   { label: "STATUS", type: "checkbox", name: "status", options: ["active", "inactive", "under maintenance"] },
+  { label: "LOCATION", type: "text", name: "location" },
   { label: "TEMPERATURE CONTROL", type: "radio", name: "temp_control", options: ["Yes", "No"] },
-  { label: "MANAGER ID", type: "number", name: "Manager_id" },
-  { label: "EXHIBIT ID", type: "number", name: "exhibit_id" },
+  { label: "MANAGER NAME", type: "text", name: "manager_name" },
+  { label: "EXHIBIT NAME", type: "checkbox", name: "exhibit_name", options: ['Feather Fiesta','Creepy Crawlies','Tundra Treasures','Sunlit Savanna','Rainforest Rumble','Willowing Wetlands','Desert Mirage','Underwater Utopia'] },
 ];
 
-const columnHeaders = ["name", "current_capacity", "capacity", "location", "opens_at", "closes_at", "status", "temp_control", "Manager_id", "exhibit_id"];
+const columnHeaders = ["name", "current_capacity", "capacity", "location", "opens_at", "closes_at", "status", "temp_control", "manager_name", "exhibit_name"];
 
 const EnclosureQueryReport = () => {
   const [filters, setFilters] = useState({});
@@ -53,10 +53,21 @@ const EnclosureQueryReport = () => {
             return;
         }
 
-        const queryParams = { entity_type: "enclosures", ...filters };
+        const queryParams = {
+          table1: "enclosures",
+          table2: "employees",
+          join_condition: "enclosures.Manager_id = employees.employee_id",
+          additional_joins: [{table: "exhibits", join_condition: "enclosures.exhibit_id = exhibits.exhibit_id"}],
+          computed_fields: `
+            enclosures.*, 
+            CONCAT(employees.first_name, ' ', employees.last_name) AS manager_name,
+            exhibits.name AS exhibit_name
+          `,
+          ...filters,
+        };
 
         Object.keys(queryParams).forEach((key) => {
-            if (Array.isArray(queryParams[key]) && queryParams[key].length > 0) {
+            if (key !== "additional_joins" && Array.isArray(queryParams[key]) && queryParams[key].length > 0) {
                 queryParams[key] = queryParams[key].join(",");
             }
         });
