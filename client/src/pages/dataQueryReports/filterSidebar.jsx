@@ -1,7 +1,7 @@
 import React from "react";
 import "./reportStyles.css";
 
-const FilterSidebar = ({ filters, onFilterChange, onRunReport, filterOptions }) => {
+const FilterSidebar = ({ filters, onFilterChange, onRunReport, onClearAll, filterOptions }) => {
   const handleChange = (event) => {
     const { name, value } = event.target;
     onFilterChange({ target: { name, value } });
@@ -79,8 +79,8 @@ const FilterSidebar = ({ filters, onFilterChange, onRunReport, filterOptions }) 
         </div>
       ))}
 
-      <button onClick={() => onFilterChange(() => ({}))}>Clear All</button>
       <button onClick={onRunReport}>Run Report</button>
+      <button onClick={onClearAll}>Clear All</button>
     </div>
   );
 };

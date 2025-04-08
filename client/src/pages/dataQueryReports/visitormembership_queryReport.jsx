@@ -1,4 +1,4 @@
-import React, { useState } from "react"; 
+import React, { useState, useEffect } from "react"; 
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
@@ -11,32 +11,33 @@ const filterOptions = [
     { label: "USER NAME", type: "text", name: "username" },
     { label: "EMAIL", type: "text", name: "email" },
     { label: "PHONE", type: "text", name: "phone_number" },
-    { label: "DATE OF BIRTH", type: "date", name: "date_of_birth" },
+    { label: "BEGINNING BIRTH DATE", type: "date", name: "date_of_birthMin" },
+    { label: "ENDING BIRTH DATE", type: "date", name: "date_of_birthMax" },
     { label: "GENDER", type: "checkbox", name: "gender", options: ["Male", "Female", "Other", "Prefer not to say"]},
     { label: "STREET ADDRESS", type: "text", name: "street_address" },
     { label: "CITY", type: "text", name: "city" },
     { label: "STATE", type: "text", name: "state" },
     { label: "ZIP CODE", type: "number", name: "zipcode" },
     { label: "COUNTRY", type: "text", name: "country" },
-    { label: "ROLE", type: "text", name: "role" }, 
 
-    { label: "MEMBERSHIP ID", type: "number", name: "membership_id" },
-    { label: "START DATE", type: "datetime-local", name: "start_date" },
-    { label: "END DATE", type: "date", name: "end_date" },
-    { label: "MAX GUESTS", type: "number", name: "max_guests" },
+    { label: "MEMBERSHIP STATUS", type: "checkbox", name: "membership_status", options: ["active", "inactive"] },
 ];
 
 const columnHeaders = [
-    "visitor_id", "first_name", "last_name", "username", "email",
+    "first_name", "last_name", "username", "email",
     "phone_number", "date_of_birth", "gender", "street_address", 
-    "city", "state", "zipcode", "country", "role",
-    "membership_id", "start_date", "end_date", "max_guests"
+    "city", "state", "zipcode", "country",
+    "membership_status", "end_date"
 
 ];
 
 const VisitorMembershipQueryReport = () => {
     const [filters, setFilters] = useState({});
     const [reportData, setReportData] = useState([]);
+
+    useEffect(() => {
+        fetchReport(false);
+    }, []);
 
     const handleFilterChange = (eventOrUpdater) => {
         if (typeof eventOrUpdater === "function") {
@@ -60,20 +61,41 @@ const VisitorMembershipQueryReport = () => {
         }
     };
 
-    const fetchReport = async () => {
+    const fetchReport = async (applyFilters = true) => {
         try {
-            if (Object.keys(filters).length === 0) {
-                console.error("No filters applied. Please select at least one filter.");
-                return;
+            const prefixedFilters = {};
+            if (applyFilters && Object.keys(filters).length > 0) {
+                Object.keys(filters).forEach((key) => {
+                    if (key === 'membership_status') {
+                        // Pass membership_status directly without prefixing with visitors
+                        prefixedFilters[key] = filters[key];
+                    } else if (key === 'date_of_birthMin' || key === 'date_of_birthMax') {
+                        // Handle date range filters
+                        prefixedFilters[`visitors.${key}`] = filters[key];
+                    } else if (key === 'gender') {
+                        // Handle gender as array
+                        prefixedFilters['visitors.gender'] = filters[key];
+                    } else {
+                        // Prefix all other visitor fields
+                        prefixedFilters[`visitors.${key}`] = filters[key];
+                    }
+                });
             }
 
-            const queryParams = { table1: "visitors", table2: "memberships", join_condition: "visitors.visitor_id = memberships.visitor_id", ...filters };
-
-            Object.keys(queryParams).forEach((key) => {
-                if (Array.isArray(queryParams[key]) && queryParams[key].length > 0) {
-                    queryParams[key] = queryParams[key].join(",");
-                }
-            });
+            const queryParams = {
+                table1: "visitors",
+                table2: "memberships",
+                join_condition: "visitors.visitor_id = memberships.visitor_id",
+                computed_fields: ` 
+                    visitors.*, 
+                    CASE 
+                        WHEN memberships.visitor_id IS NOT NULL THEN 'active'
+                        ELSE 'inactive'
+                    END AS membership_status,
+                    memberships.end_date
+                `, // Computes membership_status and includes end_date
+                ...prefixedFilters,
+            };
 
             const response = await fetch(`${API_BASE_URL}/query_report/visitors`, {
                 method: "POST",
@@ -92,9 +114,13 @@ const VisitorMembershipQueryReport = () => {
         }
     };
 
+    const onClearAll = () => {
+        setFilters({});
+        fetchReport(false);
+    };
     return (
         <div className="visitor-query-report"> 
-          <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} filterOptions={filterOptions} />
+          <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
           <div className="report-table-container">
           <ReportTable data={reportData} columns={columnHeaders} />
           <div className="edit-visitor-button-container">
