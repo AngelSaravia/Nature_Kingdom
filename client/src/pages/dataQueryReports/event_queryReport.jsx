@@ -8,17 +8,17 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
 const filterOptions = [
   { label: "EVENT NAME", type: "text", name: "eventName" },
   { label: "EVENT DATE", type: "date", name: "eventDate" },
-  { label: "DURATION (Min)", type: "time", name: "durationMin" },
-  { label: "DURATION (Max)", type: "time", name: "durationMax" },
+  { label: "MIN DURATION (HH:MM)", type: "text", name: "durationMin" },
+  { label: "MAX DURATION (HH:MM)", type: "text", name: "durationMax" },
   { label: "LOCATION", type: "text", name: "location" },
   { label: "TYPE", type: "checkbox", name: "eventType", options: ["Educational", "Entertainment", "Seasonal", "Workshops", "Fundraising", "Animal Interaction", "Corporate"] },
   { label: "CAPACITY", type: "number", name: "capacity" },
   { label: "PRICE (Min)", type: "number", name: "priceMin" },
   { label: "PRICE (Max)", type: "number", name: "priceMax" },
-  { label: "MANAGER ID", type: "number", name: "managerID" },
+  { label: "MANAGER EMAIL", type: "text", name: "manager_email" },
 ];
 
-const columnHeaders = ["eventName", "description", "eventDate", "duration", "location", "eventType", "capacity", "price", "managerID"];
+const columnHeaders = ["eventName", "description", "eventDate", "duration", "location", "eventType", "capacity", "price", "manager_email"];
 
 const EventQueryReport = () => {
   const [filters, setFilters] = useState({});
@@ -53,13 +53,43 @@ const EventQueryReport = () => {
             return;
         }
 
-        const queryParams = { entity_type: "events", ...filters };
+        // Validate HH:MM format for durationMin and durationMax
+      if (filters.durationMin && !/^([0-9]|[0-9][0-9]):[0-5][0-9]$/.test(filters.durationMin)) {
+        console.error("Invalid durationMin format. Please use HH:MM.");
+        return;
+      }
+      if (filters.durationMax && !/^([0-9]|[0-9][0-9]):[0-5][0-9]$/.test(filters.durationMax)) {
+        console.error("Invalid durationMax format. Please use HH:MM.");
+        return;
+      }
 
-        Object.keys(queryParams).forEach((key) => {
-            if (Array.isArray(queryParams[key]) && queryParams[key].length > 0) {
-                queryParams[key] = queryParams[key].join(",");
+        // Create prefixed filters
+        const prefixedFilters = {};
+        Object.keys(filters).forEach((key) => {
+            if (['eventName', 'eventDate', 'duration', 'location', 
+                 'eventType', 'capacity', 'price'].includes(key)) {
+                prefixedFilters[`events.${key}`] = filters[key];
+            } else if (key.endsWith('Min') || key.endsWith('Max')) {
+                // Handle range filters
+                const baseKey = key.replace('Min', '').replace('Max', '');
+                prefixedFilters[`events.${key}`] = filters[key];
+            } else if (key === "manager_email") {
+              prefixedFilters["manager.email"] = filters[key];
+            } else {
+                prefixedFilters[key] = filters[key];
             }
         });
+
+        const queryParams = {
+          table1: "events",
+          table2: "employees AS manager",
+          join_condition: "events.managerID = manager.Employee_id",
+          computed_fields: `
+              events.*, 
+              manager.email AS manager_email
+          `,
+          ...prefixedFilters,
+        };
 
         const response = await fetch(`${API_BASE_URL}/query_report/events`, {
             method: "POST",

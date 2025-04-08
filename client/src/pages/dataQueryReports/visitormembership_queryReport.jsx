@@ -64,6 +64,23 @@ const VisitorMembershipQueryReport = () => {
                 return;
             }
 
+            const prefixedFilters = {};
+            Object.keys(filters).forEach((key) => {
+                if (key === 'membership_status') {
+                    // Pass membership_status directly without prefixing with visitors
+                    prefixedFilters[key] = filters[key];
+                } else if (key === 'date_of_birthMin' || key === 'date_of_birthMax') {
+                    // Handle date range filters
+                    prefixedFilters[`visitors.${key}`] = filters[key];
+                } else if (key === 'gender') {
+                    // Handle gender as array
+                    prefixedFilters['visitors.gender'] = filters[key];
+                } else {
+                    // Prefix all other visitor fields
+                    prefixedFilters[`visitors.${key}`] = filters[key];
+                }
+            });
+
             const queryParams = {
                 table1: "visitors",
                 table2: "memberships",
@@ -76,14 +93,8 @@ const VisitorMembershipQueryReport = () => {
                     END AS membership_status,
                     memberships.end_date
                 `, // Computes membership_status and includes end_date
-                ...filters,
+                ...prefixedFilters,
             };
-
-            Object.keys(queryParams).forEach((key) => {
-                if (Array.isArray(queryParams[key]) && queryParams[key].length > 0) {
-                    queryParams[key] = queryParams[key].join(",");
-                }
-            });
 
             const response = await fetch(`${API_BASE_URL}/query_report/visitors`, {
                 method: "POST",

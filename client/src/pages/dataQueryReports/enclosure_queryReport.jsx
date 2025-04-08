@@ -53,6 +53,36 @@ const EnclosureQueryReport = () => {
             return;
         }
 
+        // Add a helper function to convert time to military format
+        const convertToMilitaryTime = (time) => {
+          const [hours, minutes] = time.split(':');
+          const period = time.toLowerCase().includes('pm') ? 'PM' : 'AM';
+          let militaryHours = parseInt(hours, 10);
+          if (period === 'PM' && militaryHours < 12) militaryHours += 12;
+          if (period === 'AM' && militaryHours === 12) militaryHours = 0;
+          return `${String(militaryHours).padStart(2, '0')}:${minutes}:00`;
+        };
+
+        // Create prefixed filters object
+        const prefixedFilters = {};
+        Object.keys(filters).forEach((key) => {
+            if (key === 'manager_name') {
+                // Handle manager name search using CONCAT in WHERE clause
+                prefixedFilters['CONCAT(employees.first_name, " ", employees.last_name)'] = filters[key];
+            } else if (key === 'exhibit_name') {
+              // Handle exhibit name search using the actual column name
+              if (Array.isArray(filters[key]) && filters[key].length > 0) {
+                prefixedFilters['exhibits.name'] = filters[key];
+              }
+            } else if (key === 'opens_at' || key === 'closes_at') {
+              prefixedFilters[`enclosures.${key}`] = convertToMilitaryTime(filters[key]);
+            } else if (['status', 'temp_control'].includes(key)) {
+                prefixedFilters[`enclosures.${key}`] = filters[key];
+            } else {
+                prefixedFilters[`enclosures.${key}`] = filters[key];
+            }
+        });
+
         const queryParams = {
           table1: "enclosures",
           table2: "employees",
@@ -61,16 +91,11 @@ const EnclosureQueryReport = () => {
           computed_fields: `
             enclosures.*, 
             CONCAT(employees.first_name, ' ', employees.last_name) AS manager_name,
-            exhibits.name AS exhibit_name
+            exhibits.name AS exhibit_name,
+            CASE enclosures.temp_control WHEN 1 THEN 'Yes' WHEN 0 THEN 'No' END AS temp_control
           `,
-          ...filters,
+          ...prefixedFilters,
         };
-
-        Object.keys(queryParams).forEach((key) => {
-            if (key !== "additional_joins" && Array.isArray(queryParams[key]) && queryParams[key].length > 0) {
-                queryParams[key] = queryParams[key].join(",");
-            }
-        });
 
         const response = await fetch(`${API_BASE_URL}/query_report/enclosures`, {
             method: "POST",

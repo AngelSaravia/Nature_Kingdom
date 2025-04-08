@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
-    { label: "VISITOR ID", type: "number", name: "visitor_id" },
+    { label: "VISITOR NAME", type: "text", name: "visitor_name" },
     { label: "START DATE", type: "date", name: "start_date" },
     { label: "END DATE", type: "date", name: "end_date" },
     { label: "TICKET TYPE", type: "checkbox", name: "ticket_type", options: ["Child", "Adult", "Senior", "Group", "Member"] },
@@ -14,7 +14,7 @@ const filterOptions = [
     { label: "ENDING PURCHASE DATE", type: "date", name: "purchase_dateMax" },
 ];
 
-const columnHeaders = ["ticket_id", "visitor_id", "start_date", "end_date", "ticket_type", "purchase_date"];
+const columnHeaders = ["visitor_name", "start_date", "end_date", "ticket_type", "purchase_date"];
 
 const TicketQueryReport = () => {
     const [filters, setFilters] = useState({});
@@ -48,22 +48,43 @@ const TicketQueryReport = () => {
                 console.error("No filters applied. Please select at least one filter.");
                 return;
             }
-
-            const queryParams = { entity_type: "tickets", ...filters };
-
-            // Add time portion for compatibility with TIMESTAMP
-            if (queryParams.start_date) {
-                queryParams.start_date = `${queryParams.start_date} 00:00:00`; // Start of the day
-            }
-            if (queryParams.end_date) {
-                queryParams.end_date = `${queryParams.end_date} 23:59:59`; // End of the day
-            }
-
-            Object.keys(queryParams).forEach((key) => {
-                if (Array.isArray(queryParams[key]) && queryParams[key].length > 0) {
-                    queryParams[key] = queryParams[key].join(",");
+            console.log("Filters being sent to the backend:", filters);
+            // Create prefixed filters object
+            const prefixedFilters = {};
+            Object.keys(filters).forEach((key) => {
+                if (key === 'visitor_name') {
+                    prefixedFilters['CONCAT(visitors.first_name, " ", visitors.last_name)'] = filters[key];
+                } else if (key === 'start_date' || key === 'end_date' || key === 'purchase_dateMin' || key === 'purchase_dateMax') {
+                    prefixedFilters[`tickets.${key}`] = filters[key];
+                } else if (key === 'ticket_type') {
+                    prefixedFilters[`tickets.${key}`] = filters[key];
                 }
             });
+
+            // Time portion for compatibility with TIMESTAMP
+            if (prefixedFilters['tickets.start_date']) {
+                prefixedFilters['tickets.start_date'] = prefixedFilters['tickets.start_date'];
+            }
+            if (prefixedFilters['tickets.end_date']) {
+                prefixedFilters['tickets.end_date'] = prefixedFilters['tickets.end_date'];
+            }
+            if (prefixedFilters['tickets.purchase_dateMin']) {
+                prefixedFilters['tickets.purchase_dateMin'] = prefixedFilters['tickets.purchase_dateMin'];
+            }
+            if (prefixedFilters['tickets.purchase_dateMax']) {
+                prefixedFilters['tickets.purchase_dateMax'] = prefixedFilters['tickets.purchase_dateMax'];
+            }
+
+            const queryParams = {
+            table1: "tickets",
+            table2: "visitors",
+            join_condition: "tickets.visitor_id = visitors.visitor_id",
+            computed_fields: `
+                tickets.*, 
+                CONCAT(visitors.first_name, ' ', visitors.last_name) AS visitor_name
+            `,
+            ...prefixedFilters,
+            };
 
             const response = await fetch(`${API_BASE_URL}/query_report/tickets`, {
                 method: "POST",

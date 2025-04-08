@@ -39,7 +39,7 @@ const AnimalQueryReport = () => {
     { label: "HEALTH STATUS", type: "checkbox", name: "health_status", options: ["HEALTHY", "NEEDS CARE", "CRITICAL"] },
   ];
   
-  const columnHeaders = ["animal_id", "animal_name", "species", "animal_type", "health_status", "date_of_birth", "name"];
+  const columnHeaders = ["animal_id", "animal_name", "species", "animal_type", "health_status", "date_of_birth", "enclosure name"];
 
   const handleFilterChange = (eventOrUpdater) => {
     if (typeof eventOrUpdater === "function") {
@@ -70,13 +70,33 @@ const AnimalQueryReport = () => {
             return;
         }
 
-        const queryParams = { table1: "animals", table2: "enclosures", join_condition: "animals.enclosure_id = enclosures.enclosure_id", ...filters };
-
-        Object.keys(queryParams).forEach((key) => {
-            if (Array.isArray(queryParams[key]) && queryParams[key].length > 0) {
-                queryParams[key] = queryParams[key].join(",");
-            }
+        const prefixedFilters = {};
+        Object.keys(filters).forEach((key) => {
+          // Skip empty array values or empty strings
+          if (Array.isArray(filters[key]) && filters[key].length === 0) {
+              return;
+          }
+          // Handle different filter types
+          switch(key) {
+            case 'name':
+                prefixedFilters['enclosures.name'] = filters[key];
+                break;
+            case 'date_of_birthMin':
+            case 'date_of_birthMax':
+                prefixedFilters[`animals.${key}`] = filters[key];
+                break;
+            case 'animal_type':
+            case 'health_status':
+            case 'animal_name':
+            case 'species':
+                prefixedFilters[`animals.${key}`] = filters[key];
+                break;
+            default:
+                prefixedFilters[key] = filters[key];
+          }
         });
+
+        const queryParams = { table1: "animals", table2: "enclosures", join_condition: "animals.enclosure_id = enclosures.enclosure_id", computed_fields: "animals.*, enclosures.name as 'enclosure name'", ...prefixedFilters };
 
         const response = await fetch(`${API_BASE_URL}/query_report/animals`, {
             method: "POST",
