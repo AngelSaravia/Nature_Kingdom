@@ -18,6 +18,7 @@ const handleEventForm = require("./helpers/eventFormHelper");
 const handleCalendar = require("./helpers/calendar_helper");
 const handleGiftShop = require("./helpers/giftShop_helper");
 const handleGiftOrder = require("./helpers/order_helper");
+const giftshopHelper = require("./helpers/giftshopPurchasesHelper");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -308,6 +309,25 @@ const server = http.createServer(async (req, res) => {
             res.end(JSON.stringify({ success: false, message: "Server error" }));
         }
     });
+  } else if (path === "/api/giftshop/purchases" && req.method === "GET") {
+    const username = url.parse(req.url, true).query.username;
+  
+    if (!username) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: false, message: "Username is required" }));
+      return;
+    }
+  
+    try {
+      // Rerouting to the helper function that fetches gift shop purchases
+      const purchases = await giftshopHelper.getUserGiftShopPurchases(username);
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: purchases }));
+    } catch (error) {
+      console.error("Error fetching gift shop purchases:", error);
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: false, message: "Failed to fetch gift shop purchases" }));
+    }
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(

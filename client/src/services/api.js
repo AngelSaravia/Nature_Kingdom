@@ -164,10 +164,15 @@ export const getDashboardData = async () => {
       `/api/checkvisitor?username=${username}`
     );
 
+    const giftShopPurchasesResponse = await apiClient.get(
+      `/api/giftshop/purchases?username=${username}`
+    );
+
     return {
       tickets: ticketsResponse.data,
       membership: membershipResponse.data,
       visitor: visitorResponse.data,
+      giftShopPurchases: giftShopPurchasesResponse.data,
     };
   } catch (error) {
     console.error("Error fetching dashboard data:", error);

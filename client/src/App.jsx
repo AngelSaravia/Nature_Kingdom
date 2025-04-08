@@ -42,6 +42,7 @@ import VisitorMembershipQueryReport from "./pages/dataQueryReports/visitormember
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
 import GiftShop from "./pages/giftshop/GiftShop";
+import GiftshopPurchases from "./pages/dashboard/giftshop-purchases/giftshop-purchases"
 
 // Performance monitoring callback
 function onRenderCallback(id, phase, actualDuration) {
@@ -331,6 +332,7 @@ function AppContent() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/my-tickets" element={<MyTickets />} />
                 <Route path="/my-membership" element={<MyMembership />} />
+                <Route path="/giftshop-purchases" element={<GiftshopPurchases />} />  
                 <Route path="/:type/checkout" element={<Checkout />} />
               </Route>
             </Routes>

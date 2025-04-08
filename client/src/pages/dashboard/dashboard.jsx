@@ -11,6 +11,7 @@ const Dashboard = () => {
         tickets: [],
         activeTicketsCount: 0,
         membership: [],
+        orders: [],
       });
     
     useEffect(() => {
@@ -21,7 +22,8 @@ const Dashboard = () => {
               tickets: data.tickets.tickets || [],
               activeTicketsCount: data.tickets.activeCount || 0,
               membership: data.membership || [],
-              user: data.visitor || []
+              user: data.visitor || [],
+              orders: data.giftShopPurchases.data.purchases || []
             });
           } catch (error) {
             console.error('Error:', error);
@@ -33,8 +35,8 @@ const Dashboard = () => {
       
       
       console.log("user",dashboardData.user)
-      console.log("member", dashboardData.membership)
-      // console.log("member", dashboardData.membership.length)
+      console.log("member", dashboardData.tickets)
+      console.log("orders ", dashboardData.orders)
       
       const capitalizeFirstLetter = (str) => {
         if (!str) return str; // Handle empty string or null
@@ -77,6 +79,12 @@ const Dashboard = () => {
                 <p className="dashboard-text">{dashboardData.membership.length ? "Active membership" : "No active membership"}</p>
                 <button onClick={() => navigate("/my-membership", { state: { dashboardData } })} 
                         className="dashboard-button">View Membership</button>
+            </div>
+            <div className="dashboard-box">
+                <h2 className="dashboard-heading">Giftshop Purchases</h2>
+                {/* <p className="dashboard-text">{dashboardData.membership.length ? "Active membership" : "No active membership"}</p> */}
+                <button onClick={() => navigate("/giftshop-purchases", { state: { dashboardData } })} 
+                        className="dashboard-button">View Purchases</button>
             </div>
             </div>
             
