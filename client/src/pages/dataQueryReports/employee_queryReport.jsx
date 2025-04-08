@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
@@ -30,6 +30,10 @@ const EmployeeQueryReport = () => {
     const [filters, setFilters] = useState({});
     const [reportData, setReportData] = useState([]);
 
+    useEffect(() => {
+      fetchReport(false);
+    }, []);
+
     const handleFilterChange = (eventOrUpdater) => {
         if (typeof eventOrUpdater === "function") {
           setFilters((prevFilters) => eventOrUpdater(prevFilters));
@@ -57,39 +61,36 @@ const EmployeeQueryReport = () => {
         }
       };
 
-      const fetchReport = async () => {
+      const fetchReport = async (applyFilters = true) => {
         try {
-            if (Object.keys(filters).length === 0) {
-                console.error("No filters applied. Please select at least one filter.");
-                return;
-            }
-
             const prefixedFilters = {};
-            Object.keys(filters).forEach((key) => {
-                // List of fields that need "employees." prefix
-                const employeeFields = [
-                    "first_name", "last_name", "user_name", "gender", 
-                    "date_of_birth", "street_address", "city", "state", 
-                    "zip_code", "country", "salary", "email", "phone"
-                ];
-                if (key === "gender") {
-                  // Special handling for gender array
-                  prefixedFilters["employees.gender"] = Array.isArray(filters[key]) 
-                      ? filters[key].join(",")  // Join array values with comma
-                      : filters[key];           // Keep single value as is
-              } else if (key === "date_of_birthMin" || key === "date_of_birthMax") {
-                    // Keep the Min/Max suffix for date range filters
-                    prefixedFilters[`employees.${key}`] = filters[key];
-                } else if (employeeFields.includes(key)) {
-                    prefixedFilters[`employees.${key}`] = filters[key];
-                } else if (key === "manager_email") {
-                    prefixedFilters["manager.email"] = filters[key];
-                } else if (key === "department_name") {
-                    prefixedFilters["departments.name"] = filters[key];
-                } else {
-                    prefixedFilters[key] = filters[key];
-                }
-            });
+            if (applyFilters && Object.keys(filters).length > 0) {
+              Object.keys(filters).forEach((key) => {
+                  // List of fields that need "employees." prefix
+                  const employeeFields = [
+                      "first_name", "last_name", "user_name", "gender", 
+                      "date_of_birth", "street_address", "city", "state", 
+                      "zip_code", "country", "salary", "email", "phone"
+                  ];
+                  if (key === "gender") {
+                    // Special handling for gender array
+                    prefixedFilters["employees.gender"] = Array.isArray(filters[key]) 
+                        ? filters[key].join(",")  // Join array values with comma
+                        : filters[key];           // Keep single value as is
+                } else if (key === "date_of_birthMin" || key === "date_of_birthMax") {
+                      // Keep the Min/Max suffix for date range filters
+                      prefixedFilters[`employees.${key}`] = filters[key];
+                  } else if (employeeFields.includes(key)) {
+                      prefixedFilters[`employees.${key}`] = filters[key];
+                  } else if (key === "manager_email") {
+                      prefixedFilters["manager.email"] = filters[key];
+                  } else if (key === "department_name") {
+                      prefixedFilters["departments.name"] = filters[key];
+                  } else {
+                      prefixedFilters[key] = filters[key];
+                  }
+              });
+            }
     
             const queryParams = {
               table1: "employees",
@@ -134,9 +135,13 @@ const EmployeeQueryReport = () => {
         }
       };
 
+      const onClearAll = () => {
+        setFilters({});
+        fetchReport(false);
+      };
       return (
         <div className="employee-query-report">
-          <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} filterOptions={filterOptions} />
+          <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
           <div className="report-table-container">
           <ReportTable data={reportData} columns={columnHeaders} />
           <div className="edit-employee-button-container">

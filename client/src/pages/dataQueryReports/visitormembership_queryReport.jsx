@@ -1,4 +1,4 @@
-import React, { useState } from "react"; 
+import React, { useState, useEffect } from "react"; 
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
@@ -35,6 +35,10 @@ const VisitorMembershipQueryReport = () => {
     const [filters, setFilters] = useState({});
     const [reportData, setReportData] = useState([]);
 
+    useEffect(() => {
+        fetchReport(false);
+    }, []);
+
     const handleFilterChange = (eventOrUpdater) => {
         if (typeof eventOrUpdater === "function") {
             setFilters((prevFilters) => eventOrUpdater(prevFilters));
@@ -57,29 +61,26 @@ const VisitorMembershipQueryReport = () => {
         }
     };
 
-    const fetchReport = async () => {
+    const fetchReport = async (applyFilters = true) => {
         try {
-            if (Object.keys(filters).length === 0) {
-                console.error("No filters applied. Please select at least one filter.");
-                return;
-            }
-
             const prefixedFilters = {};
-            Object.keys(filters).forEach((key) => {
-                if (key === 'membership_status') {
-                    // Pass membership_status directly without prefixing with visitors
-                    prefixedFilters[key] = filters[key];
-                } else if (key === 'date_of_birthMin' || key === 'date_of_birthMax') {
-                    // Handle date range filters
-                    prefixedFilters[`visitors.${key}`] = filters[key];
-                } else if (key === 'gender') {
-                    // Handle gender as array
-                    prefixedFilters['visitors.gender'] = filters[key];
-                } else {
-                    // Prefix all other visitor fields
-                    prefixedFilters[`visitors.${key}`] = filters[key];
-                }
-            });
+            if (applyFilters && Object.keys(filters).length > 0) {
+                Object.keys(filters).forEach((key) => {
+                    if (key === 'membership_status') {
+                        // Pass membership_status directly without prefixing with visitors
+                        prefixedFilters[key] = filters[key];
+                    } else if (key === 'date_of_birthMin' || key === 'date_of_birthMax') {
+                        // Handle date range filters
+                        prefixedFilters[`visitors.${key}`] = filters[key];
+                    } else if (key === 'gender') {
+                        // Handle gender as array
+                        prefixedFilters['visitors.gender'] = filters[key];
+                    } else {
+                        // Prefix all other visitor fields
+                        prefixedFilters[`visitors.${key}`] = filters[key];
+                    }
+                });
+            }
 
             const queryParams = {
                 table1: "visitors",
@@ -113,9 +114,13 @@ const VisitorMembershipQueryReport = () => {
         }
     };
 
+    const onClearAll = () => {
+        setFilters({});
+        fetchReport(false);
+    };
     return (
         <div className="visitor-query-report"> 
-          <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} filterOptions={filterOptions} />
+          <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
           <div className="report-table-container">
           <ReportTable data={reportData} columns={columnHeaders} />
           <div className="edit-visitor-button-container">

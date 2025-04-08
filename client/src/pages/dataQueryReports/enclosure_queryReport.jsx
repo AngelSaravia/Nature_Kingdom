@@ -1,4 +1,4 @@
-import React, { useState } from "react"; 
+import React, { useState, useEffect } from "react"; 
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
@@ -24,6 +24,10 @@ const EnclosureQueryReport = () => {
   const [filters, setFilters] = useState({});
   const [reportData, setReportData] = useState([]);
 
+  useEffect(() => {
+    fetchReport(false);
+  }, []);
+
   const handleFilterChange = (eventOrUpdater) => {
     if (typeof eventOrUpdater === "function") {
       setFilters((prevFilters) => eventOrUpdater(prevFilters));
@@ -46,13 +50,8 @@ const EnclosureQueryReport = () => {
     }
   };
 
-  const fetchReport = async () => {
+  const fetchReport = async (applyFilters = true) => {
     try {
-        if (Object.keys(filters).length === 0) {
-            console.error("No filters applied. Please select at least one filter.");
-            return;
-        }
-
         // Add a helper function to convert time to military format
         const convertToMilitaryTime = (time) => {
           const [hours, minutes] = time.split(':');
@@ -65,23 +64,25 @@ const EnclosureQueryReport = () => {
 
         // Create prefixed filters object
         const prefixedFilters = {};
-        Object.keys(filters).forEach((key) => {
-            if (key === 'manager_name') {
-                // Handle manager name search using CONCAT in WHERE clause
-                prefixedFilters['CONCAT(employees.first_name, " ", employees.last_name)'] = filters[key];
-            } else if (key === 'exhibit_name') {
-              // Handle exhibit name search using the actual column name
-              if (Array.isArray(filters[key]) && filters[key].length > 0) {
-                prefixedFilters['exhibits.name'] = filters[key];
+        if (applyFilters && Object.keys(filters).length > 0) {
+          Object.keys(filters).forEach((key) => {
+              if (key === 'manager_name') {
+                  // Handle manager name search using CONCAT in WHERE clause
+                  prefixedFilters['CONCAT(employees.first_name, " ", employees.last_name)'] = filters[key];
+              } else if (key === 'exhibit_name') {
+                // Handle exhibit name search using the actual column name
+                if (Array.isArray(filters[key]) && filters[key].length > 0) {
+                  prefixedFilters['exhibits.name'] = filters[key];
+                }
+              } else if (key === 'opens_at' || key === 'closes_at') {
+                prefixedFilters[`enclosures.${key}`] = convertToMilitaryTime(filters[key]);
+              } else if (['status', 'temp_control'].includes(key)) {
+                  prefixedFilters[`enclosures.${key}`] = filters[key];
+              } else {
+                  prefixedFilters[`enclosures.${key}`] = filters[key];
               }
-            } else if (key === 'opens_at' || key === 'closes_at') {
-              prefixedFilters[`enclosures.${key}`] = convertToMilitaryTime(filters[key]);
-            } else if (['status', 'temp_control'].includes(key)) {
-                prefixedFilters[`enclosures.${key}`] = filters[key];
-            } else {
-                prefixedFilters[`enclosures.${key}`] = filters[key];
-            }
-        });
+          });
+        }
 
         const queryParams = {
           table1: "enclosures",
@@ -115,9 +116,13 @@ const EnclosureQueryReport = () => {
     }
   };
 
+  const onClearAll = () => {
+    setFilters({});
+    fetchReport(false);
+  };
   return (
     <div className="enclosure-query-report">
-      <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} filterOptions={filterOptions} />
+      <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
       <div className="report-table-container">
         <ReportTable data={reportData} columns={columnHeaders} />
         <div className="edit-enclosure-button-container">

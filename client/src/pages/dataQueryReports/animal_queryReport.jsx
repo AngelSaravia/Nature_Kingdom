@@ -12,6 +12,7 @@ const AnimalQueryReport = () => {
 
   // Fetch enclosure names from the backend
   useEffect(() => {
+    fetchReport(false);
     const fetchEnclosureNames = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/get_enclosure_names`);
@@ -63,38 +64,35 @@ const AnimalQueryReport = () => {
     }
   };
 
-  const fetchReport = async () => {
+  const fetchReport = async (applyFilters = true) => {
     try {
-        if (Object.keys(filters).length === 0) {
-            console.error("No filters applied. Please select at least one filter.");
-            return;
-        }
-
         const prefixedFilters = {};
-        Object.keys(filters).forEach((key) => {
-          // Skip empty array values or empty strings
-          if (Array.isArray(filters[key]) && filters[key].length === 0) {
-              return;
-          }
-          // Handle different filter types
-          switch(key) {
-            case 'name':
-                prefixedFilters['enclosures.name'] = filters[key];
-                break;
-            case 'date_of_birthMin':
-            case 'date_of_birthMax':
-                prefixedFilters[`animals.${key}`] = filters[key];
-                break;
-            case 'animal_type':
-            case 'health_status':
-            case 'animal_name':
-            case 'species':
-                prefixedFilters[`animals.${key}`] = filters[key];
-                break;
-            default:
-                prefixedFilters[key] = filters[key];
-          }
-        });
+        if (applyFilters && Object.keys(filters).length > 0) {
+          Object.keys(filters).forEach((key) => {
+            // Skip empty array values or empty strings
+            if (Array.isArray(filters[key]) && filters[key].length === 0) {
+                return;
+            }
+            // Handle different filter types
+            switch(key) {
+              case 'name':
+                  prefixedFilters['enclosures.name'] = filters[key];
+                  break;
+              case 'date_of_birthMin':
+              case 'date_of_birthMax':
+                  prefixedFilters[`animals.${key}`] = filters[key];
+                  break;
+              case 'animal_type':
+              case 'health_status':
+              case 'animal_name':
+              case 'species':
+                  prefixedFilters[`animals.${key}`] = filters[key];
+                  break;
+              default:
+                  prefixedFilters[key] = filters[key];
+            }
+          });
+        }
 
         const queryParams = { table1: "animals", table2: "enclosures", join_condition: "animals.enclosure_id = enclosures.enclosure_id", computed_fields: "animals.*, enclosures.name as 'enclosure name'", ...prefixedFilters };
 
@@ -116,9 +114,13 @@ const AnimalQueryReport = () => {
     }
   };
 
+  const onClearAll = () => {
+    setFilters({});
+    fetchReport(false);
+  };
   return (
     <div className="animal-query-report">
-      <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} filterOptions={filterOptions} />
+      <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
       <div className="report-table-container">
         <ReportTable data={reportData} columns={columnHeaders} />
         <div className="edit-animal-button-container">

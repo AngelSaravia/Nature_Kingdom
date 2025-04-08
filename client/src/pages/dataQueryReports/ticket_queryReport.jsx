@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
@@ -19,6 +19,10 @@ const columnHeaders = ["visitor_name", "start_date", "end_date", "ticket_type", 
 const TicketQueryReport = () => {
     const [filters, setFilters] = useState({});
     const [reportData, setReportData] = useState([]);
+
+    useEffect(() => {
+        fetchReport(false);
+    }, []);
 
     const handleFilterChange = (eventOrUpdater) => {
         if (typeof eventOrUpdater === "function") {
@@ -42,24 +46,21 @@ const TicketQueryReport = () => {
         }
     };
 
-    const fetchReport = async () => {
+    const fetchReport = async (applyFilters = true) => {
         try {
-            if (Object.keys(filters).length === 0) {
-                console.error("No filters applied. Please select at least one filter.");
-                return;
-            }
-            console.log("Filters being sent to the backend:", filters);
             // Create prefixed filters object
             const prefixedFilters = {};
-            Object.keys(filters).forEach((key) => {
-                if (key === 'visitor_name') {
-                    prefixedFilters['CONCAT(visitors.first_name, " ", visitors.last_name)'] = filters[key];
-                } else if (key === 'start_date' || key === 'end_date' || key === 'purchase_dateMin' || key === 'purchase_dateMax') {
-                    prefixedFilters[`tickets.${key}`] = filters[key];
-                } else if (key === 'ticket_type') {
-                    prefixedFilters[`tickets.${key}`] = filters[key];
-                }
-            });
+            if (applyFilters && Object.keys(filters).length > 0) {
+                Object.keys(filters).forEach((key) => {
+                    if (key === 'visitor_name') {
+                        prefixedFilters['CONCAT(visitors.first_name, " ", visitors.last_name)'] = filters[key];
+                    } else if (key === 'start_date' || key === 'end_date' || key === 'purchase_dateMin' || key === 'purchase_dateMax') {
+                        prefixedFilters[`tickets.${key}`] = filters[key];
+                    } else if (key === 'ticket_type') {
+                        prefixedFilters[`tickets.${key}`] = filters[key];
+                    }
+                });
+            }
 
             // Time portion for compatibility with TIMESTAMP
             if (prefixedFilters['tickets.start_date']) {
@@ -102,10 +103,13 @@ const TicketQueryReport = () => {
             console.error("Error fetching report:", error);
         }
     };
-
+    const onClearAll = () => {
+        setFilters({});
+        fetchReport(false);
+    };
     return (
         <div className="ticket-query-report">
-            <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} filterOptions={filterOptions} />
+            <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
             <div className="report-table-container">
                 <ReportTable data={reportData} columns={columnHeaders} />
                 <div className="edit-ticket-button-container">

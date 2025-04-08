@@ -1,4 +1,4 @@
-import React, { useState } from "react"; 
+import React, { useState, useEffect } from "react"; 
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
@@ -24,6 +24,10 @@ const EventQueryReport = () => {
   const [filters, setFilters] = useState({});
   const [reportData, setReportData] = useState([]);
 
+  useEffect(() => {
+    fetchReport(false);
+  }, []);
+
   const handleFilterChange = (eventOrUpdater) => {
     if (typeof eventOrUpdater === "function") {
       setFilters((prevFilters) => eventOrUpdater(prevFilters));
@@ -46,13 +50,8 @@ const EventQueryReport = () => {
     }
   };
 
-  const fetchReport = async () => {
+  const fetchReport = async (applyFilters = true) => {
     try {
-        if (Object.keys(filters).length === 0) {
-            console.error("No filters applied. Please select at least one filter.");
-            return;
-        }
-
         // Validate HH:MM format for durationMin and durationMax
       if (filters.durationMin && !/^([0-9]|[0-9][0-9]):[0-5][0-9]$/.test(filters.durationMin)) {
         console.error("Invalid durationMin format. Please use HH:MM.");
@@ -65,21 +64,22 @@ const EventQueryReport = () => {
 
         // Create prefixed filters
         const prefixedFilters = {};
-        Object.keys(filters).forEach((key) => {
-            if (['eventName', 'eventDate', 'duration', 'location', 
-                 'eventType', 'capacity', 'price'].includes(key)) {
-                prefixedFilters[`events.${key}`] = filters[key];
-            } else if (key.endsWith('Min') || key.endsWith('Max')) {
-                // Handle range filters
-                const baseKey = key.replace('Min', '').replace('Max', '');
-                prefixedFilters[`events.${key}`] = filters[key];
-            } else if (key === "manager_email") {
-              prefixedFilters["manager.email"] = filters[key];
-            } else {
-                prefixedFilters[key] = filters[key];
-            }
-        });
-
+        if (applyFilters && Object.keys(filters).length > 0) {
+          Object.keys(filters).forEach((key) => {
+              if (['eventName', 'eventDate', 'duration', 'location', 
+                  'eventType', 'capacity', 'price'].includes(key)) {
+                  prefixedFilters[`events.${key}`] = filters[key];
+              } else if (key.endsWith('Min') || key.endsWith('Max')) {
+                  // Handle range filters
+                  const baseKey = key.replace('Min', '').replace('Max', '');
+                  prefixedFilters[`events.${key}`] = filters[key];
+              } else if (key === "manager_email") {
+                prefixedFilters["manager.email"] = filters[key];
+              } else {
+                  prefixedFilters[key] = filters[key];
+              }
+          });
+        }
         const queryParams = {
           table1: "events",
           table2: "employees AS manager",
@@ -109,9 +109,13 @@ const EventQueryReport = () => {
     }
   };
 
+  const onClearAll = () => {
+    setFilters({});
+    fetchReport(false);
+  };
   return (
     <div className="event-query-report">
-      <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} filterOptions={filterOptions} />
+      <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
       <div className="report-table-container">
         <ReportTable data={reportData} columns={columnHeaders} />
         <div className="edit-event-button-container">
