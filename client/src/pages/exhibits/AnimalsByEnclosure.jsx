@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './AnimalsByEnclosure.css';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
@@ -11,6 +11,7 @@ const AnimalsByEnclosure = () => {
   const [exhibitDetails, setExhibitDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!enclosureId) {
@@ -82,6 +83,14 @@ const AnimalsByEnclosure = () => {
     fetchData();
   }, [enclosureId]);
 
+  const handleBackToEnclosures = () => {
+    if (enclosureDetails && exhibitDetails) {
+      navigate(`/enclosures/${exhibitDetails.exhibit_id}`);
+    } else {
+      navigate('/exhibits');
+    }
+  };
+
   if (loading) {
     return <div className="loading">Loading animals...</div>;
   }
@@ -91,19 +100,31 @@ const AnimalsByEnclosure = () => {
   }
 
   if (animals.length === 0) {
-    return <div className="no-animals">No animals found in this enclosure.</div>;
+    return (
+      <div className="no-animals-container">
+        <div className="no-animals">No animals found in this enclosure.</div>
+        <button className="back-btn" onClick={handleBackToEnclosures}>
+          Back to Enclosures
+        </button>
+      </div>
+    );
   }
 
   return (
     <div className="animals-by-enclosure">
       <div className="enclosure-header">
-        <h2>{enclosureDetails ? enclosureDetails.name : `Enclosure ${enclosureId}`}</h2>
-        {exhibitDetails && (
-          <div className="exhibit-info">
-            <span className="exhibit-badge">{exhibitDetails.name}</span>
-            <span className="habitat-badge">{exhibitDetails.habitat_type}</span>
-          </div>
-        )}
+        <div className="header-content">
+          <h2>{enclosureDetails ? enclosureDetails.name : `Enclosure ${enclosureId}`}</h2>
+          {exhibitDetails && (
+            <div className="exhibit-info">
+              <span className="exhibit-badge">{exhibitDetails.name}</span>
+              <span className="habitat-badge">{exhibitDetails.habitat_type}</span>
+            </div>
+          )}
+        </div>
+        <button className="back-btn" onClick={handleBackToEnclosures}>
+          Back to Enclosures
+        </button>
       </div>
       
       <div className="animal-grid">
@@ -113,11 +134,7 @@ const AnimalsByEnclosure = () => {
             <p>Species: {animal.species}</p>
             <p>Type: {animal.animal_type}</p>
             <p>Date of Birth: {new Date(animal.date_of_birth).toLocaleDateString()}</p>
-            <p>Health: 
-              <span className={`health-status ${animal.health_status?.toLowerCase().replace(' ', '-') || 'unknown'}`}>
-                {animal.health_status || 'Unknown'}
-              </span>
-            </p>
+            
             {animal.description && <p className="description">{animal.description}</p>}
             {exhibitDetails && (
               <div className="card-footer">

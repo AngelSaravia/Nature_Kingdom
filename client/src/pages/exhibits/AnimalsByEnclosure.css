@@ -72,29 +72,6 @@
     color: #555;
   }
   
-  .health-status {
-    display: inline-block;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-weight: 500;
-    margin-left: 0.5rem;
-  }
-  
-  .health-status.healthy {
-    background-color: #28a745;
-    color: white;
-  }
-  
-  .health-status.needs-care {
-    background-color: #ffc107;
-    color: #333;
-  }
-  
-  .health-status.critical {
-    background-color: #dc3545;
-    color: white;
-  }
-  
   .card-footer {
     margin-top: auto;
     padding-top: 1rem;

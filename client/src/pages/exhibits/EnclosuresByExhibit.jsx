@@ -1,37 +1,67 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "./Enclosures.css"; // Regular CSS import
+import { useParams, useNavigate } from "react-router-dom";
+import "./EnclosuresByExhibit.css"; // You'll need to create this CSS file
+
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-const Enclosure = () => {
+const EnclosuresByExhibit = () => {
+    const { exhibitId } = useParams();
     const [enclosures, setEnclosures] = useState([]);
+    const [exhibitDetails, setExhibitDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchEnclosures = async () => {
+        if (!exhibitId) {
+            setError("No exhibit specified");
+            setLoading(false);
+            return;
+        }
+
+        const fetchData = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/get_enclosures`);
-                if (!response.ok) {
+                // Fetch enclosures data
+                const enclosuresResponse = await fetch(`${API_BASE_URL}/get_enclosures`);
+                if (!enclosuresResponse.ok) {
                     throw new Error("Failed to fetch enclosures");
                 }
-                const data = await response.json();
-                if (data.success) {
-                    setEnclosures(data.data);
+                const enclosuresData = await enclosuresResponse.json();
+                
+                // Fetch exhibit details
+                const exhibitsResponse = await fetch(`${API_BASE_URL}/get_exhibits`);
+                if (!exhibitsResponse.ok) {
+                    throw new Error("Failed to fetch exhibits");
+                }
+                const exhibitsData = await exhibitsResponse.json();
+                
+                if (enclosuresData.success && exhibitsData.success) {
+                    // Find current exhibit
+                    const currentExhibit = exhibitsData.data.find(
+                        exhibit => String(exhibit.exhibit_id) === String(exhibitId)
+                    );
+                    
+                    setExhibitDetails(currentExhibit);
+                    
+                    // Filter enclosures for this exhibit
+                    const filteredEnclosures = enclosuresData.data.filter(
+                        enclosure => String(enclosure.exhibit_id) === String(exhibitId)
+                    );
+                    
+                    setEnclosures(filteredEnclosures);
                 } else {
-                    throw new Error(data.message || "Failed to load enclosure data");
+                    throw new Error("Error fetching data");
                 }
             } catch (err) {
                 setError(err.message);
-                console.error("Error fetching enclosures:", err);
+                console.error("Error:", err);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchEnclosures();
-    }, []);
+        fetchData();
+    }, [exhibitId]);
 
     const getStatusClass = (status) => {
         switch (status) {
@@ -47,7 +77,7 @@ const Enclosure = () => {
     };
 
     const handleViewAnimals = (enclosureId) => {
-        navigate(`/animals/${enclosureId}`)
+        navigate(`/animals/${enclosureId}`);
     };
 
     if (loading) {
@@ -58,12 +88,23 @@ const Enclosure = () => {
         return <div className="error">Error: {error}</div>;
     }
 
+    if (enclosures.length === 0) {
+        return <div className="no-enclosures">No enclosures found in this exhibit.</div>;
+    }
+
     return (
-        <div className="enclosure-page">
-            <h1 className="page-title">Our Animal Enclosures</h1>
-            <p className="page-description">
-                Explore the diverse habitats we've created for our animals
-            </p>
+        <div className="enclosures-by-exhibit">
+            <div className="exhibit-header">
+                <h1>{exhibitDetails ? exhibitDetails.name : `Exhibit ${exhibitId}`}</h1>
+                {exhibitDetails && (
+                    <div className="exhibit-details">
+                        <span className="habitat-badge">{exhibitDetails.habitat_type}</span>
+                        {exhibitDetails.description && (
+                            <p className="exhibit-description">{exhibitDetails.description}</p>
+                        )}
+                    </div>
+                )}
+            </div>
 
             <div className="enclosure-grid">
                 {enclosures.map((enclosure) => (
@@ -100,13 +141,13 @@ const Enclosure = () => {
                                 <strong>Temperature Controlled:</strong> 
                                 {enclosure.temp_control ? " Yes" : " No"}
                             </p>
+                            
                             <button 
                                 className="view-animals-btn"
                                 onClick={() => handleViewAnimals(enclosure.enclosure_id)}
                             >
                                 View Animals
                             </button>
-    
                         </div>
                     </div>
                 ))}
@@ -115,4 +156,4 @@ const Enclosure = () => {
     );
 };
 
-export default Enclosure;
+export default EnclosuresByExhibit;
