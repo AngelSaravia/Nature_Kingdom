@@ -21,6 +21,10 @@ import MyTickets from "./pages/dashboard/my-tickets/my-tickets";
 import MyMembership from "./pages/dashboard/my-membership/my-membership";
 import AdminDash from "./pages/employee_dash/admin_dash";
 import ManagerDash from "./pages/employee_dash/manager_dash";
+import VeterinarianDash from "./pages/employee_dash/veterinarian_dash";
+import ZookeeperDash from "./pages/employee_dash/zookeeper_dash";
+import OperatorDash from "./pages/employee_dash/operator_dash";
+import GiftShopDash from "./pages/employee_dash/giftshop_dash";
 import TicketForm from "./pages/dataEntries/ticket_form";
 import MembershipForm from "./pages/dataEntries/membership_form";
 import VisitorForm from "./pages/dataEntries/visitor_form";
@@ -180,6 +184,38 @@ function AppContent() {
                   </RoleProtectedRoute>
                 }
               />
+              <Route
+                path="/veterinarian_dash"
+                element={
+                  <RoleProtectedRoute allowedRoles={["veterinarian", "admin"]}>
+                    <VeterinarianDash />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/zookeeper_dash"
+                element={
+                  <RoleProtectedRoute allowedRoles={["zookeeper", "admin"]}>
+                    <ZookeeperDash />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/operator_dash"
+                element={
+                  <RoleProtectedRoute allowedRoles={["operator", "admin"]}>
+                    <OperatorDash />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/giftshop_dash"
+                element={
+                  <RoleProtectedRoute allowedRoles={["giftshop", "admin"]}>
+                    <GiftShopDash />
+                  </RoleProtectedRoute>
+                }
+              />
 
               {/* Admin and manager routes */}
               <Route
@@ -220,6 +256,7 @@ function AppContent() {
                   </RoleProtectedRoute>
                 }
               />
+
               <Route
                 path="/query_report/animals"
                 element={
@@ -248,7 +285,6 @@ function AppContent() {
               <Route path="/login" element={<Login />} />
               <Route path="/employee_login" element={<EmployeeLogin />} />
               <Route path="/admin_dash" element={<AdminDash />} />
-              
 
               <Route path="/animal_form" element={<AnimalForm />} />
               <Route path="/event_form" element={<EventForm />} />
@@ -257,21 +293,38 @@ function AppContent() {
               <Route path="/ticket_form" element={<TicketForm />} />
               <Route path="/visitor_form" element={<VisitorForm />} />
               <Route path="/membership_form" element={<MembershipForm />} />
-                
-              <Route path="/query_report/animals" element={<AnimalQueryReport />} />
-              <Route path="/query_report/events" element={<EventQueryReport />} />
-              <Route path="/query_report/enclosures" element={<EnclosureQueryReport />} />
-              <Route path="/query_report/employees" element={<EmployeeQueryReport />} />
-              <Route path="/query_report/tickets" element={<TicketQueryReport />} />
-              <Route path="/query_report/visitors" element={<VisitorMembershipQueryReport />} />
-              
+
+              <Route
+                path="/query_report/animals"
+                element={<AnimalQueryReport />}
+              />
+              <Route
+                path="/query_report/events"
+                element={<EventQueryReport />}
+              />
+              <Route
+                path="/query_report/enclosures"
+                element={<EnclosureQueryReport />}
+              />
+              <Route
+                path="/query_report/employees"
+                element={<EmployeeQueryReport />}
+              />
+              <Route
+                path="/query_report/tickets"
+                element={<TicketQueryReport />}
+              />
+              <Route
+                path="/query_report/visitors"
+                element={<VisitorMembershipQueryReport />}
+              />
+
               <Route path="/:type/checkout" element={<Checkout />} />
               <Route path="/calendar" element={<EventsPage />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/my-tickets" element={<MyTickets />} />
               <Route path="/my-membership" element={<MyMembership />} />
               <Route path="/giftshop" element={<GiftShop />} />
-
 
               {/* Customer protected routes */}
               <Route element={<ProtectedRoutes allowedRoles={["customer"]} />}>
@@ -280,7 +333,6 @@ function AppContent() {
                 <Route path="/my-membership" element={<MyMembership />} />
                 <Route path="/:type/checkout" element={<Checkout />} />
               </Route>
-
             </Routes>
           </main>
           <Footer />

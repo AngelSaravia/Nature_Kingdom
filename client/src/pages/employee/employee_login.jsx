@@ -26,6 +26,14 @@ function EmployeeLogin() {
         navigate("/manager_dash", { replace: true });
       } else if (role === "staff") {
         navigate("/staff_dash", { replace: true });
+      } else if (role === "zookeeper") {
+        navigate("/zookeeper_dash", { replace: true });
+      } else if (role === "veterinarian") {
+        navigate("/veterinarian_dash", { replace: true });
+      } else if (role === "operator") {
+        navigate("/operator_dash", { replace: true });
+      } else if (role === "giftshop") {
+        navigate("/giftshop_dash", { replace: true });
       }
     }
   }, [isAuthenticated, navigate]);
