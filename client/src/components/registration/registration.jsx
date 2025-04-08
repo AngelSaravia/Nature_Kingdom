@@ -19,6 +19,7 @@ function Registration() {
     street_address: "",
     city: "",
     phone_number: "",
+    gender: "",
   });
 
   // Validation and UI states
@@ -159,6 +160,10 @@ function Registration() {
     } else if (!/^\d{5}(-\d{4})?$/.test(formData.zipcode)) {
       errors.zipcode =
         "Please enter a valid zip code (e.g., 12345 or 12345-6789)";
+    }
+    
+    if (!formData.gender) {
+      errors.gender = "Gender selection is required";
     }
 
     setFormErrors(errors);
@@ -450,6 +455,28 @@ function Registration() {
           </div>
         </div>
 
+        <label  >GENDER (choose one)</label>
+        <div className="form-group">
+          <select
+            name="gender"
+            value={formData.gender}
+            onChange={handleChange}
+            className={formErrors.gender ? "error" : ""}
+          >
+            <option value="">-- Select Gender --</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Non-binary">Non-binary</option>
+            <option value="Other">Other</option>
+            <option value="Prefer not to say">Prefer not to say</option>
+          </select>
+          {formErrors.gender && (
+            <span className="error-text">{formErrors.gender}</span>
+          )}
+        </div>
+
+                    
+
         <div className="form-actions">
           <button type="button" onClick={resetForm} disabled={isSubmitting}>
             Reset
@@ -458,6 +485,7 @@ function Registration() {
             {isSubmitting ? "Submitting..." : "Submit"}
           </button>
         </div>
+        
       </form>
     </div>
   );
