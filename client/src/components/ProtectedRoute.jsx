@@ -60,7 +60,7 @@ const ProtectedRoutes = ({ allowedRoles = ["customer"] }) => {
       allowedRoles,
       username: user.username,
     });
-    return <Navigate to="/unauthorized" replace />;
+    return <Navigate to="/" replace />;
   }
 
   // Access granted

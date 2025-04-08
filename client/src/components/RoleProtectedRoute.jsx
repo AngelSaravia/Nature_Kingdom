@@ -27,7 +27,7 @@ const RoleProtectedRoute = ({ allowedRoles, children }) => {
       "Allowed roles:",
       allowedRoles
     );
-    return <Navigate to="/unauthorized" replace />;
+    return <Navigate to="/" replace />;
   }
 
   console.log("Access granted to:", user.role);
