@@ -96,7 +96,8 @@ const server = http.createServer(async (req, res) => {
 
   } else if (path === "/animal_form" && req.method === "POST") {
     handleAnimalForm(req, res);
-  } else if (path === "/get_animals" && req.method === "GET") {
+  } 
+  else if (path === "/get_animals" && req.method === "GET") {
     const sql = "SELECT * FROM animals"; // Query to fetch all animals
     db_connection.query(sql, (err, results) => {
       if (err) {
@@ -105,11 +106,25 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({ success: false, message: "Database error" }));
         return;
       }
+      console.log("Animals from DB:", results); // Check what's actually returned
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true, data: results }));
     });
-
-  } else if (path === "/employee_form" && req.method === "POST") {
+  }
+  else if (path === "/get_exhibits" && req.method === "GET") {
+    const sql = "SELECT * FROM exhibits"; // Query to fetch all exhibits
+    db_connection.query(sql, (err, results) => {
+      if (err) {
+        console.error("Error fetching exhibits:", err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Database error" }));
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: results }));
+    });
+  }
+  else if (path === "/employee_form" && req.method === "POST") {
     handleEmployeeForm(req, res);
   } else if (path === "/get_employees" && req.method === "GET") {
     const sql = "SELECT * FROM employees";
