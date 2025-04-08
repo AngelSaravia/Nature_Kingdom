@@ -24,7 +24,7 @@ const filterOptions = [
     { label: "MANAGER EMAIL", type: "text", name: "manager_email"},
 ];
 
-const columnHeaders = ["Employee_id", "first_name", "last_name", "user_name", "department_name", "date_of_birth", "street_address", "city", "state", "zip_code", "country", "salary", "gender", "email", "phone", "manager_email"];
+const columnHeaders = ["first_name", "last_name", "user_name", "department_name", "date_of_birth", "street_address", "city", "state", "zip_code", "country", "salary", "gender", "email", "phone", "manager_email"];
 
 const EmployeeQueryReport = () => {
     const [filters, setFilters] = useState({});

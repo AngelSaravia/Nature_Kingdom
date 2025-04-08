@@ -24,7 +24,7 @@ const filterOptions = [
 ];
 
 const columnHeaders = [
-    "visitor_id", "first_name", "last_name", "username", "email",
+    "first_name", "last_name", "username", "email",
     "phone_number", "date_of_birth", "gender", "street_address", 
     "city", "state", "zipcode", "country",
     "membership_status", "end_date"

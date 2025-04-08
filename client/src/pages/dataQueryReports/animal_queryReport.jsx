@@ -39,7 +39,7 @@ const AnimalQueryReport = () => {
     { label: "HEALTH STATUS", type: "checkbox", name: "health_status", options: ["HEALTHY", "NEEDS CARE", "CRITICAL"] },
   ];
   
-  const columnHeaders = ["animal_id", "animal_name", "species", "animal_type", "health_status", "date_of_birth", "enclosure name"];
+  const columnHeaders = ["animal_name", "species", "animal_type", "health_status", "date_of_birth", "enclosure name"];
 
   const handleFilterChange = (eventOrUpdater) => {
     if (typeof eventOrUpdater === "function") {
