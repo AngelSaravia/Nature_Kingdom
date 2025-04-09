@@ -291,24 +291,24 @@ const server = http.createServer(async (req, res) => {
         })
       );
     }
-  } 
-  else if (path === "/api/giftshop/order" && req.method === "POST") {
-    let body = "";
-    req.on("data", chunk => {
-        body += chunk;
-    });
-    req.on("end", async () => {
-        try {
-            const orderData = JSON.parse(body);
-            console.log("Received gift order data:", orderData);
-            await handleGiftOrder.handleGiftOrder(req,res,orderData);
+  } else if (path === "/api/giftshop/order" && req.method === "POST") {
+      let body = "";
+      req.on("data", chunk => {
+          body += chunk;
+      });
+      req.on("end", async () => {
+          try {
+              const orderData = JSON.parse(body);
+              console.log("Received gift order data:", orderData);
+              await handleGiftOrder.handleGiftOrder(req,res,orderData);
 
-        } catch (error) {
-            console.error("Error processing gift order:", error);
-            res.writeHead(500, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ success: false, message: "Server error" }));
-        }
-    });
+          } catch (error) {
+              console.error("Error processing gift order:", error);
+              res.writeHead(500, { "Content-Type": "application/json" });
+              res.end(JSON.stringify({ success: false, message: "Server error" }));
+          }
+      }
+    );
   } else if (path === "/api/giftshop/purchases" && req.method === "GET") {
     const username = url.parse(req.url, true).query.username;
   
