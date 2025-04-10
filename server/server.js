@@ -67,6 +67,20 @@ const server = http.createServer(async (req, res) => {
     // Query Reports
   } else if (path === "/query_report/animals" && req.method === "POST") {
     handleQueryReport(req, res);
+  } // Added route to fetch all enclosure names for animal query report
+    else if (path === "/get_enclosure_names" && req.method === "GET") {
+      const sql = "SELECT name FROM enclosures"; // Query to fetch all enclosure names
+      db_connection.query(sql, (err, results) => {
+          if (err) {
+              console.error("Error fetching enclosure names:", err);
+              res.writeHead(500, { "Content-Type": "application/json" });
+              res.end(JSON.stringify({ success: false, message: "Database error" }));
+              return;
+          }
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ success: true, data: results.map(row => row.name) })); // Return only the names
+      });
+
   } else if (path === "/query_report/events" && req.method === "POST") {
     handleQueryReport(req, res);
   } else if (path === "/query_report/employees" && req.method === "POST") {
