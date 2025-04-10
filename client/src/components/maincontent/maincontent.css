@@ -5,7 +5,14 @@
   --border-radius: 4px;
   --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   --blue-button: #007bff;
+  --blue-button-hover: #0056b3;
   --border-color: #e0e0e0;
+  --light-gray: #aaa;
+  --white: #fff;
+  --black: #000;
+  --card-height: 450px; /* Standard card height */
+  --image-height: 200px; /* Standard image height */
+  --header-height: 50px; /* Standard header height */
 }
 
 /* Main layout */
@@ -25,23 +32,35 @@
   gap: 20px;
 }
 
+/* Common card styles */
+.card,
+.section-header,
+.calendar,
+.event-card,
+.donation-section {
+  background-color: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+  width: 100%;
+}
+
 /* Header styles */
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: white;
-  border-radius: var(--border-radius);
   padding: 10px 15px;
-  box-shadow: var(--box-shadow);
+  height: var(--header-height);
+  box-sizing: border-box;
 }
 
 .section-header h2 {
   margin: 0;
-  font-size: 35px;
+  font-size: 32px;
   text-transform: uppercase;
   font-weight: bold;
-  color: #000;
+  color: var(--black);
   font-family: "EB Garamond", serif;
 }
 
@@ -49,17 +68,20 @@
   color: var(--text-color);
   text-decoration: none;
   font-size: 22px;
+  transition: color 0.2s;
+}
+
+.view-all:hover {
+  color: var(--zoo-green);
 }
 
 /* Calendar styles */
 .calendar {
-  background-color: white;
-  border-radius: var(--border-radius);
   padding: 15px;
-  box-shadow: var(--box-shadow);
   display: flex;
   flex-direction: column;
-  max-height: 350px;
+  height: var(--card-height);
+  box-sizing: border-box;
 }
 
 .calendar-header h3 {
@@ -67,7 +89,7 @@
   text-align: center;
   font-size: 20px;
   font-weight: normal;
-  color: #000;
+  color: var(--black);
 }
 
 .weekdays {
@@ -84,6 +106,9 @@
   grid-template-columns: repeat(7, 1fr);
   gap: 5px;
   margin-top: 5px;
+  width: 100%;
+  text-align: center;
+  flex-grow: 1;
 }
 
 .day {
@@ -96,11 +121,17 @@
   font-size: 14px;
   position: relative;
   color: var(--text-color);
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.day:hover {
+  transform: scale(1.1);
 }
 
 .day.selected {
   background-color: var(--zoo-green);
-  color: white;
+  color: var(--white);
   border-radius: 50%;
 }
 
@@ -119,32 +150,29 @@
 }
 
 .prev-month {
-  color: #aaa;
+  color: var(--light-gray);
 }
 
-/* Donation section - ENHANCED */
+/* Donation section - STANDARDIZED */
 .donation-section {
-  background-color: white;
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  box-shadow: var(--box-shadow);
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
-  margin-top: auto;
-  min-height: 450px;
+  align-items: center;
+  height: 800px;
+  box-sizing: border-box;
 }
 
 .donation-image {
-  width: 100%;
-  height: 300px;
+  padding-top: 20px;
+  width: 80%;
+  height: 400px;
   object-fit: cover;
   object-position: top center;
   display: block;
 }
 
 .donation-text {
-  padding: 25px;
+  padding: 20px;
   font-size: 16px;
   line-height: 1.6;
   color: var(--text-color);
@@ -156,7 +184,7 @@
 
 .donate-button {
   background-color: var(--blue-button);
-  color: white;
+  color: var(--white);
   border: none;
   border-radius: 25px;
   padding: 10px 25px;
@@ -166,12 +194,17 @@
   margin: 15px auto 10px;
   display: block;
   text-transform: uppercase;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.2s;
   min-width: 160px;
 }
 
 .donate-button:hover {
-  background-color: #0056b3;
+  background-color: var(--blue-button-hover);
+  transform: translateY(-2px);
+}
+
+.donate-button:active {
+  transform: translateY(0);
 }
 
 /* Event styles */
@@ -182,22 +215,31 @@
 }
 
 .event-card {
-  background-color: white;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  overflow: hidden;
+  transition: transform 0.2s;
+  height: var(--card-height);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.event-card:hover {
+  transform: translateY(-3px);
 }
 
 .event-card h3 {
   margin: 0;
   padding: 15px 15px 5px;
   font-size: 20px;
-  color: black;
+  color: var(--black);
   font-weight: bold;
 }
 
 .event-details {
   padding: 0 15px 15px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .event-details p {
@@ -214,18 +256,25 @@
 /* Event image container with proper sizing structure */
 .event-image-container {
   width: 100%;
-  height: 200px;
+  height: var(--image-height);
   overflow: hidden;
-  border-top: 2px solid var(--border-color); /* Border on top of image container */
+  border-top: 2px solid var(--border-color);
 }
 
 /* Event image with exact structure as you requested + border */
 .event-image {
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 80%;
   object-fit: cover;
   object-position: center;
   display: block;
+  transition: transform 0.3s;
+  border-radius: 10px;
+  padding-bottom: 20px;
+}
+
+.event-card:hover .event-image {
+  transform: scale(1.05);
 }
 
 /* Fix for full calendar display */
@@ -233,12 +282,7 @@
   width: 100%;
 }
 
-.calendar-grid {
-  width: 100%;
-  text-align: center;
-}
-
-/* Add additional calendar days */
+/* Weekday row */
 .weekday-row {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -246,18 +290,26 @@
 }
 
 /* Media queries for responsiveness */
+@media (max-width: 1024px) {
+  .main-content-container {
+    gap: 15px;
+    padding: 15px;
+  }
+
+  :root {
+    --card-height: 420px;
+    --image-height: 180px;
+  }
+}
+
 @media (max-width: 768px) {
-  .main-content {
+  .main-content-container {
     flex-direction: column;
   }
 
   .day {
     height: 25px;
     width: 25px;
-  }
-
-  .donation-image {
-    height: 220px;
   }
 
   .section-header h2 {
@@ -267,9 +319,19 @@
   .view-all {
     font-size: 18px;
   }
+
+  :root {
+    --card-height: 400px;
+    --image-height: 160px;
+  }
 }
 
 @media (max-width: 480px) {
+  .main-content-container {
+    padding: 10px;
+    gap: 10px;
+  }
+
   .section-header h2 {
     font-size: 20px;
   }
@@ -282,10 +344,6 @@
     font-size: 18px;
   }
 
-  .donation-section {
-    min-height: 400px;
-  }
-
   .donation-text {
     font-size: 14px;
     padding: 15px;
@@ -295,5 +353,11 @@
     font-size: 14px;
     padding: 8px 20px;
     min-width: 140px;
+  }
+
+  :root {
+    --card-height: 350px;
+    --image-height: 140px;
+    --header-height: 40px;
   }
 }

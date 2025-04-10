@@ -26,6 +26,12 @@ const AdminDash = () => {
                 <div className="dashboard-single">
                     <button onClick={() => navigate("/query_report/events")} className="dashboard-button"> Events</button>
                 </div>
+                <div className="dashboard-single">
+                    <button onClick={() => navigate("/query_report/tickets")} className="dashboard-button"> Tickets</button>
+                </div>
+                <div className="dashboard-single">
+                    <button onClick={() => navigate("/query_report/visitors")} className="dashboard-button"> Visitors</button>
+                </div>
             </div>
           </div>
           <div className="dashboard-box">
@@ -42,6 +48,15 @@ const AdminDash = () => {
                 </div>
                 <div className="dashboard-single">
                     <button onClick={() => navigate("/event_form")} className="dashboard-button"> Events</button>
+                </div>
+                <div className="dashboard-single">
+                    <button onClick={() => navigate("/ticket_form")} className="dashboard-button"> Tickets</button>
+                </div>
+                <div className="dashboard-single">
+                    <button onClick={() => navigate("/visitor_form")} className="dashboard-button"> Visitors</button>
+                </div>
+                <div className="dashboard-single">
+                    <button onClick={() => navigate("/membership_form")} className="dashboard-button"> Memberships</button>
                 </div>
             </div>
           </div>

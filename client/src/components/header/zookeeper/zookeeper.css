@@ -1,0 +1,140 @@
+/* Base header layout */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #182119; /* Dark green background */
+  color: white;
+  padding: 30px 20px;
+}
+
+/* Logo section */
+.logo-section {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+  max-width: 485.5px;
+}
+
+.brand-name {
+  font-size: clamp(30px, 40px, 50px);
+}
+
+.logo-image {
+  width: clamp(85px, 7vw, 150px);
+  height: clamp(85px, 7vw, 150px);
+}
+
+/* Navigation links */
+.nav-links {
+  display: flex;
+  gap: clamp(10px, 3vw, 50px);
+  align-items: flex-end;
+  /* margin: 0 auto; */
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 8px 12px;
+  font-size: clamp(14px, 22px, 30px);
+}
+
+.nav-links a:hover {
+  color: white;
+  text-decoration: underline;
+  text-decoration-thickness: 5px;
+}
+
+/* User menu section */
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: clamp(15px, 2vw, 30px);
+  /* margin-left: auto; */
+  white-space: nowrap;
+}
+
+.username {
+  color: white;
+  font-size: clamp(16px, 22px, 28px);
+}
+
+.logout-btn {
+  font-size: clamp(16px, 20px, 28px);
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: red;
+  color: white;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .header {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 1510px) {
+  .user-menu {
+    margin: auto;
+  }
+  .header {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .nav-links {
+    order: 2;
+    justify-content: center;
+    width: 100%;
+    gap: 20px;
+  }
+
+  .user-menu {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 0.5rem;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .user-menu {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .username {
+    font-size: 16px;
+  }
+
+  .logout-btn {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+}

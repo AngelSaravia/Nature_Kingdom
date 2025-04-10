@@ -1,11 +1,11 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./admin.css";
+import "./veterinarian.css";
 import logoImage from "../../../zoo_pictures/Nature's_Kingdom.jpeg";
 import { useAuth } from "../../../context/Authcontext";
 import apiClient from "../../../services/api";
 
-function AdminHeader() {
+function veterinarianHeader() {
   const navigate = useNavigate();
   const auth = useAuth();
 
@@ -43,11 +43,7 @@ function AdminHeader() {
       </div>
 
       <nav className="nav-links">
-        <Link to="/admin_dash">Dashboard</Link>
-        {/* <Link to="/event_form">Events Form</Link>
-        <Link to="/enclosure_form">Enclosure Form</Link>
-        <Link to="/animal_form">Animal Form</Link>
-        <Link to="/employee_form">Employee Form</Link> */}
+        <Link to="/veterinarian_dash">Dashboard</Link>
       </nav>
       <div className="user-menu">
         <span className="username">Welcome, {username}</span>
@@ -59,4 +55,4 @@ function AdminHeader() {
   );
 }
 
-export default AdminHeader;
+export default veterinarianHeader;
