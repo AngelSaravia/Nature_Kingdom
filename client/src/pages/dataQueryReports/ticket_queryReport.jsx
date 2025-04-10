@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
@@ -6,20 +6,23 @@ import { Link } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
-    { label: "VISITOR ID", type: "number", name: "visitor_id" }, //remove id's from all query reports? Don't know if I need to take out primary key id's or foreign key id's
-    { label: "START DATE", type: "datetime-local", name: "start_date" },
-    { label: "END DATE", type: "datetime-local", name: "end_date" },
-    { label: "PRICE (Min)", type: "number", name: "priceMin" },
-    { label: "PRICE (Max)", type: "number", name: "priceMax" },
-    { label: "TICKET TYPE", type: "text", name: "ticket_type" },
-    { label: "PURCHASE DATE", type: "datetime-local", name: "purchase_date" },
+    { label: "VISITOR NAME", type: "text", name: "visitor_name" },
+    { label: "START DATE", type: "date", name: "start_date" },
+    { label: "END DATE", type: "date", name: "end_date" },
+    { label: "TICKET TYPE", type: "checkbox", name: "ticket_type", options: ["Child", "Adult", "Senior", "Group", "Member"] },
+    { label: "BEGINNING PURCHASE DATE", type: "date", name: "purchase_dateMin" },
+    { label: "ENDING PURCHASE DATE", type: "date", name: "purchase_dateMax" },
 ];
 
-const columnHeaders = ["ticket_id", "visitor_id", "start_date", "end_date", "price", "ticket_type", "purchase_date"];
+const columnHeaders = ["visitor_name", "start_date", "end_date", "ticket_type", "purchase_date"];
 
 const TicketQueryReport = () => {
     const [filters, setFilters] = useState({});
     const [reportData, setReportData] = useState([]);
+
+    useEffect(() => {
+        fetchReport(false);
+    }, []);
 
     const handleFilterChange = (eventOrUpdater) => {
         if (typeof eventOrUpdater === "function") {
@@ -43,20 +46,46 @@ const TicketQueryReport = () => {
         }
     };
 
-    const fetchReport = async () => {
+    const fetchReport = async (applyFilters = true) => {
         try {
-            if (Object.keys(filters).length === 0) {
-                console.error("No filters applied. Please select at least one filter.");
-                return;
+            // Create prefixed filters object
+            const prefixedFilters = {};
+            if (applyFilters && Object.keys(filters).length > 0) {
+                Object.keys(filters).forEach((key) => {
+                    if (key === 'visitor_name') {
+                        prefixedFilters['CONCAT(visitors.first_name, " ", visitors.last_name)'] = filters[key];
+                    } else if (key === 'start_date' || key === 'end_date' || key === 'purchase_dateMin' || key === 'purchase_dateMax') {
+                        prefixedFilters[`tickets.${key}`] = filters[key];
+                    } else if (key === 'ticket_type') {
+                        prefixedFilters[`tickets.${key}`] = filters[key];
+                    }
+                });
             }
 
-            const queryParams = { entity_type: "tickets", ...filters };
+            // Time portion for compatibility with TIMESTAMP
+            if (prefixedFilters['tickets.start_date']) {
+                prefixedFilters['tickets.start_date'] = prefixedFilters['tickets.start_date'];
+            }
+            if (prefixedFilters['tickets.end_date']) {
+                prefixedFilters['tickets.end_date'] = prefixedFilters['tickets.end_date'];
+            }
+            if (prefixedFilters['tickets.purchase_dateMin']) {
+                prefixedFilters['tickets.purchase_dateMin'] = prefixedFilters['tickets.purchase_dateMin'];
+            }
+            if (prefixedFilters['tickets.purchase_dateMax']) {
+                prefixedFilters['tickets.purchase_dateMax'] = prefixedFilters['tickets.purchase_dateMax'];
+            }
 
-            Object.keys(queryParams).forEach((key) => {
-                if (Array.isArray(queryParams[key]) && queryParams[key].length > 0) {
-                    queryParams[key] = queryParams[key].join(",");
-                }
-            });
+            const queryParams = {
+            table1: "tickets",
+            table2: "visitors",
+            join_condition: "tickets.visitor_id = visitors.visitor_id",
+            computed_fields: `
+                tickets.*, 
+                CONCAT(visitors.first_name, ' ', visitors.last_name) AS visitor_name
+            `,
+            ...prefixedFilters,
+            };
 
             const response = await fetch(`${API_BASE_URL}/query_report/tickets`, {
                 method: "POST",
@@ -66,14 +95,7 @@ const TicketQueryReport = () => {
 
             const data = await response.json();
             if (data.success) {
-                // Format TIMESTAMP fields to datetime-local format
-                const formattedData = data.data.map((row) => ({
-                ...row,
-                start_date: row.start_date ? new Date(row.start_date).toISOString().slice(0, 16) : "",
-                end_date: row.end_date ? new Date(row.end_date).toISOString().slice(0, 16) : "",
-                purchase_date: row.purchase_date ? new Date(row.purchase_date).toISOString().slice(0, 16) : "",
-            }));
-                setReportData(formattedData);
+                setReportData(data.data);
             } else {
                 console.error("Error fetching report:", data.message);
             }
@@ -81,10 +103,13 @@ const TicketQueryReport = () => {
             console.error("Error fetching report:", error);
         }
     };
-
+    const onClearAll = () => {
+        setFilters({});
+        fetchReport(false);
+    };
     return (
         <div className="ticket-query-report">
-            <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} filterOptions={filterOptions} />
+            <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
             <div className="report-table-container">
                 <ReportTable data={reportData} columns={columnHeaders} />
                 <div className="edit-ticket-button-container">

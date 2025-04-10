@@ -7,6 +7,7 @@ import getDay from 'date-fns/getDay';
 import { enUS } from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './calendar.css';
+import { FiTrendingUp } from 'react-icons/fi';
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const locales = {
@@ -20,6 +21,44 @@ const localizer = dateFnsLocalizer({
   getDay,
   locales,
 });
+
+// Custom Event Component
+const CustomEvent = ({ event }) => {
+  const durationMs = event.end - event.start;
+  const hours = Math.floor(durationMs / (1000 * 60 * 60));
+  const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
+  const durationString = `${hours}h ${minutes}m`;
+
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e) => {
+    setPosition({ x: e.clientX, y: e.clientY });
+  };
+
+  return (
+    <div 
+      className="custom-event"
+      onMouseMove={handleMouseMove}
+    >
+      <div className="event-title">{event.title}</div>
+      <div 
+        className="event-tooltip" 
+        style={{
+          left: `${position.x}px`,
+          top: `${position.y}px`
+        }}
+      >
+        <div><strong>Title: </strong>{event.title}</div>
+        <div><strong>Description:</strong> {event.description}</div>
+        <div><strong>Location:</strong> {event.location}</div>
+        <div><strong>Duration:</strong> {durationString}</div>
+
+        <div><strong>Price:</strong> ${event.price || 'Free'}</div>
+        <div><strong>Type:</strong> {event.type}</div>
+      </div>
+    </div>
+  );
+};
 
 const MyCalendar = () => {
   const [events, setEvents] = useState([]);
@@ -93,6 +132,13 @@ const MyCalendar = () => {
     setCurrentDate(newDate);
   };
 
+  // Customize event appearance
+  const eventPropGetter = (event) => {
+    return {
+      className: `rbc-event-${event.type.toLowerCase()}`,
+    };
+  };
+
   return (
     <div className='calendar-container'>
       <Calendar
@@ -103,6 +149,10 @@ const MyCalendar = () => {
         date={currentDate}
         onNavigate={handleNavigate}
         defaultView="month"
+        components={{
+          event: CustomEvent,
+        }}
+        eventPropGetter={eventPropGetter}
       />
     </div>
   );
