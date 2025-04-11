@@ -1,0 +1,275 @@
+.enclosure-query-report {
+  margin: 20px;
+}
+
+.report-table-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.loading-message {
+  color: #e0e0e0;
+  font-size: 16px;
+  padding: 20px;
+  text-align: center;
+}
+
+.enclosure-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #000000;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.enclosure-table th,
+.enclosure-table td {
+  border: 1px solid #444;
+  padding: 8px;
+  text-align: left;
+  color: #e0e0e0;
+}
+
+.enclosure-table th {
+  background-color: #1b3c36;
+  color: #e0e0e0;
+  padding: 10px 8px;
+  font-weight: bold;
+}
+
+.enclosure-table tr:hover {
+  background-color: #1a1a1a;
+}
+
+.toggle-animals-btn {
+  background: transparent;
+  border: none;
+  color: #00cc8e;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 5px;
+  transition: color 0.2s ease;
+}
+
+.toggle-animals-btn:hover {
+  color: #00a668;
+}
+
+.animals-row {
+  background-color: #0a0a0a;
+}
+
+.animals-container {
+  padding: 15px;
+}
+
+.animals-container h4 {
+  color: #00cc8e;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.animals-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.animals-table th,
+.animals-table td {
+  border: 1px solid #333;
+  padding: 8px;
+  text-align: left;
+}
+
+.animals-table th {
+  background-color: #1b3c36;
+  color: #e0e0e0;
+}
+
+.animals-table tr:hover {
+  background-color: #1a1a1a;
+}
+
+.animals-container p {
+  color: #999;
+  font-style: italic;
+  margin: 10px 0;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background-color: white;
+  border-radius: 8px;
+  width: 450px;
+  max-width: 90%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: popup-fade-in 0.3s ease;
+}
+
+@keyframes popup-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #2c5e4e;
+  color: white;
+}
+
+.popup-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.popup-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.popup-body {
+  padding: 25px 20px;
+}
+
+.animal-name {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.status-change {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.status-box {
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-align: center;
+  min-width: 120px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.arrow {
+  margin: 0 15px;
+  font-size: 1.5rem;
+  color: #6c757d;
+}
+
+.status-description {
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.5;
+  color: #495057;
+  padding: 0 10px;
+}
+
+.warning-message {
+  background-color: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding: 10px 15px;
+  margin: 15px 0 5px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.warning-message p {
+  margin: 0;
+  color: #856404;
+  font-weight: 500;
+}
+
+.popup-footer {
+  display: flex;
+  justify-content: center;
+  padding: 15px 20px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+.popup-footer button {
+  padding: 8px 25px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 0 10px;
+}
+
+.confirm-button {
+  background-color: #2c5e4e;
+  color: white;
+  border: none;
+}
+
+.confirm-button:hover {
+  background-color: #224a3e;
+}
+
+.cancel-button {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #ced4da;
+}
+
+.cancel-button:hover {
+  background-color: #e9ecef;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1000px) {
+  .enclosure-table {
+    font-size: 14px;
+  }
+
+  .enclosure-table th,
+  .enclosure-table td,
+  .animals-table th,
+  .animals-table td {
+    padding: 6px 4px;
+  }
+}
+
+@media (max-width: 768px) {
+  .enclosure-table {
+    font-size: 12px;
+  }
+
+  .animals-container {
+    padding: 10px;
+  }
+}
