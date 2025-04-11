@@ -15,6 +15,10 @@ const handleEnclosureForm = require("./helpers/enclosureFormHelper");
 const handleAnimalForm = require("./helpers/animalFormHelper");
 const handleEmployeeForm = require("./helpers/employeeFormHelper");
 const handleEventForm = require("./helpers/eventFormHelper");
+const handleTicketForm = require("./helpers/ticketFormHelper");
+const handleVisitorForm = require("./helpers/visitorFormHelper");
+const handleMembershipForm = require("./helpers/membershipFormHelper");
+const handleMedicalForm = require("./helpers/medicalFormHelper");
 const handleCalendar = require("./helpers/calendar_helper");
 const handleGiftShop = require("./helpers/giftShop_helper");
 const handleGiftOrder = require("./helpers/order_helper");
@@ -89,6 +93,12 @@ const server = http.createServer(async (req, res) => {
     handleQueryReport(req, res);
   } else if (path === "/query_report/tickets" && req.method === "POST") {
     handleQueryReport(req, res);
+  } else if (path === "/query_report/revenue" && req.method === "POST") {
+    handleQueryReport(req, res);
+  } else if (path === "/query_report/feedLogs" && req.method === "POST") {
+    handleQueryReport(req, res);
+  } else if (path === "/query_report/medicalRecords" && req.method === "POST") {
+    handleQueryReport(req, res);
   } else if (path === "/query_report/visitors" && req.method === "POST") {
     handleQueryReport(req, res);
 
@@ -159,7 +169,7 @@ const server = http.createServer(async (req, res) => {
     const sql = "SELECT * FROM tickets"; // Query to fetch all tickets
     db_connection.query(sql, (err, results) => {
       if (err) {
-        console.error("Error fetching events:", err);
+        console.error("Error fetching tickets:", err);
         res.writeHead(500, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ success: false, message: "Database error" }));
         return;
@@ -174,7 +184,22 @@ const server = http.createServer(async (req, res) => {
     const sql = "SELECT * FROM visitors"; // Query to fetch all visitors
     db_connection.query(sql, (err, results) => {
       if (err) {
-        console.error("Error fetching events:", err);
+        console.error("Error fetching visitors:", err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Database error" }));
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: results }));
+    });
+
+  } else if (path === "/medical_form" && req.method === "POST") {
+    handleMedicalForm(req, res);
+  } else if (path === "/get_medical_records" && req.method === "GET") {
+    const sql = "SELECT * FROM medical_records";
+    db_connection.query(sql, (err, results) => {
+      if (err) {
+        console.error("Error fetching medical records:", err);
         res.writeHead(500, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ success: false, message: "Database error" }));
         return;
@@ -189,7 +214,7 @@ const server = http.createServer(async (req, res) => {
     const sql = "SELECT * FROM memberships"; // Query to fetch all memberships
     db_connection.query(sql, (err, results) => {
       if (err) {
-        console.error("Error fetching events:", err);
+        console.error("Error fetching memberships:", err);
         res.writeHead(500, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ success: false, message: "Database error" }));
         return;

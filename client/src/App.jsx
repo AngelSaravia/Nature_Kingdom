@@ -28,6 +28,7 @@ import EmployeeForm from "./pages/dataEntries/employee_form";
 import AnimalForm from "./pages/dataEntries/animal_form";
 import EnclosureForm from "./pages/dataEntries/enclosure_form";
 import EventForm from "./pages/dataEntries/event_form";
+import MedicalForm from "./pages/dataEntries/medical_form";
 import EventsPage from "./pages/events/EventsPage";
 import AnimalQueryReport from "./pages/dataQueryReports/animal_queryReport";
 import EventQueryReport from "./pages/dataQueryReports/event_queryReport";
@@ -35,6 +36,9 @@ import EnclosureQueryReport from "./pages/dataQueryReports/enclosure_queryReport
 import EmployeeQueryReport from "./pages/dataQueryReports/employee_queryReport";
 import TicketQueryReport from "./pages/dataQueryReports/ticket_queryReport";
 import VisitorMembershipQueryReport from "./pages/dataQueryReports/visitormembership_queryReport";
+import RevenueQueryReport from "./pages/dataQueryReports/revenue_queryReport";
+import FeedLogsQueryReport from "./pages/dataQueryReports/feedLogs_queryReport";
+import MedicalRecordsQueryReport from "./pages/dataQueryReports/medicalRecords_queryReport";
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
 import GiftShop from "./pages/giftshop/GiftShop";
@@ -257,6 +261,7 @@ function AppContent() {
               <Route path="/ticket_form" element={<TicketForm />} />
               <Route path="/visitor_form" element={<VisitorForm />} />
               <Route path="/membership_form" element={<MembershipForm />} />
+              <Route path="/medical_form" element={<MedicalForm />} />
                 
               <Route path="/query_report/animals" element={<AnimalQueryReport />} />
               <Route path="/query_report/events" element={<EventQueryReport />} />
@@ -264,6 +269,9 @@ function AppContent() {
               <Route path="/query_report/employees" element={<EmployeeQueryReport />} />
               <Route path="/query_report/tickets" element={<TicketQueryReport />} />
               <Route path="/query_report/visitors" element={<VisitorMembershipQueryReport />} />
+              <Route path="/query_report/revenue" element={<RevenueQueryReport />} />
+              <Route path="/query_report/feedLogs" element={<FeedLogsQueryReport />} />
+              <Route path="/query_report/medicalRecords" element={<MedicalRecordsQueryReport />} />
               
               <Route path="/:type/checkout" element={<Checkout />} />
               <Route path="/calendar" element={<EventsPage />} />

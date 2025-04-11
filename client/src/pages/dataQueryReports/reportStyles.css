@@ -3,7 +3,11 @@
 .event-query-report,
 .employee-query-report,
 .ticket-query-report,
-.visitor-query-report {
+.visitor-query-report,
+.revenue-query-report,
+.EWH-query-report,
+.feedLogs-query-report,
+.medicalRecords-query-report {
   display: flex;
   gap: 20px;
   padding: 20px;
@@ -104,7 +108,8 @@
 .edit-animal-button-container,
 .edit-enclosure-button-container,
 .edit-ticket-button-container,
-.edit-visitor-button-container {
+.edit-visitor-button-container,
+.edit-medicalRecords-button-container {
   display: flex;
   justify-content: flex-end;
   margin-top: 10px;
@@ -115,7 +120,8 @@
 .edit-animal-button,
 .edit-enclosure-button,
 .edit-ticket-button,
-.edit-visitor-button {
+.edit-visitor-button,
+.edit-medicalRecords-button {
   padding: 10px 20px;
   background-color: #007bff;
   color: white;

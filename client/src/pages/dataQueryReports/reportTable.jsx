@@ -18,7 +18,12 @@ const ReportTable = ({ data, columns }) => {
             {data.map((row, index) => (
               <tr key={index}>
                 {columns.map((col) => (
-                  <td key={col}>{row[col]}</td>
+                  <td key={col}>
+                    {/* Format specific date-related columns */}
+                    {["date", "start_date", "end_date", "purchase_date", "eventDate"].includes(col) && row[col]
+                      ? new Date(row[col]).toISOString().split("T")[0] // Format to YYYY-MM-DD
+                      : row[col]}
+                  </td>
                 ))}
               </tr>
             ))}
