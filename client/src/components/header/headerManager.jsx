@@ -7,15 +7,13 @@ import ManagerHeader from "./manager/managerHeader";
 import StaffHeader from "./staff/staffheader";
 import VeterinarianHeader from "./veterinarian/veterinarian";
 import ZookeeperHeader from "./zookeeper/zookeeper";
-import { useAuth } from "../../context/Authcontext"; // <-- Import the same hook
+import { useAuth } from "../../context/Authcontext";
 import OperatorHeader from "./operator/operator";
 import GiftShopHeader from "./giftshop/giftshop";
-import ManagerHeader from "./manager/managerHeader";
-import StaffHeader from "./staff/staffheader";
 
 function HeaderManager() {
   const location = useLocation();
-  const { isAuthenticated, user, loading } = useAuth(); // <-- Use the same auth context
+  const { isAuthenticated, user, loading } = useAuth();
 
   console.log("HeaderManager Auth State:", {
     isAuthenticated,
