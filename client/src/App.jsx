@@ -29,6 +29,7 @@ import AnimalForm from "./pages/dataEntries/animal_form";
 import EnclosureForm from "./pages/dataEntries/enclosure_form";
 import EventForm from "./pages/dataEntries/event_form";
 import MedicalForm from "./pages/dataEntries/medical_form";
+import FeedLogsForm from "./pages/dataEntries/feedLogs_form";
 import EventsPage from "./pages/events/EventsPage";
 import AnimalQueryReport from "./pages/dataQueryReports/animal_queryReport";
 import EventQueryReport from "./pages/dataQueryReports/event_queryReport";
@@ -42,6 +43,17 @@ import MedicalRecordsQueryReport from "./pages/dataQueryReports/medicalRecords_q
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
 import GiftShop from "./pages/giftshop/GiftShop";
+
+function DebugNavigation() {
+  const location = useLocation();
+
+  useEffect(() => {
+      console.log("Navigated to:", location.pathname);
+      console.log("Navigation state:", location.state);
+  }, [location]);
+
+  return null;
+} //Bahar's debugging
 
 // Performance monitoring callback
 function onRenderCallback(id, phase, actualDuration) {
@@ -112,6 +124,7 @@ function AppContent() {
 
   return (
     <>
+      <DebugNavigation /> {/* Debugging navigation changes */}
       {loading ? (
         <div className="loading_container">
           <DotLottieReact
@@ -262,6 +275,7 @@ function AppContent() {
               <Route path="/visitor_form" element={<VisitorForm />} />
               <Route path="/membership_form" element={<MembershipForm />} />
               <Route path="/medical_form" element={<MedicalForm />} />
+              <Route path="/feedLog_form" element={<FeedLogsForm />} />
                 
               <Route path="/query_report/animals" element={<AnimalQueryReport />} />
               <Route path="/query_report/events" element={<EventQueryReport />} />

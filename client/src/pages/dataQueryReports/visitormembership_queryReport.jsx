@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
@@ -27,13 +27,14 @@ const columnHeaders = [
     "first_name", "last_name", "username", "email",
     "phone_number", "date_of_birth", "gender", "street_address", 
     "city", "state", "zipcode", "country",
-    "membership_status", "end_date"
+    "membership_status", "end_date", "first_login", "last_login"
 
 ];
 
 const VisitorMembershipQueryReport = () => {
     const [filters, setFilters] = useState({});
     const [reportData, setReportData] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchReport(false);
@@ -92,8 +93,10 @@ const VisitorMembershipQueryReport = () => {
                         WHEN memberships.visitor_id IS NOT NULL THEN 'active'
                         ELSE 'inactive'
                     END AS membership_status,
-                    memberships.end_date
-                `, // Computes membership_status and includes end_date
+                    memberships.end_date,
+                    visitors.first_login,
+                    visitors.last_login
+                `,
                 ...prefixedFilters,
             };
 
@@ -118,13 +121,28 @@ const VisitorMembershipQueryReport = () => {
         setFilters({});
         fetchReport(false);
     };
+
+    const renderEditButton = (tuple) => {
+        return (
+          <button 
+            onClick={() => {
+              // Store in sessionStorage as fallback
+              sessionStorage.setItem('visitorEditData', JSON.stringify(tuple));
+              navigate('/visitor_form', { state: { tuple } });
+            }}
+            className="edit-tuple-button"
+          >
+            Edit Tuple
+          </button>
+        );
+      };
     return (
         <div className="visitor-query-report"> 
           <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
           <div className="report-table-container">
-          <ReportTable data={reportData} columns={columnHeaders} />
+          <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
           <div className="edit-visitor-button-container">
-            <Link to="/visitor_form" className="edit-visitor-button">Edit Visitor</Link>
+            <Link to="/visitor_form" className="edit-visitor-button">Add Visitor</Link>
           </div>
         </div>
         </div>

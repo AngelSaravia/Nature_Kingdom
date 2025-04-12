@@ -3,9 +3,12 @@ import InputFields from "./inputs.jsx";
 import styles from "./forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
+import { useLocation, useNavigate } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const TicketForm = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         ticket_id: "",
         visitor_id: "",
@@ -20,12 +23,42 @@ const TicketForm = () => {
     const [tickets, setTickets] = useState([]);
 
     useEffect(() => {
+        console.log("Location object:", location);
+        const tupleData = location.state?.tuple || JSON.parse(sessionStorage.getItem('ticketEditData') || null);
+        
+        if (tupleData) {
+            console.log("Loading ticket data:", tupleData);
+            const formatDateTime = (dateTime) => {
+                if (!dateTime) return "";
+                return new Date(dateTime).toISOString().slice(0, 16); // Format as YYYY-MM-DDTHH:mm
+            };
+            setFormData({
+                ticket_id: tupleData.ticket_id || "",
+                visitor_id: tupleData.visitor_id || "",
+                start_date: formatDateTime(tupleData.start_date) || "",
+                end_date: formatDateTime(tupleData.end_date) || "",
+                price: tupleData.price || "",
+                ticket_type: tupleData.ticket_type || "",
+                purchase_date: formatDateTime(tupleData.purchase_date) || "",
+            });
+            
+            // Clear the sessionStorage after use
+            sessionStorage.removeItem('ticketEditData');
+        } else {
+            console.log("No ticket data found - creating new form");
+        }
         fetch(`${API_BASE_URL}/get_tickets`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) setTickets(data.data);
             })
             .catch(error => console.error("Error fetching tickets:", error));
+    }, [location]);
+
+    useEffect(() => {
+        return () => {
+            sessionStorage.removeItem('ticketFormState');
+        };
     }, []);
 
     // Handle text input changes
@@ -48,22 +81,6 @@ const TicketForm = () => {
     // Handles only numeric input
     const handleNumericInput = (event) => {
         event.target.value = event.target.value.replace(/\D/g, "");
-    };
-
-    const handleTicketSelect = (ticket) => {
-        const formatDateTime = (dateTime) => {
-            if (!dateTime) return "";
-            return new Date(dateTime).toISOString().slice(0, 16); // Format as YYYY-MM-DDTHH:mm
-        };
-        setFormData({
-            ticket_id: ticket.ticket_id || "",
-            visitor_id: ticket.visitor_id || "",
-            start_date: formatDateTime(ticket.start_date) || "",
-            end_date: formatDateTime(ticket.end_date) || "",
-            price: ticket.price || "",
-            ticket_type: ticket.ticket_type || "",
-            purchase_date: formatDateTime(ticket.purchase_date) || "",
-        });
     };
 
     // Handle form submission
@@ -138,19 +155,6 @@ const TicketForm = () => {
         <div className={styles.formContainer}>
             <h2 className={styles.formTitle}>TICKET DATA ENTRY FORM</h2>
             <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
-            <div className={styles.formRow}>
-                    <Dropdown
-                        label="Select Ticket to Modify/Delete"
-                        onSelect={(value) => handleTicketSelect(JSON.parse(value))}
-                        selectedLabel={formData.ticket_id ? `${formData.visitor_id} (ID: ${formData.ticket_id})` : "Select Ticket to Modify/Delete"}
-                    >
-                        {tickets.map(ticket => (
-                            <DropdownItem key={ticket.ticket_id} value={JSON.stringify(ticket)}>
-                                (Visitor ID: {ticket.visitor_id}) (ID: {ticket.ticket_id})
-                            </DropdownItem>
-                        ))}
-                    </Dropdown>
-                </div>
                 <div className={styles.formRow}>
                     <InputFields label="VISITOR ID *" name="visitor_id" type="text" value={formData.visitor_id} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autoComplete="off"/>
                     <InputFields label="PRICE *" name="price" type="number" value={formData.price} onChange={handleChange} min="0" max="9999.99" pattern="^\d+(\.\d{1,2})?$" step="0.01" onInput={handleNumericInput} autoComplete="off"/>

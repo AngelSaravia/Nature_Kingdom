@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
@@ -23,6 +23,8 @@ const columnHeaders = ["eventName", "description", "eventDate", "duration", "loc
 const EventQueryReport = () => {
   const [filters, setFilters] = useState({});
   const [reportData, setReportData] = useState([]);
+  const navigate = useNavigate();
+  
 
   useEffect(() => {
     fetchReport(false);
@@ -113,13 +115,28 @@ const EventQueryReport = () => {
     setFilters({});
     fetchReport(false);
   };
+
+  const renderEditButton = (tuple) => {
+    return (
+      <button 
+        onClick={() => {
+          // Store in sessionStorage as fallback
+          sessionStorage.setItem('eventEditData', JSON.stringify(tuple));
+          navigate('/event_form', { state: { tuple } });
+        }}
+        className="edit-tuple-button"
+      >
+        Edit Tuple
+      </button>
+    );
+  };
   return (
     <div className="event-query-report">
       <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
       <div className="report-table-container">
-        <ReportTable data={reportData} columns={columnHeaders} />
+        <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
         <div className="edit-event-button-container">
-          <Link to="/event_form" className="edit-event-button">Edit Event</Link>
+          <Link to="/event_form" className="edit-event-button">Add Event</Link>
         </div>
       </div>
       </div>

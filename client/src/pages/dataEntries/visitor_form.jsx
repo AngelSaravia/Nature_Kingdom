@@ -3,9 +3,12 @@ import InputFields from "./inputs.jsx";
 import styles from "./forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
+import { useLocation, useNavigate } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const VisitorForm = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         visitor_id: "",
         first_name: "",
@@ -28,12 +31,47 @@ const VisitorForm = () => {
     const [visitors, setVisitors] = useState([]);
 
     useEffect(() => {
+        console.log("Location object:", location);
+        const tupleData = location.state?.tuple || JSON.parse(sessionStorage.getItem('visitorEditData') || null);
+        
+        if (tupleData) {
+            console.log("Loading visitor data:", tupleData);
+            setFormData({
+                visitor_id: tupleData.visitor_id || "",
+                first_name: tupleData.first_name || "",
+                Minit_name: tupleData.Minit_name || "",
+                last_name: tupleData.last_name || "",
+                username: tupleData.username || "",
+                password: tupleData.password || "",
+                email: tupleData.email || "",
+                phone_number: tupleData.phone_number || "",
+                date_of_birth: tupleData.date_of_birth ? tupleData.date_of_birth.slice(0, 10) : "",
+                gender: tupleData.gender || "",
+                street_address: tupleData.street_address || "",
+                city: tupleData.city || "",
+                state: tupleData.state || "",
+                zipcode: tupleData.zipcode || "",
+                country: tupleData.country || "",
+                role: tupleData.role || "",
+            });
+            
+            // Clear the sessionStorage after use
+            sessionStorage.removeItem('visitorEditData');
+        } else {
+            console.log("No visitor data found - creating new form");
+        }
         fetch(`${API_BASE_URL}/get_visitors`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) setVisitors(data.data);
             })
             .catch(error => console.error("Error fetching visitors:", error));
+    }, [location]);
+
+    useEffect(() => {
+        return () => {
+            sessionStorage.removeItem('visitorFormState');
+        };
     }, []);
 
     // Handle text input changes
@@ -56,28 +94,6 @@ const VisitorForm = () => {
     // Handles only numeric input
     const handleNumericInput = (event) => {
         event.target.value = event.target.value.replace(/\D/g, "");
-    };
-
-    const handleVisitorSelect = (visitor) => {
-        const formattedDate = visitor.date_of_birth?.split('T')[0];
-        setFormData({
-            visitor_id: visitor.visitor_id || "",
-            first_name: visitor.first_name || "",
-            Minit_name: visitor.Minit_name || "",
-            last_name: visitor.last_name || "",
-            username: visitor.username || "",
-            password: visitor.password || "",
-            email: visitor.email || "",
-            phone_number: visitor.phone_number || "",
-            date_of_birth: formattedDate || "",
-            gender: visitor.gender || "",
-            street_address: visitor.street_address || "",
-            city: visitor.city || "",
-            state: visitor.state || "",
-            zipcode: visitor.zipcode || "",
-            country: visitor.country || "",
-            role: visitor.role || "",
-        });
     };
 
     // Handle form submission
@@ -149,6 +165,8 @@ const VisitorForm = () => {
                         zipcode: "",
                         country: "",
                         role: "",
+                        first_login: "",
+                        last_login: "",
                     });
                 }
             }   
@@ -162,19 +180,6 @@ const VisitorForm = () => {
         <div className={styles.formContainer}>
             <h2 className={styles.formTitle}>VISITOR DATA ENTRY FORM</h2>
             <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
-                <div className={styles.formRow}>
-                    <Dropdown
-                        label="Select Visitor to Modify/Delete"
-                        onSelect={(value) => handleVisitorSelect(JSON.parse(value))}
-                        selectedLabel={formData.visitor_id ? `${formData.first_name} (ID: ${formData.visitor_id})` : "Select Visitor to Modify/Delete"}
-                    >
-                        {visitors.map(visitor => (
-                            <DropdownItem key={visitor.visitor_id} value={JSON.stringify(visitor)}>
-                                {visitor.first_name} (ID: {visitor.visitor_id})
-                            </DropdownItem>
-                        ))}
-                    </Dropdown>
-                </div>
                 <div className={styles.formRow}>
                     <InputFields label="FIRST NAME *" name="first_name" value={formData.first_name} onChange={handleChange} pattern="[A-Za-z]+" autoComplete="given-name"/>
                     <InputFields label="MIDDLE INITIAL" name="Minit_name" value={formData.Minit_name} onChange={handleChange} maxLength="1" pattern="[A-Za-z]" required={false} autoComplete="additional-name"/>

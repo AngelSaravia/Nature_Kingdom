@@ -3,9 +3,12 @@ import InputFields from "./inputs.jsx";
 import styles from "./forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
+import { useLocation, useNavigate } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const MedicalForm = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         record_id: "",
         animal_id: "",
@@ -20,12 +23,38 @@ const MedicalForm = () => {
     const [records, setRecords] = useState([]);
 
     useEffect(() => {
+        console.log("Location object:", location);
+        const tupleData = location.state?.tuple || JSON.parse(sessionStorage.getItem('medicalRecordEditData') || null);
+        
+        if (tupleData) {
+            console.log("Loading medical record data:", tupleData);
+            setFormData({
+                record_id: tupleData.record_id || "",
+                animal_id: tupleData.animal_id || "",
+                employee_id: tupleData.employee_id || "",
+                enclosure_id: tupleData.enclosure_id || "",
+                location: tupleData.location || "",
+                date: tupleData.date ? tupleData.date.slice(0, 10) : "",
+                record_type: tupleData.record_type || "",
+            });
+            
+            // Clear the sessionStorage after use
+            sessionStorage.removeItem('medicalRecordEditData');
+        } else {
+            console.log("No medical record data found - creating new form");
+        }
         fetch(`${API_BASE_URL}/get_medical_records`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) setRecords(data.data);
             })
             .catch(error => console.error("Error fetching records:", error));
+    }, [location]);
+
+    useEffect(() => {
+        return () => {
+            sessionStorage.removeItem('medicalRecordFormState');
+        };
     }, []);
 
     // Handle text input changes
@@ -42,20 +71,6 @@ const MedicalForm = () => {
     // Handles only numeric input
     const handleNumericInput = (event) => {
         event.target.value = event.target.value.replace(/\D/g, "");
-    };
-
-    // Load selected record details into the form
-    const handleRecordSelect = (record) => {
-        const formattedDate = record.date ? record.date.split('T')[0] : ""; //handles null or undefined date
-        setFormData({
-            record_id: record.record_id,
-            animal_id: record.animal_id,
-            employee_id: record.employee_id,
-            enclosure_id: record.enclosure_id,
-            location: record.location,
-            date: formattedDate,
-            record_type: record.record_type,
-        });
     };
 
     // Handle form submission
@@ -119,19 +134,6 @@ const MedicalForm = () => {
         <div className={styles.formContainer}>
             <h2 className={styles.formTitle}>MEDICAL RECORD DATA ENTRY FORM</h2>
             <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
-                <div className={styles.formRow}>
-                    <Dropdown
-                        label="Select Record to Modify/Delete"
-                        onSelect={(value) => handleRecordSelect(JSON.parse(value))}
-                        selectedLabel={formData.record_id ? `${formData.record_type} (ID: ${formData.record_id})` : "Select Record to Modify/Delete"}
-                    >
-                        {records.map(record => (
-                            <DropdownItem key={record.record_id} value={JSON.stringify(record)}>
-                                {record.record_type} (ID: {record.record_id})
-                            </DropdownItem>
-                        ))}
-                    </Dropdown>
-                </div>
                 <div className={styles.formRow}>
                     <InputFields label="ANIMAL ID *" name="animal_id" type="text" value={formData.animal_id} onChange={handleChange} onInput={handleNumericInput} autoComplete="off" />
                     <InputFields label="EMPLOYEE ID *" name="employee_id" type="text" value={formData.employee_id} onChange={handleChange} onInput={handleNumericInput} autoComplete="off" />

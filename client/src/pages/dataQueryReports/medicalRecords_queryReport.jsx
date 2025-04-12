@@ -2,18 +2,18 @@ import React, { useState, useEffect } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
     { label: "ANIMAL ID", type: "number", name: "animal_id"},
+    { label: "EMPLOYEE EMAIL", type: "dropdown", name: "employee_email"},
     { label: "ANIMAL NAME", type: "text", name: "animal_name"},
-    { label: "EMPLOYEE EMAIL", type: "text", name: "employee_email"}, //create dropdown for employee email
-    { label: "ENCLOSURE NAME", type: "text", name: "enclosure_name"}, //create dropdown for enclosure name
+    { label: "ENCLOSURE NAME", type: "dropdown", name: "enclosure_name"},
     { label: "HEALTH STATUS", type: "checkbox", name: "health_status", options: ["HEALTHY", "NEEDS CARE", "CRITICAL"] },
+    { label: "ANIMAL SPECIES", type: "dropdown", name: "species"},
     { label: "STARTING DATE OF RECORD" , type: "date", name: "dateMin"},
     { label: "ENDING DATE OF RECORD" , type: "date", name: "dateMax"},
-    { label: "ANIMAL SPECIES", type: "text", name: "species"}, //create dropdown for species. Make sure there are no duplicates in the dropdown.
 ];
 
 const columnHeaders = ["animal_id", "animal_name", "employee_email", "enclosure_name", "location", "health_status", "date", "species", "record_type"];
@@ -21,10 +21,36 @@ const columnHeaders = ["animal_id", "animal_name", "employee_email", "enclosure_
 const MedicalRecordsQueryReport = () => {
     const [filters, setFilters] = useState({});
     const [reportData, setReportData] = useState([]);
+    const navigate = useNavigate();
+    const [dropdownData, setDropdownData] = useState({
+        employee_email: [],
+        enclosure_name: [],
+        species: [],
+    });
+    const [resetDropdowns, setResetDropdowns] = useState(false);
 
     useEffect(() => {
         fetchReport(false);
+        fetchDropdownData();
     }, []);
+
+    const fetchDropdownData = async () => {
+        try {
+            const [employeeEmails, enclosureNames, species] = await Promise.all([
+                fetch(`${API_BASE_URL}/medical_records/distinct_values?field=email&table=employees`).then((res) => res.json()),
+                fetch(`${API_BASE_URL}/medical_records/distinct_values?field=name&table=enclosures`).then((res) => res.json()),
+                fetch(`${API_BASE_URL}/medical_records/distinct_values?field=species&table=animals`).then((res) => res.json()),
+            ]);
+
+            setDropdownData({
+                employee_email: employeeEmails.success ? employeeEmails.data : [],
+                enclosure_name: enclosureNames.success ? enclosureNames.data : [],
+                species: species.success ? species.data : [],
+            });
+        } catch (error) {
+            console.error("Error fetching dropdown data:", error);
+        }
+    };
 
     const handleFilterChange = (eventOrUpdater) => {
         if (typeof eventOrUpdater === "function") {
@@ -44,7 +70,7 @@ const MedicalRecordsQueryReport = () => {
                     return { ...prevFilters, [name]: updatedValues };
                 }
 
-                if (type === "date") {
+                if (type === "date" || type === "dropdown") {
                     return { ...prevFilters, [name]: value };
                 }
                 return { ...prevFilters, [name]: value };
@@ -72,7 +98,6 @@ const MedicalRecordsQueryReport = () => {
                     } else if (key === "record_type") {
                         prefixedFilters["medical_records.record_type"] = filters[key];
                     } else if (key === "dateMin" || key === "dateMax") {
-                        // Keep the Min/Max suffix for date range filters
                         prefixedFilters[`medical_records.${key}`] = filters[key];
                     } else if (key === "species") {
                         prefixedFilters["animals.species"] = filters[key];
@@ -106,12 +131,6 @@ const MedicalRecordsQueryReport = () => {
                 ...prefixedFilters,
             };
 
-            Object.keys(queryParams).forEach((key) => {
-                if (key !== "additional_joins" && Array.isArray(queryParams[key]) && queryParams[key].length > 0) {
-                    queryParams[key] = queryParams[key].join(",");
-                }
-            });
-
             const response = await fetch(`${API_BASE_URL}/query_report/medicalRecords`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -131,15 +150,36 @@ const MedicalRecordsQueryReport = () => {
 
     const onClearAll = () => {
         setFilters({});
+        setResetDropdowns(true);
+        console.log("Resetting dropdowns: ", true); // Debugging
         fetchReport(false);
+        setTimeout(() => {
+            setResetDropdowns(false);
+        console.log("Resetting dropdowns: ", false); // Debugging
+        }, 0);
     };
+
+    const renderEditButton = (tuple) => {
+        return (
+          <button 
+            onClick={() => {
+              // Store in sessionStorage as fallback
+              sessionStorage.setItem('medicalRecordEditData', JSON.stringify(tuple));
+              navigate('/medical_form', { state: { tuple } });
+            }}
+            className="edit-tuple-button"
+          >
+            Edit Tuple
+          </button>
+        );
+      };
     return (
         <div className="medicalRecords-query-report">
-          <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
+          <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} dropdownData={dropdownData} resetDropdowns={resetDropdowns}/>
           <div className="report-table-container">
-          <ReportTable data={reportData} columns={columnHeaders} />
+          <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
           <div className="edit-medicalRecords-button-container">
-            <Link to="/medical_form" className="edit-medicalRecords-button">Edit Medical Records</Link>
+            <Link to="/medical_form" className="edit-medicalRecords-button">Add Medical Record</Link>
           </div>
         </div>
         </div>

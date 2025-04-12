@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const AnimalQueryReport = () => {
   const [filters, setFilters] = useState({});
   const [reportData, setReportData] = useState([]);
   const [enclosureOptions, setEnclosureOptions] = useState([]); // State to store enclosure names
+  const navigate = useNavigate();
 
   // Fetch enclosure names from the backend
   useEffect(() => {
@@ -32,7 +33,7 @@ const AnimalQueryReport = () => {
 
   const filterOptions = [
     { label: "ANIMAL NAME", type: "text", name: "animal_name" },
-    { label: "ENCLOSURE NAME", type: "checkbox", name: "name", options: enclosureOptions }, // This will be populated with enclosure names
+    { label: "ENCLOSURE NAME", type: "checkbox", name: "enclosure_name", options: enclosureOptions }, // This will be populated with enclosure names
     { label: "BEGINNING BIRTH DATE", type: "date", name: "date_of_birthMin" },
     { label: "ENDING BIRTH DATE", type: "date", name: "date_of_birthMax" },
     { label: "ANIMAL TYPE", type: "checkbox", name: "animal_type", options: ["Mammal", "Bird", "Reptile", "Amphibian", "Fish", "Invertebrate"] },
@@ -40,7 +41,7 @@ const AnimalQueryReport = () => {
     { label: "HEALTH STATUS", type: "checkbox", name: "health_status", options: ["HEALTHY", "NEEDS CARE", "CRITICAL"] },
   ];
   
-  const columnHeaders = ["animal_name", "species", "animal_type", "health_status", "date_of_birth", "enclosure name"];
+  const columnHeaders = ["animal_name", "species", "animal_type", "health_status", "date_of_birth", "enclosure_name"];
 
   const handleFilterChange = (eventOrUpdater) => {
     if (typeof eventOrUpdater === "function") {
@@ -75,7 +76,7 @@ const AnimalQueryReport = () => {
             }
             // Handle different filter types
             switch(key) {
-              case 'name':
+              case 'enclosure_name':
                   prefixedFilters['enclosures.name'] = filters[key];
                   break;
               case 'date_of_birthMin':
@@ -94,7 +95,7 @@ const AnimalQueryReport = () => {
           });
         }
 
-        const queryParams = { table1: "animals", table2: "enclosures", join_condition: "animals.enclosure_id = enclosures.enclosure_id", computed_fields: "animals.*, enclosures.name as 'enclosure name'", ...prefixedFilters };
+        const queryParams = { table1: "animals", table2: "enclosures", join_condition: "animals.enclosure_id = enclosures.enclosure_id", computed_fields: "animals.*, enclosures.name as 'enclosure_name'", ...prefixedFilters };
 
         const response = await fetch(`${API_BASE_URL}/query_report/animals`, {
             method: "POST",
@@ -118,13 +119,28 @@ const AnimalQueryReport = () => {
     setFilters({});
     fetchReport(false);
   };
+
+  const renderEditButton = (tuple) => {
+    return (
+      <button 
+        onClick={() => {
+          // Store in sessionStorage as fallback
+          sessionStorage.setItem('animalEditData', JSON.stringify(tuple));
+          navigate('/animal_form', { state: { tuple } });
+        }}
+        className="edit-tuple-button"
+      >
+        Edit Tuple
+      </button>
+    );
+  };
   return (
     <div className="animal-query-report">
       <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
       <div className="report-table-container">
-        <ReportTable data={reportData} columns={columnHeaders} />
+        <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
         <div className="edit-animal-button-container">
-          <Link to="/animal_form" className="edit-animal-button">Edit Animal</Link>
+          <Link to="/animal_form" className="edit-animal-button">Add Animal</Link>
         </div>
       </div>
       </div>

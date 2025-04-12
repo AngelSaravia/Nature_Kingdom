@@ -1,8 +1,10 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
+import React from "react"; // Highlighted: Import React
 import { useAuth } from "../context/Authcontext";
 
 const RoleProtectedRoute = ({ allowedRoles, children }) => {
   const { isAuthenticated, user, role, loading } = useAuth();
+  const location = useLocation(); // Get the current location for edit tuple buttons
 
   console.log("Protected Route Status:", {
     isAuthenticated,
@@ -17,7 +19,7 @@ const RoleProtectedRoute = ({ allowedRoles, children }) => {
 
   if (!isAuthenticated || !user) {
     console.log("Not authenticated, redirecting to login");
-    return <Navigate to="/employee_login" replace />;
+    return <Navigate to="/employee_login" replace state={{ from: location.pathname, state: location.state }}/>; // passing state={{ from: location }} for redirection
   }
 
   if (!allowedRoles.includes(user.role)) {
@@ -27,7 +29,7 @@ const RoleProtectedRoute = ({ allowedRoles, children }) => {
       "Allowed roles:",
       allowedRoles
     );
-    return <Navigate to="/unauthorized" replace />;
+    return <Navigate to="/unauthorized" replace state={{ from: location.pathname, state: location.state }}/>; //added state={{ from: location }} for redirection
   }
 
   console.log("Access granted to:", user.role);

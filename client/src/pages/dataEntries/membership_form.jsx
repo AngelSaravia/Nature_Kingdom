@@ -57,7 +57,7 @@ const MembershipForm = () => {
         setFormData({
             membership_id: membership.membership_id || "",
             visitor_id: membership.visitor_id || "",
-            start_date: formatDateTime(ticket.start_date) || "",
+            start_date: formatDateTime(membership.start_date) || "",
             end_date: formattedDate || "",
             max_guests: membership.max_guests || "",
         });

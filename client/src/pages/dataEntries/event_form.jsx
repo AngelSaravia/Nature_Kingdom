@@ -3,9 +3,12 @@ import InputFields from "./inputs.jsx";
 import styles from "./forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
+import { useLocation, useNavigate } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const EventForm = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         eventID: "",
         eventName: "",
@@ -23,6 +26,33 @@ const EventForm = () => {
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
+        console.log("Location object:", location);
+        const tupleData = location.state?.tuple || JSON.parse(sessionStorage.getItem('eventEditData') || null);
+        
+        if (tupleData) {
+            console.log("Loading event data:", tupleData);
+            // Format the eventDate to match the datetime-local input format
+            const formattedEventDate = tupleData.eventDate
+            ? new Date(tupleData.eventDate).toISOString().slice(0, 16) // Extract yyyy-MM-ddThh:mm
+            : "";
+            setFormData({
+                eventID: tupleData.eventID || "",
+                eventName: tupleData.eventName || "",
+                description: tupleData.description || "",
+                eventDate: formattedEventDate,
+                duration: tupleData.duration || "",
+                location: tupleData.location || "",
+                eventType: tupleData.eventType || "",
+                capacity: tupleData.capacity || "",
+                price: tupleData.price || "",
+                managerID: tupleData.managerID || "",
+            });
+            
+            // Clear the sessionStorage after use
+            sessionStorage.removeItem('eventEditData');
+        } else {
+            console.log("No event data found - creating new form");
+        }
         fetch(`${API_BASE_URL}/get_events`)
             .then(response => response.json())
             .then(data => {
@@ -33,6 +63,12 @@ const EventForm = () => {
                 }
             })
             .catch(error => console.error("Error fetching events:", error));
+    }, [location]);
+
+    useEffect(() => {
+        return () => {
+            sessionStorage.removeItem('eventFormState');
+        };
     }, []);
 
     // Handle text input changes
@@ -55,22 +91,6 @@ const EventForm = () => {
     // Handles only numeric input
     const handleNumericInput = (event) => {
         event.target.value = event.target.value.replace(/\D/g, "");
-    };
-
-    const handleEventSelect = (event) => {
-        const formattedDate = event.eventDate?.split('T')[0];
-        setFormData({
-            eventID: event.eventID || "",
-            eventName: event.eventName || "",
-            description: event.description || "",
-            eventDate: formattedDate || "",
-            duration: event.duration || "",
-            location: event.location || "",
-            eventType: event.eventType || "",
-            capacity: event.capacity || "",
-            price: event.price || "",
-            managerID: event.managerID || "",
-        });
     };
 
     // Handle form submission
@@ -141,19 +161,6 @@ const EventForm = () => {
         <div className={styles.formContainer}>
             <h2 className={styles.formTitle}>EVENT DATA ENTRY FORM</h2>
             <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
-                <div className={styles.formRow}>
-                    <Dropdown
-                        label="Select Event to Modify/Delete"
-                        onSelect={(value) => handleEventSelect(JSON.parse(value))}
-                        selectedLabel={formData.eventID ? `${formData.eventName} (ID: ${formData.eventID})` : "Select Event to Modify/Delete"}
-                    >
-                        {events.map((event, index) => (
-                            <DropdownItem key={event.eventID || `event-${index}`} value={JSON.stringify(event)}>
-                                {event.eventName} (ID: {event.eventID})
-                            </DropdownItem>
-                        ))}
-                    </Dropdown>
-                </div>
                 <div className={styles.formRow}>
                     <InputFields label="EVENT NAME *" name="eventName" value={formData.eventName} onChange={handleChange} pattern="[A-Za-z\s\-]+" autoComplete="off"/>
                     <InputFields label="PRICE *" name="price" type="number" value={formData.price} onChange={handleChange} min="0" max="9999.99" pattern="^\d+(\.\d{1,2})?$" step="0.01" onInput={handleNumericInput} autoComplete="off"/>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
@@ -23,6 +23,7 @@ const columnHeaders = ["name", "current_capacity", "capacity", "location", "open
 const EnclosureQueryReport = () => {
   const [filters, setFilters] = useState({});
   const [reportData, setReportData] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchReport(false);
@@ -120,13 +121,28 @@ const EnclosureQueryReport = () => {
     setFilters({});
     fetchReport(false);
   };
+
+  const renderEditButton = (tuple) => {
+    return (
+      <button 
+        onClick={() => {
+          // Store in sessionStorage as fallback
+          sessionStorage.setItem('enclosureEditData', JSON.stringify(tuple));
+          navigate('/enclosure_form', { state: { tuple } });
+        }}
+        className="edit-tuple-button"
+      >
+        Edit Tuple
+      </button>
+    );
+  };
   return (
     <div className="enclosure-query-report">
       <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
       <div className="report-table-container">
-        <ReportTable data={reportData} columns={columnHeaders} />
+        <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
         <div className="edit-enclosure-button-container">
-          <Link to="/enclosure_form" className="edit-enclosure-button">Edit Enclosure</Link>
+          <Link to="/enclosure_form" className="edit-enclosure-button">Add Enclosure</Link>
         </div>
       </div>
       </div>

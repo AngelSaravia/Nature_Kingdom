@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
@@ -19,6 +19,7 @@ const columnHeaders = ["animal_name", "enclosure_name", "employee_name", "date",
 const FeedLogsQueryReport = () => {
     const[filters, setFilters] = useState({});
     const[reportData, setReportData] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchReport(false);
@@ -121,14 +122,29 @@ const FeedLogsQueryReport = () => {
         setFilters({});
         fetchReport(false);
     };
+
+    const renderEditButton = (tuple) => {
+        return (
+          <button 
+            onClick={() => {
+              // Store in sessionStorage as fallback
+              sessionStorage.setItem('feedLogEditData', JSON.stringify(tuple));
+              navigate('/feedLog_form', { state: { tuple } });
+            }}
+            className="edit-tuple-button"
+          >
+            Edit Tuple
+          </button>
+        );
+      };
     return (
         <div className="feedLogs-query-report">
           <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
           <div className="report-table-container">
-          <ReportTable data={reportData} columns={columnHeaders} />
-          {/*<div className="edit-feedLogs-button-container">
-            <Link to="/feedLogs_form" className="edit-feedLogs-button">Edit Feed Logs</Link>
-          </div>*/}
+          <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
+          <div className="edit-feedLogs-button-container">
+            <Link to="/feedLog_form" className="edit-feedLogs-button">Add Feed Logs</Link>
+          </div>
         </div>
         </div>
     );

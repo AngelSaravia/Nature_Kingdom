@@ -58,6 +58,7 @@ const handleQueryReport = (req, res) => {
             if (entity_type !== "revenue") {
                 Object.keys(filters).forEach((key) => {
                     const value = filters[key];
+                    console.log("Processing filter:", key, "Value:", value); // Debugging line
 
                     if (value !== undefined && value !== null && value !== "") {
                         // Handle specific table prefixes
@@ -68,7 +69,7 @@ const handleQueryReport = (req, res) => {
                         } else if (key.startsWith('visitors.') || key === 'membership_status') {           
                             handleVisitorFilters(key, value, conditions, values);
                         } else if (key.startsWith('enclosures.')) {
-                            handleEnclosureFilters(key, value, conditions, values);
+                            handleEnclosureFilters(key, value, conditions, values, entity_type);
                         } else if (key.startsWith('events.')) {
                             handleEventFilters(key, value, conditions, values);
                         } else if (key.startsWith('tickets.')) {
@@ -153,6 +154,12 @@ function handleAnimalFilters(key, value, conditions, values) {
             conditions.push(`animals.${fieldName} IN (${valueArray.map(() => '?').join(', ')})`);
             values.push(...valueArray);
         }
+    } else if (key === "enclosures.name") {
+        const valueArray = Array.isArray(value) ? value : value.split(',');
+        if (valueArray.length > 0) {
+            conditions.push(`enclosures.name IN (${valueArray.map(() => '?').join(', ')})`);
+            values.push(...valueArray);
+        }
     } else {
         conditions.push(`${key} LIKE ?`);
         values.push(`%${value}%`);
@@ -206,9 +213,22 @@ function handleVisitorFilters(key, value, conditions, values) {
         values.push(`%${value}%`);
     }
 }
-function handleEnclosureFilters(key, value, conditions, values) {
+function handleEnclosureFilters(key, value, conditions, values, entity_type) {
     const fieldName = key.replace('enclosures.', '');
-    if (key === 'exhibits.name') {
+    if (key === 'name') {
+        if (entity_type === 'animals') {
+            // Use IN for animals query report
+            const valueArray = Array.isArray(value) ? value : value.split(',');
+            if (valueArray.length > 0) {
+                conditions.push(`enclosures.name IN (${valueArray.map(() => '?').join(', ')})`);
+                values.push(...valueArray);
+            }
+        } else {
+            // Use LIKE for this report
+            conditions.push(`enclosures.name LIKE ?`);
+            values.push(`%${value}%`);
+        } 
+    } else if (key === 'exhibits.name') {
         const valueArray = Array.isArray(value) ? value : value.toString().split(',');
         if (valueArray.length > 0) {
             conditions.push(`exhibits.name IN (${valueArray.map(() => '?').join(', ')})`);
@@ -442,4 +462,27 @@ function handleUnprefixedFilters(key, value, table1, conditions, values) {
         values.push(value);
     }
 }
-module.exports = { handleQueryReport };
+const handleDistinctValuesForMedicalRecords = (req, res) => { //for dropdowns in medical records report
+    const { field, table } = req.query;
+
+    // Restrict to specific tables for medical records
+    const allowedTables = ["employees", "enclosures", "animals"];
+    if (!field || !table || !allowedTables.includes(table)) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Invalid field or table for medical records" }));
+        return;
+    }
+
+    const sql = `SELECT DISTINCT ${field} FROM ${table}`;
+    db_connection.query(sql, (err, results) => {
+        if (err) {
+            console.error("Database query error:", err);
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: false, message: "Database error" }));
+            return;
+        }
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: true, data: results.map((row) => row[field]) }));
+    });
+};
+module.exports = { handleQueryReport, handleDistinctValuesForMedicalRecords };

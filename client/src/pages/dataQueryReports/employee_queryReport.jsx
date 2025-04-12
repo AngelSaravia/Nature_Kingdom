@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
@@ -29,6 +29,7 @@ const columnHeaders = ["first_name", "last_name", "user_name", "department_name"
 const EmployeeQueryReport = () => {
     const [filters, setFilters] = useState({});
     const [reportData, setReportData] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
       fetchReport(false);
@@ -139,13 +140,28 @@ const EmployeeQueryReport = () => {
         setFilters({});
         fetchReport(false);
       };
+
+      const renderEditButton = (tuple) => {
+        return (
+          <button 
+            onClick={() => {
+              // Store in sessionStorage as fallback
+              sessionStorage.setItem('employeeEditData', JSON.stringify(tuple));
+              navigate('/employee_form', { state: { tuple } });
+            }}
+            className="edit-tuple-button"
+          >
+            Edit Tuple
+          </button>
+        );
+      };
       return (
         <div className="employee-query-report">
           <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
           <div className="report-table-container">
-          <ReportTable data={reportData} columns={columnHeaders} />
+          <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
           <div className="edit-employee-button-container">
-            <Link to="/employee_form" className="edit-employee-button">Edit Employee</Link>
+            <Link to="/employee_form" className="edit-employee-button">Add Employee</Link>
           </div>
         </div>
         </div>

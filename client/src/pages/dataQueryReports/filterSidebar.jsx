@@ -1,7 +1,9 @@
 import React from "react";
+import Dropdown from "../../components/Dropdown/Dropdown";
+import DropdownItem from "../../components/DropdownItem/DropdownItem";
 import "./reportStyles.css";
 
-const FilterSidebar = ({ filters, onFilterChange, onRunReport, onClearAll, filterOptions }) => {
+const FilterSidebar = ({ filters, onFilterChange, onRunReport, onClearAll, filterOptions, dropdownData, resetDropdowns }) => {
   const handleChange = (event) => {
     const { name, value } = event.target;
     onFilterChange({ target: { name, value } });
@@ -73,6 +75,23 @@ const FilterSidebar = ({ filters, onFilterChange, onRunReport, onClearAll, filte
               <input type="time" name="durationMin" value={filters.durationMin || ""} onChange={handleChange} />
               <label>Max Duration (HH:MM):</label>
               <input type="time" name="durationMax" value={filters.durationMax || ""} onChange={handleChange} />
+            </>
+          )}
+
+          {type === "dropdown" && dropdownData[name] && (
+            <>
+              {console.log(`Dropdown reset state for ${name}:`, resetDropdowns)} {/* Debugging */}
+              <Dropdown
+                  label={`${label}`.toLowerCase()}
+                  onSelect={(value) => onFilterChange({ target: { name, value, type: "dropdown" } })}
+                  reset={resetDropdowns}
+              >
+                  {dropdownData[name].map((item) => (
+                      <DropdownItem key={item} value={item}>
+                          {item}
+                      </DropdownItem>
+                  ))}
+              </Dropdown>
             </>
           )}
 

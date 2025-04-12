@@ -3,9 +3,12 @@ import InputFields from "./inputs.jsx";
 import styles from "./forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
+import { useLocation, useNavigate } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const EnclosureForm = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         enclosure_id: "",
         name: "",
@@ -24,13 +27,51 @@ const EnclosureForm = () => {
     const [enclosures, setEnclosures] = useState([]);
 
     useEffect(() => {
-            fetch(`${API_BASE_URL}/get_enclosures`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) setEnclosures(data.data);
-                })
-                .catch(error => console.error("Error fetching enclosures:", error));
-        }, []);
+        console.log("Location object:", location);
+        // Try to get data from either location state or sessionStorage
+        const tupleData = location.state?.tuple || JSON.parse(sessionStorage.getItem('enclosureEditData') || null);
+        
+        if (tupleData) {
+            console.log("Loading enclosure data:", tupleData);
+            setFormData({
+                enclosure_id: tupleData.enclosure_id || "",
+                name: tupleData.name || "",
+                current_capacity: tupleData.current_capacity || "",
+                capacity: tupleData.capacity || "",
+                exhibit_id: tupleData.exhibit_id || "",
+                Manager_id: tupleData.Manager_id || "",
+                location: tupleData.location || "",
+                opens_at: tupleData.opens_at ? tupleData.opens_at.slice(0, 5) : "",
+                closes_at: tupleData.closes_at ? tupleData.closes_at.slice(0, 5) : "",
+                status: tupleData.status || "",
+                temp_control: tupleData.temp_control === 1 || tupleData.temp_control === "Yes",
+            });
+            
+            // Clear the sessionStorage after use
+            sessionStorage.removeItem('enclosureEditData');
+        } else {
+            console.log("No enclosure data found - creating new form");
+        }
+    
+        // Fetch enclosures data
+        fetch(`${API_BASE_URL}/get_enclosures`)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    setEnclosures(data.data);
+                } else {
+                    console.error("Failed to fetch enclosures:", data.message);
+                }
+            })
+            .catch((error) => console.error("Error fetching enclosures:", error));
+    }, [location]);
+
+    // Add this cleanup effect near your other effects
+    useEffect(() => {
+        return () => {
+            sessionStorage.removeItem('enclosureFormState');
+        };
+    }, []); // Empty dependency array means this runs once on unmount
 
     // Handle text input changes
     const handleChange = (event) => {
@@ -61,23 +102,6 @@ const EnclosureForm = () => {
     const handleNumericInput = (event) => {
         event.target.value = event.target.value.replace(/\D/g, "");
     };
-
-    const handleEnclosureSelect = (enclosure) => {
-        setFormData({
-            enclosure_id: enclosure.enclosure_id || "",
-            name: enclosure.name || "",
-            current_capacity: enclosure.current_capacity || "",
-            capacity: enclosure.capacity || "",
-            exhibit_id: enclosure.exhibit_id || "",
-            Manager_id: enclosure.Manager_id || "",
-            location: enclosure.location || "",
-            opens_at: enclosure.opens_at || "",
-            closes_at: enclosure.closes_at || "",
-            status: enclosure.status ? enclosure.status.replace('_', ' ') : "",
-            temp_control: enclosure.temp_control === 1,
-        });
-    };
-
 
     // Handle form submission
     const handleSubmit = async (action) => {
@@ -150,19 +174,6 @@ const EnclosureForm = () => {
         <div className={styles.formContainer}>
             <h2 className={styles.formTitle}>ENCLOSURE DATA ENTRY FORM</h2>
             <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
-                <div className={styles.formRow}>
-                    <Dropdown
-                        label="Select Enclosure to Modify/Delete"
-                        onSelect={(value) => handleEnclosureSelect(JSON.parse(value))}
-                        selectedLabel={formData.enclosure_id ? `${formData.name} (ID: ${formData.enclosure_id})` : "Select Enclosure to Modify/Delete"}
-                    >
-                        {enclosures.map(enclosure => (
-                            <DropdownItem key={enclosure.enclosure_id} value={JSON.stringify(enclosure)}>
-                                {enclosure.name} (ID: {enclosure.enclosure_id})
-                            </DropdownItem>
-                        ))}
-                    </Dropdown>
-                </div>
                 <div className={styles.formRow}>
                     <InputFields label="ENCLOSURE NAME *" name="name" value={formData.name} onChange={handleChange} pattern="[A-Za-z\s\-]+" autoComplete="off"/>
                     <InputFields label="CURRENT CAPACITY *" name="current_capacity" value={formData.current_capacity} pattern="[0-9]+" onChange={handleChange} autoComplete="off"/>

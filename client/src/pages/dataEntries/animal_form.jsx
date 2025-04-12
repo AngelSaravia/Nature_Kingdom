@@ -3,9 +3,12 @@ import InputFields from "./inputs.jsx";
 import styles from "./forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
+import { useLocation, useNavigate } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const AnimalForm = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         animal_id: "",
         animal_name: "",
@@ -21,12 +24,38 @@ const AnimalForm = () => {
 
     // Fetch all animals to populate dropdown
     useEffect(() => {
+        console.log("Location object:", location);
+        const tupleData = location.state?.tuple || JSON.parse(sessionStorage.getItem('animalEditData') || null);
+        
+        if (tupleData) {
+            console.log("Loading animal data:", tupleData);
+            setFormData({
+                animal_id: tupleData.animal_id || "",
+                animal_name: tupleData.animal_name || "",
+                date_of_birth: tupleData.date_of_birth ? tupleData.date_of_birth.slice(0, 10) : "",
+                enclosure_id: tupleData.enclosure_id || "",
+                species: tupleData.species || "",
+                animal_type: tupleData.animal_type || "",
+                health_status: tupleData.health_status || "",
+            });
+            
+            // Clear the sessionStorage after use
+            sessionStorage.removeItem('animalEditData');
+        } else {
+            console.log("No animal data found - creating new form");
+        }
         fetch(`${API_BASE_URL}/get_animals`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) setAnimals(data.data);
             })
             .catch(error => console.error("Error fetching animals:", error));
+    }, [location]);
+
+    useEffect(() => {
+        return () => {
+            sessionStorage.removeItem('animalFormState');
+        };
     }, []);
 
     // Handle text input changes
@@ -43,20 +72,6 @@ const AnimalForm = () => {
     // Handles only numeric input
     const handleNumericInput = (event) => {
         event.target.value = event.target.value.replace(/\D/g, "");
-    };
-
-    // Load selected animal details into the form
-    const handleAnimalSelect = (animal) => {
-        const formattedDate = animal.date_of_birth.split('T')[0];
-        setFormData({
-            animal_id: animal.animal_id,
-            animal_name: animal.animal_name,
-            date_of_birth: formattedDate,
-            enclosure_id: animal.enclosure_id,
-            species: animal.species,
-            animal_type: animal.animal_type,
-            health_status: animal.health_status,
-        });
     };
 
     // Handle form submission
@@ -103,19 +118,6 @@ const AnimalForm = () => {
             <h2 className={styles.formTitle}>ANIMAL DATA ENTRY FORM</h2>
 
             <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
-                <div className={styles.formRow}>
-                    <Dropdown
-                        label="Select Animal to Modify/Delete"
-                        onSelect={(value) => handleAnimalSelect(JSON.parse(value))}
-                        selectedLabel={formData.animal_id ? `${formData.animal_name} (ID: ${formData.animal_id})` : "Select Animal to Modify/Delete"}
-                    >
-                        {animals.map(animal => (
-                            <DropdownItem key={animal.animal_id} value={JSON.stringify(animal)}>
-                                {animal.animal_name} (ID: {animal.animal_id})
-                            </DropdownItem>
-                        ))}
-                    </Dropdown>
-                </div>
                 <div className={styles.formRow}>
                     <InputFields label="ANIMAL NAME *" name="animal_name" value={formData.animal_name} onChange={handleChange} pattern="[A-Za-z\s\-]+" autoComplete="off"/>
                 </div>

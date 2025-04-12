@@ -3,9 +3,9 @@ import DropdownButton from "../DropdownButton/DropdownButton";
 import DropdownContent from "../DropdownContent/DropdownContent";
 import "./Dropdown.css";
 
-const Dropdown = ({ label, onSelect, children, selectedLabel }) => {
+const Dropdown = ({ label, onSelect, children, selectedLabel, reset }) => {
   const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(label);
+  const [selectedValue, setSelectedValue] = useState(selectedLabel || label);
 
   const dropdownRef = useRef();
   const buttonRef = useRef();
@@ -23,12 +23,18 @@ const Dropdown = ({ label, onSelect, children, selectedLabel }) => {
 
   useEffect(() => {
     // Update selectedValue when selectedLabel prop changes
-    if (selectedLabel) {
+    if (selectedLabel !== undefined) {
       setSelectedValue(selectedLabel);
-    } else {
+    } 
+  }, [selectedLabel]);
+
+  useEffect (() => {
+    console.log("Dropdown reset prop:", reset); // Debugging
+    if (reset) {
+      console.log("Resetting dropdown to default label:", label);
       setSelectedValue(label);
     }
-  }, [selectedLabel, label]);
+  }, [reset, label]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
