@@ -1,7 +1,7 @@
 import React from "react";
 import "./reportStyles.css";
 
-const ReportTable = ({ data, columns }) => {
+const ReportTable = ({ data, columns, renderActions }) => {
   return (
     <div className="report-table">
       <h3>Report</h3>
@@ -12,14 +12,21 @@ const ReportTable = ({ data, columns }) => {
               {columns.map((col) => (
                 <th key={col}>{col}</th>
               ))}
+              {renderActions && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
             {data.map((row, index) => (
               <tr key={index}>
                 {columns.map((col) => (
-                  <td key={col}>{row[col]}</td>
+                  <td key={col}>
+                    {/* Format specific date-related columns */}
+                    {["date", "start_date", "end_date", "purchase_date", "eventDate"].includes(col) && row[col]
+                      ? new Date(row[col]).toISOString().split("T")[0] // Format to YYYY-MM-DD
+                      : row[col]}
+                  </td>
                 ))}
+                {renderActions && (<td> {console.log("Rendering actions for row:", row)} {/* Debugging */} {renderActions(row)}</td>)}
               </tr>
             ))}
           </tbody>

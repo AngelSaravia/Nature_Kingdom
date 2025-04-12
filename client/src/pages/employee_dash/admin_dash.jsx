@@ -41,7 +41,7 @@ const AdminDash = () => {
                     <button onClick={() => navigate("/employee_form")} className="dashboard-button"> Employees</button>
                 </div>
                 <div className="dashboard-single">
-                    <button onClick={() => navigate("/enclosures_form")} className="dashboard-button"> Enclosures</button>
+                    <button onClick={() => navigate("/enclosure_form")} className="dashboard-button"> Enclosures</button>
                 </div>
                 <div className="dashboard-single">
                     <button onClick={() => navigate("/animal_form")} className="dashboard-button"> Animals</button>

@@ -7,7 +7,7 @@ const handleSignUp = require("./helpers/sign_up_helper");
 const handleLogin = require("./helpers/login_helper");
 const db_connection = require("./database"); // Import the database connection
 const handleEmployeeLogin = require("./helpers/employee_login");
-const { handleQueryReport } = require("./helpers/queryReportHelper");
+const { handleQueryReport, handleDistinctValuesForMedicalRecords } = require("./helpers/queryReportHelper");
 const ticketHelper = require("./helpers/ticket_helper");
 const getParseData = require("./utils/getParseData");
 const membershipHelper = require("./helpers/membership_helper");
@@ -15,13 +15,19 @@ const handleEnclosureForm = require("./helpers/enclosureFormHelper");
 const handleAnimalForm = require("./helpers/animalFormHelper");
 const handleEmployeeForm = require("./helpers/employeeFormHelper");
 const handleEventForm = require("./helpers/eventFormHelper");
+const handleTicketForm = require("./helpers/ticketFormHelper");
+const handleVisitorForm = require("./helpers/visitorFormHelper");
+const handleMembershipForm = require("./helpers/membershipFormHelper");
+const handleMedicalForm = require("./helpers/medicalFormHelper");
 const handleCalendar = require("./helpers/calendar_helper");
 const handleGiftShop = require("./helpers/giftShop_helper");
 const handleGiftOrder = require("./helpers/order_helper");
+const handleFeedForm = require("./helpers/feedFormHelper");
 const giftshopHelper = require("./helpers/giftshopPurchasesHelper");
 const handleGiftShopHistory = require("./helpers/giftshopHistoryHelper");
 const handleGiftShopRestock = require("./helpers/giftshopRestockHelper");
 const getClockInStatus = require("./helpers/ClockInHelper");
+
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -52,6 +58,7 @@ const server = http.createServer(async (req, res) => {
 
   const parsedUrl = url.parse(req.url, true);
   const path = parsedUrl.pathname;
+  req.query = parsedUrl.query; // Attach query parameters to the request object (Bahar's addition)
   console.log("path ", path);
 
   if (path === "/" && req.method === "GET") {
@@ -97,6 +104,14 @@ const server = http.createServer(async (req, res) => {
     handleQueryReport(req, res);
   } else if (path === "/query_report/tickets" && req.method === "POST") {
     handleQueryReport(req, res);
+  } else if (path === "/query_report/revenue" && req.method === "POST") {
+    handleQueryReport(req, res);
+  } else if (path === "/query_report/feedLogs" && req.method === "POST") {
+    handleQueryReport(req, res);
+  } else if (path === "/query_report/medicalRecords" && req.method === "POST") {
+    handleQueryReport(req, res);
+  } else if (path === "/medical_records/distinct_values" && req.method === "GET") { //for medical Qreport dropdowns
+      handleDistinctValuesForMedicalRecords(req, res);
   } else if (path === "/query_report/visitors" && req.method === "POST") {
     handleQueryReport(req, res);
 
@@ -182,7 +197,7 @@ const server = http.createServer(async (req, res) => {
     const sql = "SELECT * FROM tickets"; // Query to fetch all tickets
     db_connection.query(sql, (err, results) => {
       if (err) {
-        console.error("Error fetching events:", err);
+        console.error("Error fetching tickets:", err);
         res.writeHead(500, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ success: false, message: "Database error" }));
         return;
@@ -197,7 +212,37 @@ const server = http.createServer(async (req, res) => {
     const sql = "SELECT * FROM visitors"; // Query to fetch all visitors
     db_connection.query(sql, (err, results) => {
       if (err) {
-        console.error("Error fetching events:", err);
+        console.error("Error fetching visitors:", err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Database error" }));
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: results }));
+    });
+
+  } else if (path === "/feedLog_form" && req.method === "POST") {
+    handleFeedForm(req, res);
+  } else if (path === "/get_feedLogs" && req.method === "GET") {
+    const sql = "SELECT * FROM feed_schedules"; // Query to fetch all feed logs
+    db_connection.query(sql, (err, results) => {
+      if (err) {
+        console.error("Error fetching feed logs:", err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Database error" }));
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: results }));
+    });
+    
+  } else if (path === "/medical_form" && req.method === "POST") {
+    handleMedicalForm(req, res);
+  } else if (path === "/get_medical_records" && req.method === "GET") {
+    const sql = "SELECT * FROM medical_records";
+    db_connection.query(sql, (err, results) => {
+      if (err) {
+        console.error("Error fetching medical records:", err);
         res.writeHead(500, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ success: false, message: "Database error" }));
         return;
@@ -212,7 +257,7 @@ const server = http.createServer(async (req, res) => {
     const sql = "SELECT * FROM memberships"; // Query to fetch all memberships
     db_connection.query(sql, (err, results) => {
       if (err) {
-        console.error("Error fetching events:", err);
+        console.error("Error fetching memberships:", err);
         res.writeHead(500, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ success: false, message: "Database error" }));
         return;

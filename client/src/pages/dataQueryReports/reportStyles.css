@@ -3,7 +3,12 @@
 .event-query-report,
 .employee-query-report,
 .ticket-query-report,
-.visitor-query-report {
+.visitor-query-report,
+.revenue-query-report,
+.EWH-query-report,
+.feedLogs-query-report,
+.medicalRecords-query-report,
+.feedLogs-query-report {
   display: flex;
   gap: 20px;
   padding: 20px;
@@ -43,7 +48,7 @@
   margin: 5px 0;
 }
 
-.filter-sidebar button {
+.filter-sidebar > button {
   width: 100%;
   padding: 8px;
   margin-top: 10px;
@@ -54,8 +59,19 @@
   border-radius: 4px;
 }
 
-.filter-sidebar button:hover {
+.filter-sidebar > button:hover {
   background: #0056b3;
+}
+
+.dropdown-btn {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  border: none;
+  background: white;
+  color: black;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
 .report-table-container {
@@ -104,7 +120,9 @@
 .edit-animal-button-container,
 .edit-enclosure-button-container,
 .edit-ticket-button-container,
-.edit-visitor-button-container {
+.edit-visitor-button-container,
+.edit-medicalRecords-button-container,
+.edit-feedLogs-button-container {
   display: flex;
   justify-content: flex-end;
   margin-top: 10px;
@@ -115,7 +133,9 @@
 .edit-animal-button,
 .edit-enclosure-button,
 .edit-ticket-button,
-.edit-visitor-button {
+.edit-visitor-button,
+.edit-medicalRecords-button,
+.edit-feedLogs-button {
   padding: 10px 20px;
   background-color: #007bff;
   color: white;
@@ -131,6 +151,25 @@
 .edit-animal-button:hover,
 .edit-enclosure-button:hover,
 .edit-ticket-button:hover,
-.edit-visitor-button:hover {
+.edit-visitor-button:hover,
+.edit-medicalRecords-button:hover,
+.edit-feedLogs-button:hover {
+  background-color: #0056b3;
+}
+
+.edit-tuple-button {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.edit-tuple-button:hover {
   background-color: #0056b3;
 }

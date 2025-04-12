@@ -66,7 +66,7 @@ const ManagerDash = () => {
               </div>
               <div className="dashboard-single">
                 <button
-                  onClick={() => navigate("/enclosures_form")}
+                  onClick={() => navigate("/enclosure_form")}
                   className="dashboard-button"
                 >
                   {" "}

@@ -3,9 +3,12 @@ import InputFields from "./inputs.jsx";
 import styles from "./forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
+import { useLocation, useNavigate } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const EmployeeForm = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         Employee_id: "",
         first_name: "",
@@ -31,12 +34,49 @@ const EmployeeForm = () => {
     const [employees, setEmployees] = useState([]);
 
     useEffect(() => {
+        console.log("Location object:", location);
+        const tupleData = location.state?.tuple || JSON.parse(sessionStorage.getItem('employeeEditData') || null);
+        
+        if (tupleData) {
+            console.log("Loading employee data:", tupleData);
+            setFormData({
+                Employee_id: tupleData.Employee_id || "",
+                first_name: tupleData.first_name || "",
+                Minit_name: tupleData.Minit_name || "",
+                last_name: tupleData.last_name || "",
+                user_name: tupleData.user_name || "",
+                password: tupleData.password || "",
+                department_id: tupleData.department_id || "",
+                date_of_birth: tupleData.date_of_birth ? tupleData.date_of_birth.slice(0, 10) : "",
+                street_address: tupleData.street_address || "",
+                city: tupleData.city || "",
+                state: tupleData.state || "",
+                zip_code: tupleData.zip_code || "",
+                country: tupleData.country || "",
+                salary: tupleData.salary || "",
+                gender: tupleData.gender || "",
+                email: tupleData.email || "",
+                phone: tupleData.phone || "",
+                Manager_id: tupleData.Manager_id || "",
+            });
+            
+            // Clear the sessionStorage after use
+            sessionStorage.removeItem('employeeEditData');
+        } else {
+            console.log("No employee data found - creating new form");
+        }
         fetch(`${API_BASE_URL}/get_employees`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) setEmployees(data.data);
             })
             .catch(error => console.error("Error fetching employees:", error));
+    }, [location]);
+
+    useEffect(() => {
+        return () => {
+            sessionStorage.removeItem('employeeFormState');
+        };
     }, []);
 
     // Handle text input changes
@@ -59,30 +99,6 @@ const EmployeeForm = () => {
     // Handles only numeric input
     const handleNumericInput = (event) => {
         event.target.value = event.target.value.replace(/\D/g, "");
-    };
-
-    const handleEmployeeSelect = (employee) => {
-        const formattedDate = employee.date_of_birth?.split('T')[0];
-        setFormData({
-            Employee_id: employee.Employee_id || "",
-            first_name: employee.first_name || "",
-            Minit_name: employee.Minit_name || "",
-            last_name: employee.last_name || "",
-            user_name: employee.user_name || "",
-            password: employee.password || "",
-            department_id: employee.department_id || "",
-            date_of_birth: formattedDate || "",
-            street_address: employee.street_address || "",
-            city: employee.city || "",
-            state: employee.state || "",
-            zip_code: employee.zip_code || "",
-            country: employee.country || "",
-            salary: employee.salary || "",
-            gender: employee.gender || "",
-            email: employee.email || "",
-            phone: employee.phone || "",
-            Manager_id: employee.Manager_id || "",
-        });
     };
 
     // Handle form submission
@@ -173,19 +189,6 @@ const EmployeeForm = () => {
             <h2 className={styles.formTitle}>EMPLOYEE DATA ENTRY FORM</h2>
             <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
                 <div className={styles.formRow}>
-                    <Dropdown
-                        label="Select Employee to Modify/Delete"
-                        onSelect={(value) => handleEmployeeSelect(JSON.parse(value))}
-                        selectedLabel={formData.Employee_id ? `${formData.first_name} (ID: ${formData.Employee_id})` : "Select Employee to Modify/Delete"}
-                    >
-                        {employees.map(employee => (
-                            <DropdownItem key={employee.Employee_id} value={JSON.stringify(employee)}>
-                                {employee.first_name} (ID: {employee.Employee_id})
-                            </DropdownItem>
-                        ))}
-                    </Dropdown>
-                </div>
-                <div className={styles.formRow}>
                     <InputFields label="FIRST NAME *" name="first_name" value={formData.first_name} onChange={handleChange} pattern="[A-Za-z]+" autoComplete="given-name"/>
                     <InputFields label="MIDDLE INITIAL" name="Minit_name" value={formData.Minit_name} onChange={handleChange} maxLength="1" pattern="[A-Za-z]" required={false} autoComplete="additional-name"/>
                     <InputFields label="LAST NAME *" name="last_name" value={formData.last_name} onChange={handleChange} pattern="[A-Za-z]+" autoComplete="family-name"/>
@@ -209,8 +212,8 @@ const EmployeeForm = () => {
                 </div>
 
                 <div className={styles.formRow}>
-                    <label htmlFor="roleDropdown" className={styles.label}>ROLE (choose one)</label>
-                    {/* <Dropdown
+                    {/*<label htmlFor="roleDropdown" className={styles.label}>ROLE (choose one)</label>
+                     <Dropdown
                         label={formData.role || "Select role *"}
                         onSelect={(value) => handleSelect("role", value)}
                         id="roleDropdown"

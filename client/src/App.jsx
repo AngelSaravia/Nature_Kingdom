@@ -32,6 +32,8 @@ import EmployeeForm from "./pages/dataEntries/employee_form";
 import AnimalForm from "./pages/dataEntries/animal_form";
 import EnclosureForm from "./pages/dataEntries/enclosure_form";
 import EventForm from "./pages/dataEntries/event_form";
+import MedicalForm from "./pages/dataEntries/medical_form";
+import FeedLogsForm from "./pages/dataEntries/feedLogs_form";
 import EventsPage from "./pages/events/EventsPage";
 import AnimalQueryReport from "./pages/dataQueryReports/animal_queryReport";
 import EventQueryReport from "./pages/dataQueryReports/event_queryReport";
@@ -39,6 +41,9 @@ import EnclosureQueryReport from "./pages/dataQueryReports/enclosure_queryReport
 import EmployeeQueryReport from "./pages/dataQueryReports/employee_queryReport";
 import TicketQueryReport from "./pages/dataQueryReports/ticket_queryReport";
 import VisitorMembershipQueryReport from "./pages/dataQueryReports/visitormembership_queryReport";
+import RevenueQueryReport from "./pages/dataQueryReports/revenue_queryReport";
+import FeedLogsQueryReport from "./pages/dataQueryReports/feedLogs_queryReport";
+import MedicalRecordsQueryReport from "./pages/dataQueryReports/medicalRecords_queryReport";
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
 import GiftShop from "./pages/giftshop/GiftShop";
@@ -46,6 +51,17 @@ import Exhibits from "./pages/exhibits/Exhibits";
 import EnclosureByExhibit from "./pages/exhibits/EnclosuresByExhibit";
 import AnimalsByEnclosure from "./pages/exhibits/AnimalsByEnclosure";
 import GiftshopPurchases from "./pages/dashboard/giftshop-purchases/giftshop-purchases"
+
+function DebugNavigation() {
+  const location = useLocation();
+
+  useEffect(() => {
+      console.log("Navigated to:", location.pathname);
+      console.log("Navigation state:", location.state);
+  }, [location]);
+
+  return null;
+} //Bahar's debugging
 
 // Performance monitoring callback
 function onRenderCallback(id, phase, actualDuration) {
@@ -116,6 +132,7 @@ function AppContent() {
 
   return (
     <>
+      <DebugNavigation /> {/* Debugging navigation changes */}
       {loading ? (
         <div className="loading_container">
           <DotLottieReact
@@ -281,6 +298,57 @@ function AppContent() {
                   </RoleProtectedRoute>
                 }
               />
+              <Route
+                path="/medical_form"
+                element={
+                  <RoleProtectedRoute
+                    allowedRoles={["admin", "manager", "veterinarian"]}
+                  >
+                    <MedicalForm />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/feedLog_form"
+                element={
+                  <RoleProtectedRoute
+                    allowedRoles={["admin", "manager", "zookeeper"]}
+                  >
+                    <FeedLogsForm />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/query_report/revenue"
+                element={
+                  <RoleProtectedRoute
+                    allowedRoles={["admin", "manager"]}
+                  >
+                    <RevenueQueryReport />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/query_report/feedlogs"
+                element={
+                  <RoleProtectedRoute
+                    allowedRoles={["admin", "manager"]}
+                  >
+                    <FeedLogsQueryReport />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/query_report/medicalRecords"
+                element={
+                  <RoleProtectedRoute
+                    allowedRoles={["admin", "manager"]}
+                  >
+                    <MedicalRecordsQueryReport />
+                  </RoleProtectedRoute>
+                }
+              />
+
 
               {/* Public routes */}
               <Route path="/tickets" element={<Tickets />} />
@@ -297,35 +365,29 @@ function AppContent() {
               <Route path="/ticket_form" element={<TicketForm />} />
               <Route path="/visitor_form" element={<VisitorForm />} />
               <Route path="/membership_form" element={<MembershipForm />} />
+                
+              <Route path="/medical_form" element={<MedicalForm />} />
+              <Route path="/feedLog_form" element={<FeedLogsForm />} />
+                
+              <Route path="/query_report/animals" element={<AnimalQueryReport />} />
+              <Route path="/query_report/events" element={<EventQueryReport />} />
+              <Route path="/query_report/enclosures" element={<EnclosureQueryReport />} />
+              <Route path="/query_report/employees" element={<EmployeeQueryReport />} />
+              <Route path="/query_report/tickets" element={<TicketQueryReport />} />
+              <Route path="/query_report/visitors" element={<VisitorMembershipQueryReport />} />
+                
+              <Route path="/query_report/revenue" element={<RevenueQueryReport />} />
+              <Route path="/query_report/feedLogs" element={<FeedLogsQueryReport />} />
+              <Route path="/query_report/medicalRecords" element={<MedicalRecordsQueryReport />} />
+              
+
               <Route path="/exhibits" element={<Exhibits />} />
               <Route path="/exhibits/:exhibitId/enclosures" element={<EnclosureByExhibit />} />
               <Route path="/exhibits/:exhibitId/enclosures/:enclosureId/animals/" element={<AnimalsByEnclosure />} /> 
 
 
-              <Route
-                path="/query_report/animals"
-                element={<AnimalQueryReport />}
-              />
-              <Route
-                path="/query_report/events"
-                element={<EventQueryReport />}
-              />
-              <Route
-                path="/query_report/enclosures"
-                element={<EnclosureQueryReport />}
-              />
-              <Route
-                path="/query_report/employees"
-                element={<EmployeeQueryReport />}
-              />
-              <Route
-                path="/query_report/tickets"
-                element={<TicketQueryReport />}
-              />
-              <Route
-                path="/query_report/visitors"
-                element={<VisitorMembershipQueryReport />}
-              />
+
+
 
               <Route path="/:type/checkout" element={<Checkout />} />
               <Route path="/calendar" element={<EventsPage />} />
