@@ -133,7 +133,8 @@ const AnimalForm = () => {
                 <div className={styles.formRow}>
                     <label htmlFor="animal_typeDropdown" className={styles.label}>ANIMAL TYPE (choose one)</label>
                     <Dropdown
-                        label={formData.animal_type || "Select animal type *"}
+                        label="Select animal type *"
+                        selectedLabel={formData.animal_type || "Select animal type *"}
                         onSelect={(value) => handleSelect("animal_type", value)}
                         id="animal_typeDropdown"
                         value={formData.animal_type}
@@ -147,7 +148,8 @@ const AnimalForm = () => {
 
                     <label htmlFor="health_statusDropdown" className={styles.label}>HEALTH STATUS (choose one)</label>
                     <Dropdown
-                        label={formData.health_status || "Select health status *"}
+                    label="Select health status *"
+                        selectedLabel={formData.health_status || "Select health status *"}
                         onSelect={(value) => handleSelect("health_status", value)}
                         id="health_statusDropdown"
                         value={formData.health_status}

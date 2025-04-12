@@ -200,7 +200,8 @@ const EnclosureForm = () => {
                 <div className={styles.formRow}>
                     <label htmlFor="statusDropdown" className={styles.label}>ENCLOSURE STATUS (choose one)</label>
                     <Dropdown
-                        label={formData.status || "Select enclosure status"}
+                        label="Select enclosure status"
+                        selectedLabel={formData.status || "Select enclosure status"}
                         onSelect={(value) => handleSelect("status", value)}
                         id="statusDropdown"
                         value={formData.status}

@@ -169,7 +169,8 @@ const TicketForm = () => {
                 <div className={styles.formRow}>
                 <label htmlFor="ticketTypeDropdown" className={styles.label}>TICKET TYPE (choose one)</label>
                     <Dropdown
-                        label={formData.ticket_type || "Select ticket type"}
+                    label="Select ticket type"
+                        selectedLabel={formData.ticket_type || "Select ticket type"}
                         onSelect={(value) => handleSelect("ticket_type", value)}
                         id="ticketTypeDropdown"
                         value={formData.ticket_type}

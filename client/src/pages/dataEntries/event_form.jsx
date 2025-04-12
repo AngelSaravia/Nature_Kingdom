@@ -183,7 +183,8 @@ const EventForm = () => {
                 <div className={styles.formRow}>
                     <label htmlFor="eventTypeStatusDropdown" className={styles.label}>EVENT TYPE (choose one)</label>
                     <Dropdown
-                        label={formData.eventType || "Select event type *"}
+                    label="Select event type *"
+                        selectedLabel={formData.eventType || "Select event type *"}
                         onSelect={(value) => handleSelect("eventType", value)}
                         id="eventTypeStatusDropdown"
                         value={formData.eventType}
