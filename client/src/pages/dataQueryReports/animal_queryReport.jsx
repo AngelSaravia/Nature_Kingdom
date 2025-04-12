@@ -130,7 +130,7 @@ const AnimalQueryReport = () => {
         }}
         className="edit-tuple-button"
       >
-        Edit Tuple
+        Edit
       </button>
     );
   };

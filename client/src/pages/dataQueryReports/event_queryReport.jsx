@@ -126,7 +126,7 @@ const EventQueryReport = () => {
         }}
         className="edit-tuple-button"
       >
-        Edit Tuple
+        Edit
       </button>
     );
   };

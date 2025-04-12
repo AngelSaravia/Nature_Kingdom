@@ -151,7 +151,7 @@ const EmployeeQueryReport = () => {
             }}
             className="edit-tuple-button"
           >
-            Edit Tuple
+            Edit
           </button>
         );
       };
