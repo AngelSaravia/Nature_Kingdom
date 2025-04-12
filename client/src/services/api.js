@@ -226,4 +226,40 @@ export const restockProduct = async (productData) => {
     throw error;
   }
 };
+
+export const getClockIn = async (email) => {
+  try {
+    // console.log(`Attempting clock in for: ${email}`);
+    const response = await apiClient.get(`/api/clock_in?email=${email}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching clock in status:", error);
+    throw error;
+  }
+};
+
+export const clockIn = async (email) => {
+  try {
+    console.log(`Attempting to clock in for: ${email}`);
+    const response = await apiClient.get(`/api/set_clock_in?email=${email}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error clocking in:", error);
+    throw error;
+  }
+};
+
+export const clockOut = async (email) => {
+  try {
+    console.log(`Attempting to clock out for: ${email}`);
+    const response = await apiClient.get(`/api/set_clock_out?email=${email}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error clocking out:", error);
+    throw error;
+  }
+};
+
+
+
 export default apiClient;

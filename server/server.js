@@ -21,6 +21,7 @@ const handleGiftOrder = require("./helpers/order_helper");
 const giftshopHelper = require("./helpers/giftshopPurchasesHelper");
 const handleGiftShopHistory = require("./helpers/giftshopHistoryHelper");
 const handleGiftShopRestock = require("./helpers/giftshopRestockHelper");
+const getClockInStatus = require("./helpers/ClockInHelper");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -315,7 +316,46 @@ const server = http.createServer(async (req, res) => {
           }
       }
     );
-  } else if (path === "/api/giftshop/purchases" && req.method === "GET") {
+  } else if (path === "/api/clock_in" && req.method === "GET") {
+    console.log("Received clock in request");
+    const urlParams = new URL(req.url, `http://${req.headers.host}`);
+    const email = urlParams.searchParams.get("email");
+    console.log("email", email);
+    
+    if (!email) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: false, message: "email is required" }));
+    } else {
+      getClockInStatus.getClockInStatus(email, res);
+    }
+  } else if (path === "/api/set_clock_in" && req.method === "GET") {
+    console.log("Received set clock-in request");
+    const urlParams = new URL(req.url, `http://${req.headers.host}`);
+    const email = urlParams.searchParams.get("email");
+    // console.log("email", email);
+  
+    if (!email) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: false, message: "email is required" }));
+    } else {
+      getClockInStatus.setClockInStatus(email, false, res); 
+    }
+  } else if (path === "/api/set_clock_out" && req.method === "GET") {
+    console.log("Received set clock-out request");
+    const urlParams = new URL(req.url, `http://${req.headers.host}`);
+    const email = urlParams.searchParams.get("email");
+    // console.log("email", email);
+  
+    if (!email) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: false, message: "email is required" }));
+    } else {
+      getClockInStatus.setClockOutStatus(email, true, res); 
+    }
+  }
+  
+  
+  else if (path === "/api/giftshop/purchases" && req.method === "GET") {
     const username = url.parse(req.url, true).query.username;
   
     if (!username) {

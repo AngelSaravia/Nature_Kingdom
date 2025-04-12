@@ -50,7 +50,7 @@ function handleGiftShop(req, res) {
             if (results.length === 0) {
                 return sendSuccessResponse(res, { products: [], message: "No products found" });
             }
-            console.log("Query results:", results);
+            // console.log("Query results:", results);
             sendSuccessResponse(res, { products: results });
         });
     } catch (error) {

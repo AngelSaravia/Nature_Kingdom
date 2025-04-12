@@ -5,13 +5,13 @@ function restockProduct(req, res) {
 
   req.on("data", chunk => {
     body += chunk.toString();
-    console.log("body", body);
+    // console.log("body", body);
   });
 
   req.on("end", () => {
     try {
       const { product_id, newStock } = JSON.parse(body);
-      console.log("Received restock request:", { product_id, newStock });
+      // console.log("Received restock request:", { product_id, newStock });
 
       const query = `
         UPDATE products 
@@ -41,7 +41,7 @@ function restockProduct(req, res) {
   });
 }
 
-function sendSuccessResponse(res, data) {
+function sendSuccessResponse(res, data) { 
   res.writeHead(200, { "Content-Type": "application/json" });
   res.end(JSON.stringify({ success: true, ...data }));
 }

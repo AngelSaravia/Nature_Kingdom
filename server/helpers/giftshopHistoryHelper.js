@@ -55,7 +55,7 @@ function handleProductHistory(req, res) {
                 return sendSuccessResponse(res, { products: [], message: "No product history found" });
             }
 
-            console.log("Query results:", results);
+            // console.log("Query results:", results);
             sendSuccessResponse(res, { products: results });
         });
 
