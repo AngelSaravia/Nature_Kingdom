@@ -4,6 +4,7 @@ import "./giftshop.css";
 import logoImage from "../../../zoo_pictures/Nature's_Kingdom.jpeg";
 import { useAuth } from "../../../context/Authcontext";
 import apiClient from "../../../services/api";
+import ClockInComponent from "../../ClockInComponent/ClockInComponent";
 
 function GiftshopHeader() {
   const navigate = useNavigate();
@@ -47,6 +48,7 @@ function GiftshopHeader() {
         <Link to="/giftshop_dash">Dashboard</Link>
       </nav>
       <div className="user-menu">
+        <ClockInComponent />
         <span className="username">Welcome, {username}</span>
         <button className="logout-btn" onClick={handleLogout}>
           Logout

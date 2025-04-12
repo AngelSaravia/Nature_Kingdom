@@ -45,6 +45,7 @@ import GiftShop from "./pages/giftshop/GiftShop";
 import Exhibits from "./pages/exhibits/Exhibits";
 import EnclosureByExhibit from "./pages/exhibits/EnclosuresByExhibit";
 import AnimalsByEnclosure from "./pages/exhibits/AnimalsByEnclosure";
+import GiftshopPurchases from "./pages/dashboard/giftshop-purchases/giftshop-purchases"
 
 // Performance monitoring callback
 function onRenderCallback(id, phase, actualDuration) {
@@ -334,6 +335,7 @@ function AppContent() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/my-tickets" element={<MyTickets />} />
                 <Route path="/my-membership" element={<MyMembership />} />
+                <Route path="/giftshop-purchases" element={<GiftshopPurchases />} />  
                 <Route path="/:type/checkout" element={<Checkout />} />
               </Route>
             </Routes>

@@ -33,7 +33,7 @@ function handleGiftShop(req, res) {
             query += " WHERE " + conditions.join(" AND ");
         }
 
-        query += " ORDER BY name ASC";
+        query += " ORDER BY product_id ASC";
 
         // Ensure the database connection is valid before querying
         if (!db_connection) {
@@ -50,7 +50,7 @@ function handleGiftShop(req, res) {
             if (results.length === 0) {
                 return sendSuccessResponse(res, { products: [], message: "No products found" });
             }
-
+            // console.log("Query results:", results);
             sendSuccessResponse(res, { products: results });
         });
     } catch (error) {

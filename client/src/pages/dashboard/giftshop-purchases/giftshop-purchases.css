@@ -1,0 +1,82 @@
+.giftshop-container {
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.giftshop-card {
+    max-width: 800px;
+    width: 100%;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+}
+
+.giftshop-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333333;
+    margin-bottom: 20px;
+}
+
+.order-group {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.order-header {
+    cursor: pointer;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #2C5530;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.order-header:hover {
+    background-color: #3a7e42 !important;
+}
+
+.order-summary {
+    text-align: left;
+    padding-left: 20px;
+}
+
+.order-item {
+    margin: 10px 0;
+    border-left: 4px solid #4A8E51;
+    padding-left: 10px;
+    color: #2C5530;
+}
+
+.no-orders-text {
+    font-size: 16px;
+    color: #888888;
+    margin-bottom: 20px;
+}
+
+.giftshop-button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #2C5530;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.giftshop-button:hover {
+    background-color: #3a7e42 !important;
+}

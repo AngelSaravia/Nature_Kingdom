@@ -27,6 +27,7 @@
 }
 
 .dashboard-grid {
+  color: #333333;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
@@ -82,4 +83,76 @@
 
 .dashboard-button:hover {
   background-color: #333333;
+}
+
+
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  color: #333;
+}
+
+.dashboard-table th,
+.dashboard-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.dashboard-table th {
+  background-color: #eee;
+  color: #333;
+  
+}
+
+.low-stock {
+  color: #c0392b;
+  font-weight: bold;
+}
+
+.stock-cell {
+  display: flex;
+  /* width: 200px; */
+}
+
+.stock-input {
+  width: 20px;
+  margin-right: 10px;
+}
+
+.dashboard-alerts {
+  list-style-type: none;
+  padding-left: 0;
+  color: #c0392b;
+  font-weight: 500;
+}
+
+.dashboard-button-group {
+  display: flex;
+  justify-content: start;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* Styling for low-stock status */
+.low-stock {
+  color: #c0392b;  /* Red color for low stock */
+  font-weight: bold;
+}
+
+/* Button for restocking */
+.restock-button {
+  background-color: #1e673c; /* Green color for the restock button */
+  color: white;
+  font-size: 14px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.restock-button:hover {
+  background-color: #0e512a; /* Lighter green on hover */
 }
