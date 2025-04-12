@@ -297,6 +297,10 @@ function AppContent() {
               <Route path="/ticket_form" element={<TicketForm />} />
               <Route path="/visitor_form" element={<VisitorForm />} />
               <Route path="/membership_form" element={<MembershipForm />} />
+              <Route path="/exhibits" element={<Exhibits />} />
+              <Route path="/exhibits/:exhibitId/enclosures" element={<EnclosureByExhibit />} />
+              <Route path="/exhibits/:exhibitId/enclosures/:enclosureId/animals/" element={<AnimalsByEnclosure />} /> 
+
 
               <Route
                 path="/query_report/animals"

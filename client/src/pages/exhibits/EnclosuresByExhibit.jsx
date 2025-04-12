@@ -77,7 +77,7 @@ const EnclosuresByExhibit = () => {
     };
 
     const handleViewAnimals = (enclosureId) => {
-        navigate(`/animals/${enclosureId}`);
+        navigate(`/exhibits/${exhibitId}/enclosures/${enclosureId}/animals/`);
     };
 
     if (loading) {

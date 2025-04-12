@@ -35,7 +35,7 @@ const Exhibits = () => {
     }, []);
 
     const handleViewEnclosures = (exhibitId) => {
-        navigate(`/enclosures/${exhibitId}`);
+        navigate(`/exhibits/${exhibitId}/enclosures/`);
     };
 
     if (loading) {

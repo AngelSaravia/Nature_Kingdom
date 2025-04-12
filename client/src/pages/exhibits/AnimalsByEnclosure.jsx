@@ -85,7 +85,7 @@ const AnimalsByEnclosure = () => {
 
   const handleBackToEnclosures = () => {
     if (enclosureDetails && exhibitDetails) {
-      navigate(`/enclosures/${exhibitDetails.exhibit_id}`);
+      navigate(`/exhibits/${exhibitDetails.exhibit_id}/enclosures/`);
     } else {
       navigate('/exhibits');
     }

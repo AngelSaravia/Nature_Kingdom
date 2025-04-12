@@ -68,27 +68,34 @@ const Dashboard = () => {
             <p className="dashboard-text">Phone: {formatPhoneNumber(dashboardData.user.phone_number)}</p>
             </div>
             <div className="dashboard-grid">
-            <div className="dashboard-box">
-                <h2 className="dashboard-heading">My Tickets</h2>
-                <p className="dashboard-text">{dashboardData.activeTicketsCount} active ticket(s)</p>
-                <button onClick={() => navigate("/my-tickets", { state: { dashboardData } })} 
-                        className="dashboard-button">View Tickets</button>
-            </div>
-            <div className="dashboard-box">
-                <h2 className="dashboard-heading">My Membership</h2>
-                <p className="dashboard-text">{dashboardData.membership.length ? "Active membership" : "No active membership"}</p>
-                <button onClick={() => navigate("/my-membership", { state: { dashboardData } })} 
-                        className="dashboard-button">View Membership</button>
-            </div>
-            <div className="dashboard-box">
-                <h2 className="dashboard-heading">Giftshop Purchases</h2>
-                {/* <p className="dashboard-text">{dashboardData.membership.length ? "Active membership" : "No active membership"}</p> */}
-                <button onClick={() => navigate("/giftshop-purchases", { state: { dashboardData } })} 
-                        className="dashboard-button">View Purchases</button>
-            </div>
+              <div className="dashboard-box">
+                  <h2 className="dashboard-heading">My Tickets</h2>
+                  <p className="dashboard-text">{dashboardData.activeTicketsCount} active ticket(s)</p>
+                  <button onClick={() => navigate("/my-tickets", { state: { dashboardData } })} 
+                          className="dashboard-button">View Tickets</button>
+              </div>
+              <div className="dashboard-box">
+                  <h2 className="dashboard-heading">My Membership</h2>
+                  <p className="dashboard-text">{dashboardData.membership.length ? "Active membership" : "No active membership"}</p>
+                  <button onClick={() => navigate("/my-membership", { state: { dashboardData } })} 
+                          className="dashboard-button">View Membership</button>
+              </div>
+              <div className="dashboard-box">
+                  <h2 className="dashboard-heading">Giftshop Purchases</h2>
+                  {/* <p className="dashboard-text">{dashboardData.membership.length ? "Active membership" : "No active membership"}</p> */}
+                  <button onClick={() => navigate("/giftshop-purchases", { state: { dashboardData } })} 
+                          className="dashboard-button">View Purchases</button>
+              </div>
+              <div className="dashboard-box">
+                <h2 className="dashboard-heading">Exhibits and Animals</h2>
+                <button className="dashboard-button" onClick={() => navigate("/exhibits")}>View Exhibits and Animals</button>
+              </div>
             </div>
             
             {/* Additional Features */}
+
+            
+
             <div className="dashboard-box single">
             <h2 className="dashboard-heading">Upcoming Events</h2>
             <p className="dashboard-text">Stay updated on zoo events and activities.</p>
