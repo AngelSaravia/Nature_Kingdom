@@ -132,7 +132,7 @@ const EnclosureQueryReport = () => {
         }}
         className="edit-tuple-button"
       >
-        Edit Tuple
+        Edit
       </button>
     );
   };
@@ -142,7 +142,7 @@ const EnclosureQueryReport = () => {
       <div className="report-table-container">
         <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
         <div className="edit-enclosure-button-container">
-          <Link to="/enclosure_form" className="edit-enclosure-button">Add Enclosure</Link>
+          <a href="/enclosure_form" target="_blank" rel="noopener noreferrer" className="edit-enclosure-button">Edit Enclosure</a>
         </div>
       </div>
       </div>

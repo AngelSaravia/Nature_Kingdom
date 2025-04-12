@@ -26,7 +26,7 @@ function handleEmployeeForm(req, res) {
           }
 
 
-        const sql = "INSERT INTO employees (first_name, last_name, date_of_birth, salary, user_name, password, department_id, gender, email, phone, Manager_id, Minit_name, street_address, city, state, zip_code, country) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        const sql = "INSERT INTO employees (first_name, last_name, date_of_birth, salary, user_name, password, department_id, gender, email, phone, Manager_id, Minit_name, street_address, city, state, zip_code, country) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         const values = [first_name, last_name, date_of_birth, salary, user_name, password, department_id, gender, email, phone, Manager_id, Minit_name, street_address, city, state, zip_code, country];
 
 

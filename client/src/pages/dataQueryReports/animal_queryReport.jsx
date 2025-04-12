@@ -130,7 +130,7 @@ const AnimalQueryReport = () => {
         }}
         className="edit-tuple-button"
       >
-        Edit Tuple
+        Edit
       </button>
     );
   };
@@ -140,7 +140,8 @@ const AnimalQueryReport = () => {
       <div className="report-table-container">
         <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
         <div className="edit-animal-button-container">
-          <Link to="/animal_form" className="edit-animal-button">Add Animal</Link>
+          <a href="/animal_form" target="_blank" rel="noopener noreferrer" className="edit-animal-button">Edit Animal</a>
+
         </div>
       </div>
       </div>

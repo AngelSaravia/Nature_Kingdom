@@ -20,6 +20,7 @@ const handleSignUp = (req, res) => {
         state,
         zipcode,
         country,
+        gender,
       } = data;
 
       // Hash the password before saving it to the database
@@ -43,8 +44,9 @@ const handleSignUp = (req, res) => {
                               city,
                               state,
                               zipcode,
-                              country)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                              country,
+                              gender)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         db_connection.query(
@@ -63,6 +65,7 @@ const handleSignUp = (req, res) => {
             state,
             zipcode,
             country,
+            gender,
           ],
           (err, result) => {
             if (err) {

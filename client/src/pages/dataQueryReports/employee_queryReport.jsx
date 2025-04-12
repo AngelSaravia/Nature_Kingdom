@@ -151,7 +151,7 @@ const EmployeeQueryReport = () => {
             }}
             className="edit-tuple-button"
           >
-            Edit Tuple
+            Edit
           </button>
         );
       };
@@ -161,7 +161,9 @@ const EmployeeQueryReport = () => {
           <div className="report-table-container">
           <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
           <div className="edit-employee-button-container">
-            <Link to="/employee_form" className="edit-employee-button">Add Employee</Link>
+
+            <a href="/employee_form" target="_blank" rel="noopener noreferrer" className="edit-employee-button">Edit Employee</a>
+
           </div>
         </div>
         </div>

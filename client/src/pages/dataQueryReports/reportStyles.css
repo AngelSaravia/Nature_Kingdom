@@ -64,6 +64,7 @@
 }
 
 .dropdown-btn {
+  z-index: 1000;
   width: 100%;
   padding: 8px;
   margin-top: 10px;
@@ -72,6 +73,11 @@
   color: black;
   cursor: pointer;
   border-radius: 4px;
+}
+
+.dropdown-content {
+  position: absolute;
+  z-index: 9999;
 }
 
 .report-table-container {

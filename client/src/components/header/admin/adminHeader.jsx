@@ -4,6 +4,7 @@ import "./admin.css";
 import logoImage from "../../../zoo_pictures/Nature's_Kingdom.jpeg";
 import { useAuth } from "../../../context/Authcontext";
 import apiClient from "../../../services/api";
+import ClockInComponent from "../../ClockInComponent/ClockInComponent";
 
 function AdminHeader() {
   const navigate = useNavigate();
@@ -44,12 +45,13 @@ function AdminHeader() {
 
       <nav className="nav-links">
         <Link to="/admin_dash">Dashboard</Link>
-        <Link to="/event_form">Events Form</Link>
+        {/* <Link to="/event_form">Events Form</Link>
         <Link to="/enclosure_form">Enclosure Form</Link>
         <Link to="/animal_form">Animal Form</Link>
-        <Link to="/employee_form">Employee Form</Link>
+        <Link to="/employee_form">Employee Form</Link> */}
       </nav>
       <div className="user-menu">
+        <ClockInComponent />
         <span className="username">Welcome, {username}</span>
         <button className="logout-btn" onClick={handleLogout}>
           Logout

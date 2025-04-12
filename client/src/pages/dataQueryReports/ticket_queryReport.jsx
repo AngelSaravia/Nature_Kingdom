@@ -119,7 +119,7 @@ const TicketQueryReport = () => {
             }}
             className="edit-tuple-button"
           >
-            Edit Tuple
+            Edit
           </button>
         );
       };
@@ -129,7 +129,7 @@ const TicketQueryReport = () => {
             <div className="report-table-container">
                 <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)}/>
                 <div className="edit-ticket-button-container">
-                    <Link to="/ticket_form" className="edit-ticket-button">Add Ticket</Link>
+                    <a href="/ticket_form" target="_blank" rel="noopener noreferrer" className="edit-ticket-button">Edit Ticket</a>
                 </div>
             </div>
         </div>

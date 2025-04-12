@@ -133,7 +133,7 @@ const FeedLogsQueryReport = () => {
             }}
             className="edit-tuple-button"
           >
-            Edit Tuple
+            Edit
           </button>
         );
       };

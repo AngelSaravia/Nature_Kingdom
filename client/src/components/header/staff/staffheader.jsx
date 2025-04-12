@@ -4,6 +4,7 @@ import "./staffheader.css";
 import logoImage from "../../../zoo_pictures/Nature's_Kingdom.jpeg";
 import { useAuth } from "../../../context/Authcontext";
 import apiClient from "../../../services/api";
+import ClockInComponent from "../../ClockInComponent/ClockInComponent";
 
 function staffHeader() {
   const navigate = useNavigate();
@@ -48,6 +49,7 @@ function staffHeader() {
         <Link to="/event_form">Events Form</Link>
       </nav>
       <div className="user-menu">
+        <ClockInComponent />
         <span className="username">Welcome, {username}</span>
         <button className="logout-btn" onClick={handleLogout}>
           Logout
