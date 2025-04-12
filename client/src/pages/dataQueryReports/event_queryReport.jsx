@@ -1,28 +1,34 @@
-import React, { useState } from "react"; 
+import React, { useState, useEffect } from "react"; 
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
   { label: "EVENT NAME", type: "text", name: "eventName" },
   { label: "EVENT DATE", type: "date", name: "eventDate" },
-  { label: "DURATION (Min)", type: "time", name: "durationMin" },
-  { label: "DURATION (Max)", type: "time", name: "durationMax" },
+  { label: "MIN DURATION (HH:MM)", type: "text", name: "durationMin" },
+  { label: "MAX DURATION (HH:MM)", type: "text", name: "durationMax" },
   { label: "LOCATION", type: "text", name: "location" },
   { label: "TYPE", type: "checkbox", name: "eventType", options: ["Educational", "Entertainment", "Seasonal", "Workshops", "Fundraising", "Animal Interaction", "Corporate"] },
   { label: "CAPACITY", type: "number", name: "capacity" },
   { label: "PRICE (Min)", type: "number", name: "priceMin" },
   { label: "PRICE (Max)", type: "number", name: "priceMax" },
-  { label: "MANAGER ID", type: "number", name: "managerID" },
+  { label: "MANAGER EMAIL", type: "text", name: "manager_email" },
 ];
 
-const columnHeaders = ["eventName", "description", "eventDate", "duration", "location", "eventType", "capacity", "price", "managerID"];
+const columnHeaders = ["eventName", "description", "eventDate", "duration", "location", "eventType", "capacity", "price", "manager_email"];
 
 const EventQueryReport = () => {
   const [filters, setFilters] = useState({});
   const [reportData, setReportData] = useState([]);
+  const navigate = useNavigate();
+  
+
+  useEffect(() => {
+    fetchReport(false);
+  }, []);
 
   const handleFilterChange = (eventOrUpdater) => {
     if (typeof eventOrUpdater === "function") {
@@ -46,20 +52,46 @@ const EventQueryReport = () => {
     }
   };
 
-  const fetchReport = async () => {
+  const fetchReport = async (applyFilters = true) => {
     try {
-        if (Object.keys(filters).length === 0) {
-            console.error("No filters applied. Please select at least one filter.");
-            return;
+        // Validate HH:MM format for durationMin and durationMax
+      if (filters.durationMin && !/^([0-9]|[0-9][0-9]):[0-5][0-9]$/.test(filters.durationMin)) {
+        console.error("Invalid durationMin format. Please use HH:MM.");
+        return;
+      }
+      if (filters.durationMax && !/^([0-9]|[0-9][0-9]):[0-5][0-9]$/.test(filters.durationMax)) {
+        console.error("Invalid durationMax format. Please use HH:MM.");
+        return;
+      }
+
+        // Create prefixed filters
+        const prefixedFilters = {};
+        if (applyFilters && Object.keys(filters).length > 0) {
+          Object.keys(filters).forEach((key) => {
+              if (['eventName', 'eventDate', 'duration', 'location', 
+                  'eventType', 'capacity', 'price'].includes(key)) {
+                  prefixedFilters[`events.${key}`] = filters[key];
+              } else if (key.endsWith('Min') || key.endsWith('Max')) {
+                  // Handle range filters
+                  const baseKey = key.replace('Min', '').replace('Max', '');
+                  prefixedFilters[`events.${key}`] = filters[key];
+              } else if (key === "manager_email") {
+                prefixedFilters["manager.email"] = filters[key];
+              } else {
+                  prefixedFilters[key] = filters[key];
+              }
+          });
         }
-
-        const queryParams = { entity_type: "events", ...filters };
-
-        Object.keys(queryParams).forEach((key) => {
-            if (Array.isArray(queryParams[key]) && queryParams[key].length > 0) {
-                queryParams[key] = queryParams[key].join(",");
-            }
-        });
+        const queryParams = {
+          table1: "events",
+          table2: "employees AS manager",
+          join_condition: "events.managerID = manager.Employee_id",
+          computed_fields: `
+              events.*, 
+              manager.email AS manager_email
+          `,
+          ...prefixedFilters,
+        };
 
         const response = await fetch(`${API_BASE_URL}/query_report/events`, {
             method: "POST",
@@ -79,13 +111,32 @@ const EventQueryReport = () => {
     }
   };
 
+  const onClearAll = () => {
+    setFilters({});
+    fetchReport(false);
+  };
+
+  const renderEditButton = (tuple) => {
+    return (
+      <button 
+        onClick={() => {
+          // Store in sessionStorage as fallback
+          sessionStorage.setItem('eventEditData', JSON.stringify(tuple));
+          navigate('/event_form', { state: { tuple } });
+        }}
+        className="edit-tuple-button"
+      >
+        Edit
+      </button>
+    );
+  };
   return (
     <div className="event-query-report">
-      <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} filterOptions={filterOptions} />
+      <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
       <div className="report-table-container">
-        <ReportTable data={reportData} columns={columnHeaders} />
+        <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
         <div className="edit-event-button-container">
-          <Link to="/event_form" className="edit-event-button">Edit Event</Link>
+          <a href="/event_form" target="_blank" rel="noopener noreferrer" className="edit-event-button">Edit Event</a>
         </div>
       </div>
       </div>

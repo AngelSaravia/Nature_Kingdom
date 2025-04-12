@@ -1,7 +1,9 @@
 import React from "react";
+import Dropdown from "../../components/Dropdown/Dropdown";
+import DropdownItem from "../../components/DropdownItem/DropdownItem";
 import "./reportStyles.css";
 
-const FilterSidebar = ({ filters, onFilterChange, onRunReport, filterOptions }) => {
+const FilterSidebar = ({ filters, onFilterChange, onRunReport, onClearAll, filterOptions, dropdownData, resetDropdowns }) => {
   const handleChange = (event) => {
     const { name, value } = event.target;
     onFilterChange({ target: { name, value } });
@@ -26,6 +28,7 @@ const FilterSidebar = ({ filters, onFilterChange, onRunReport, filterOptions }) 
           <h4>{label}</h4>
           {type === "text" && <input type="text" name={name} value={filters[name] || ""} onChange={handleChange} />}
           {type === "date" && <input type="date" name={name} value={filters[name] || ""} onChange={handleChange} />}
+          {type === "datetime-local" && <input type="datetime-local" name={name} value={filters[name] || ""} onChange={handleChange} />}
           {type === "time" && <input type="time" name={name} value={filters[name] || ""} onChange={handleChange} />}
           {type === "number" && name !== "price" && name !== "duration" && 
             <input type="number" name={name} value={filters[name] || ""} onChange={handleChange} />}
@@ -56,9 +59,6 @@ const FilterSidebar = ({ filters, onFilterChange, onRunReport, filterOptions }) 
                 {option}
               </label>
             ))}
-
-
-
           {name === "price" && (
             <>
               <label>Min Price:</label>
@@ -77,11 +77,28 @@ const FilterSidebar = ({ filters, onFilterChange, onRunReport, filterOptions }) 
             </>
           )}
 
+          {type === "dropdown" && dropdownData[name] && (
+            <>
+              {console.log(`Dropdown reset state for ${name}:`, resetDropdowns)} {/* Debugging */}
+              <Dropdown
+                  label={`${label}`.toLowerCase()}
+                  onSelect={(value) => onFilterChange({ target: { name, value, type: "dropdown" } })}
+                  reset={resetDropdowns}
+              >
+                  {dropdownData[name].map((item) => (
+                      <DropdownItem key={item} value={item}>
+                          {item}
+                      </DropdownItem>
+                  ))}
+              </Dropdown>
+            </>
+          )}
+
         </div>
       ))}
 
-      <button onClick={() => onFilterChange(() => ({}))}>Clear All</button>
       <button onClick={onRunReport}>Run Report</button>
+      <button onClick={onClearAll}>Clear All</button>
     </div>
   );
 };

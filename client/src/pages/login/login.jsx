@@ -3,57 +3,55 @@ import { FaUserAlt, FaLock } from "react-icons/fa";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useAuth } from "../../context/Authcontext";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [visible, setVisible] = useState(false);
-  const API_BASE_URL = import.meta.env.VITE_API_URL;
-
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
   const navigate = useNavigate();
+
+  const localRefreshAuthState = () => {
+    const token = localStorage.getItem("token");
+    const username = localStorage.getItem("username");
+    const email = localStorage.getItem("email");
+
+    let role = localStorage.getItem("role");
+    if (!role && token && username) {
+      role = "customer";
+      localStorage.setItem("role", role);
+    }
+
+    console.log("Auth state refreshed with:", { username, email, role });
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setMessage("");
 
     try {
-      console.log(
-        "Sending login request with:",
-        { username, password },
-        " apibaseurl ",
-        API_BASE_URL
-      );
-      const res = await axios.post(`${API_BASE_URL}/login`, {
-        username,
-        password,
-      });
-
-      console.log("Login response:", res.data);
-
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("username", username);
-
-      if (res.data.email) {
-        localStorage.setItem("email", res.data.email);
+      const result = await login(username, password);
+      if (result.success) {
+        localRefreshAuthState(); // Refresh if needed
+        // Login will handle navigation
+      } else {
+        setMessage(result.message || "Login failed");
       }
-
-      setMessage("Login Successful");
-
-      // All regular users go to the dashboard
-      navigate("/dashboard", { replace: true });
-    } catch (e) {
-      console.error("Login error:", e);
-      setMessage(
-        e.response?.data?.error ||
-          "Login failed. Please check your credentials and try again."
-      );
+    } catch (error) {
+      setMessage("An error occurred during login");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="wrapper">
-      <div className="form-box-login">
+    <div className="login">
+      <div className="wrapper">
         <form onSubmit={handleLogin}>
           <h1>Login</h1>
           <div className="input_container">
@@ -91,9 +89,11 @@ function Login() {
             </a>
           </div>
           <div className="login_button">
-            <button type="submit">Login</button>
+            <button type="submit" disabled={isLoading}>
+              {isLoading ? "Logging in..." : "Login"}
+            </button>
           </div>
-          <p style={{ color: "red" }}>{message}</p>
+          {message && <p style={{ color: "red" }}>{message}</p>}
           <div className="register-link">
             <p>
               Don't have an account? <a href="/signup">Register</a>

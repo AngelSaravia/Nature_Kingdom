@@ -1,102 +1,134 @@
 .animal-query-report, 
 .enclosure-query-report, 
 .event-query-report,
-.employee-query-report {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-    align-items: stretch;
-    box-sizing: border-box; /* Include padding in height calculation */
-    overflow: hidden; /* Prevent overflow */
-  }
-  
-  .filter-sidebar {
-    width: 250px;
-    background: rgb(126, 136, 134);
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .filter-sidebar h3 {
-    margin-bottom: 10px;
-  }
-  
-  .filter-sidebar h4 {
-    margin: 10px 0 5px;
-  }
-  
-  .filter-sidebar input[type="text"],
-  .filter-sidebar input[type="date"],
-  .filter-sidebar input[type="number"] {
-    width: 100%;
-    padding: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .filter-sidebar label {
-    display: block;
-    margin: 5px 0;
-  }
-  
-  .filter-sidebar button {
-    width: 100%;
-    padding: 8px;
-    margin-top: 10px;
-    border: none;
-    background: #007bff;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-  }
-  
-  .filter-sidebar button:hover {
-    background: #0056b3;
-  }
-  
-  .report-table-container {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
+.employee-query-report,
+.ticket-query-report,
+.visitor-query-report,
+.revenue-query-report,
+.EWH-query-report,
+.feedLogs-query-report,
+.medicalRecords-query-report,
+.feedLogs-query-report {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  align-items: stretch;
+  box-sizing: border-box; /* Include padding in height calculation */
+  overflow: hidden; /* Prevent overflow */
+}
 
-  .report-table {
-    flex-grow: 1;
-    background: #256e5d;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .report-table table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: rgb(126, 136, 134);;
-  }
-  
-  .report-table th, .report-table td {
-    border: 1px solid #9c9c9c;
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .report-table th {
-    background-color: rgb(67, 80, 77);
-    color: rgb(255, 255, 255);
-  }
-  
-  .report-table tr:nth-child(even) {
-    background-color: rgb(154, 161, 160);
-  }
-  
+.filter-sidebar {
+  width: 250px;
+  background: rgb(126, 136, 134);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
 
-  .edit-employee-button-container,
+.filter-sidebar h3 {
+  margin-bottom: 10px;
+}
+
+.filter-sidebar h4 {
+  margin: 10px 0 5px;
+}
+
+.filter-sidebar input[type="text"],
+.filter-sidebar input[type="date"],
+.filter-sidebar input[type="number"] {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.filter-sidebar label {
+  display: block;
+  margin: 5px 0;
+}
+
+.filter-sidebar > button {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  border: none;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.filter-sidebar > button:hover {
+  background: #0056b3;
+}
+
+.dropdown-btn {
+  z-index: 1000;
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  border: none;
+  background: white;
+  color: black;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.dropdown-content {
+  position: absolute;
+  z-index: 9999;
+}
+
+.report-table-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-y: hidden; /* Prevent vertical scrolling in the container */
+}
+
+.report-table {
+  flex-grow: 1;
+  background: #256e5d;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  overflow-x: auto; /* Enable horizontal scrolling for the table */
+  overflow-y: hidden; /* Prevent vertical scrolling in the table */
+  white-space: nowrap; /* Prevent table cells from wrapping */
+}
+
+.report-table table {
+  width: max-content;/* Allow table to expand horizontally based on its content*/
+  border-collapse: collapse;
+  background-color: rgb(126, 136, 134);;
+}
+
+.report-table th, .report-table td {
+  border: 1px solid #9c9c9c;
+  padding: 8px;
+  text-align: left;
+}
+
+.report-table th {
+  background-color: rgb(67, 80, 77);
+  color: rgb(255, 255, 255);
+}
+
+.report-table tr:nth-child(even) {
+  background-color: rgb(154, 161, 160);
+}
+
+
+.edit-employee-button-container,
 .edit-event-button-container,
 .edit-animal-button-container,
-.edit-enclosure-button-container {
+.edit-enclosure-button-container,
+.edit-ticket-button-container,
+.edit-visitor-button-container,
+.edit-medicalRecords-button-container,
+.edit-feedLogs-button-container {
   display: flex;
   justify-content: flex-end;
   margin-top: 10px;
@@ -105,7 +137,11 @@
 .edit-employee-button,
 .edit-event-button,
 .edit-animal-button,
-.edit-enclosure-button {
+.edit-enclosure-button,
+.edit-ticket-button,
+.edit-visitor-button,
+.edit-medicalRecords-button,
+.edit-feedLogs-button {
   padding: 10px 20px;
   background-color: #007bff;
   color: white;
@@ -119,6 +155,27 @@
 .edit-employee-button:hover,
 .edit-event-button:hover,
 .edit-animal-button:hover,
-.edit-enclosure-button:hover {
+.edit-enclosure-button:hover,
+.edit-ticket-button:hover,
+.edit-visitor-button:hover,
+.edit-medicalRecords-button:hover,
+.edit-feedLogs-button:hover {
+  background-color: #0056b3;
+}
+
+.edit-tuple-button {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.edit-tuple-button:hover {
   background-color: #0056b3;
 }

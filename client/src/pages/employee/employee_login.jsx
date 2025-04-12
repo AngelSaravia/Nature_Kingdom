@@ -1,50 +1,72 @@
 import "./employee_login.css";
 import { FaUserAlt, FaLock } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
-import axios from "axios";
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+import { useAuth } from "../../context/Authcontext"; // Update the path as needed
 
 function EmployeeLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
+  const { isAuthenticated, employeeLogin } = useAuth();
+
+  // Check if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      const role = localStorage.getItem("role");
+
+      if (role === "admin") {
+        navigate("/admin_dash", { replace: true });
+      } else if (role === "manager") {
+        navigate("/manager_dash", { replace: true });
+      } else if (role === "staff") {
+        navigate("/staff_dash", { replace: true });
+      } else if (role === "zookeeper") {
+        navigate("/zookeeper_dash", { replace: true });
+      } else if (role === "veterinarian") {
+        navigate("/veterinarian_dash", { replace: true });
+      } else if (role === "operator") {
+        navigate("/operator_dash", { replace: true });
+      } else if (role === "giftshop") {
+        navigate("/giftshop_dash", { replace: true });
+      }
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMessage("");
 
-    console.log("Sending employee login request with email:", email);
     try {
-      const res = await axios.post(`${API_BASE_URL}/employee_login`, {
-        email,
-        password,
-      });
+      console.log("Attempting employee login with email:", email);
 
-      console.log("Employee login response:", res.data);
+      const result = await employeeLogin(email, password);
 
-      // Store user information
-      localStorage.setItem("username", res.data.username);
-      localStorage.setItem("email", email);
-      localStorage.setItem("token", res.data.token);
+      if (result.success) {
+        setMessage("Employee Login Successful");
 
-      setMessage("Employee Login Successful");
-
-      // Determine if the employee is admin staff or regular staff based on email domain
-      const isAdmin = email.includes("@admin.naturekingdom.com");
-      const isManager = email.includes("@manager.naturekingdom.com");
-
-      // Navigate based on user role
-      if (isAdmin || isManager) {
-        navigate("/admin_dash", { replace: true });
+        // Determine which dashboard to navigate to based on role
+        if (result.role === "admin") {
+          navigate("/admin_dash", { replace: true });
+        } else if (result.role === "manager") {
+          navigate("/manager_dash", { replace: true });
+        } else {
+          navigate("/staff_dash", { replace: true });
+        }
       } else {
-        navigate("/employee_dash", { replace: true });
+        setMessage(result.message || "Login failed");
       }
-    } catch (e) {
-      console.error("Login error:", e);
-      setMessage(e.response?.data?.error || "Login failed");
+    } catch (error) {
+      console.error("Login error:", error);
+      setMessage("An error occurred during login");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,6 +83,7 @@ function EmployeeLogin() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                disabled={loading}
               />
               <FaUserAlt />
             </div>
@@ -71,6 +94,7 @@ function EmployeeLogin() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                disabled={loading}
               />
               <div className="p-2" onClick={() => setVisible(!visible)}>
                 {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
@@ -88,9 +112,11 @@ function EmployeeLogin() {
             </a>
           </div>
           <div className="login_button">
-            <button type="submit">Login</button>
+            <button type="submit" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </button>
           </div>
-          <p style={{ color: "red" }}>{message}</p>
+          {message && <p style={{ color: "red" }}>{message}</p>}
         </form>
       </div>
     </div>

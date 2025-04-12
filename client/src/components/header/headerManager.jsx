@@ -3,66 +3,62 @@ import { useLocation } from "react-router-dom";
 import Header from "./header";
 import AuthHeader from "./auth/authHeader";
 import AdminHeader from "./admin/adminHeader";
+import ManagerHeader from "./manager/managerHeader";
+import StaffHeader from "./staff/staffheader";
+import VeterinarianHeader from "./veterinarian/veterinarian";
+import ZookeeperHeader from "./zookeeper/zookeeper";
+import { useAuth } from "../../context/Authcontext";
+import OperatorHeader from "./operator/operator";
+import GiftShopHeader from "./giftshop/giftshop";
 
 function HeaderManager() {
   const location = useLocation();
-  const isLoggedIn = localStorage.getItem("token") !== null;
-  const email = localStorage.getItem("email");
-  const username = localStorage.getItem("username");
+  const { isAuthenticated, user, loading } = useAuth();
 
-  console.log("Current path:", location.pathname);
-  console.log("Is logged in:", isLoggedIn);
-  console.log("Email:", email);
-  console.log("Username:", username);
+  console.log("HeaderManager Auth State:", {
+    isAuthenticated,
+    user,
+    loading,
+    path: location.pathname,
+  });
 
-  const adminPaths = [
-    "/admin",
-    "/employee_form",
-    "/animal_form",
-    "/enclosure_form",
-    "/event_form",
-  ];
+  // Show default header while loading
+  if (loading) {
+    return <Header />;
+  }
 
-  const authPaths = [
-    "/dashboard", 
-    "/profile", 
-    "/tickets",
-    "/membership",
-    "/checkout",
-    "/my-tickets",
-    "/my-membership"
-  ];
+  // Not logged in
+  if (!isAuthenticated || !user) {
+    return <Header />;
+  }
 
-  const isAdminPath = adminPaths.some(
-    (path) => location.pathname === path || location.pathname.startsWith(path)
-  );
-
-  const isAuthPath = authPaths.some(
-    (path) => location.pathname === path || location.pathname.startsWith(path)
-  );
-
-  console.log("Is admin path:", isAdminPath);
-  console.log("Is auth path:", isAuthPath);
-
-  const isStaff =
-    email &&
-    (email.endsWith("@admin.naturekingdom.com") ||
-      email.endsWith("@manager.naturekingdom.com") ||
-      email.endsWith("@staff.naturekingdom.com"));
-
-  console.log("Is staff:", isStaff);
-
-  if (isLoggedIn) {
-    if (isStaff) {
+  // Determine which header to show based on user.role
+  switch (user.role) {
+    case "admin":
       console.log("Showing AdminHeader");
       return <AdminHeader />;
-    } else {
-      console.log("Showing AuthHeader");
+    case "manager":
+      console.log("Showing ManagerHeader");
+      return <ManagerHeader />;
+    case "staff":
+      console.log("Showing StaffHeader");
+      return <StaffHeader />;
+    case "veterinarian":
+      console.log("Showing VeterinarianHeader");
+      return <VeterinarianHeader />;
+    case "zookeeper":
+      console.log("Showing ZookeeperHeader");
+      return <ZookeeperHeader />;
+    case "operator":
+      console.log("Showing Operator Header");
+      return <OperatorHeader />;
+    case "giftshop":
+      console.log("Showing Giftshop Header");
+      return <GiftShopHeader />;
+
+    default:
+      console.log("Showing regular Auth Header");
       return <AuthHeader />;
-    }
-  } else {
-    console.log("Showing regular Header");
-    return <Header />;
   }
 }
 

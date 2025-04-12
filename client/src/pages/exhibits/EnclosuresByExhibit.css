@@ -1,0 +1,138 @@
+.enclosure-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.page-title {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.page-description {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.enclosure-grid {
+    margin-left: 20px;
+    margin-right: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.enclosure-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.enclosure-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    background: #3498db;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h2 {
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+.status {
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.active {
+    background: #2ecc71;
+}
+
+.inactive {
+    background: #e74c3c;
+}
+
+.maintenance {
+    background: #f39c12;
+}
+
+.card-content {
+    padding: 1.5rem;
+}
+
+.location, .hours, .temp-control {
+    margin: 0.5rem 0;
+    color: #34495e;
+}
+
+.capacity {
+    margin: 1rem 0;
+}
+
+.capacity span{
+    color:#2980b9;
+}
+
+.exhibit-details{
+    text-align: center;
+}
+
+.capacity-bar {
+    width: 100%;
+    height: 8px;
+    background: #ecf0f1;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+    overflow: hidden;
+}
+
+.capacity-fill {
+    height: 100%;
+    background: #3498db;
+    transition: width 0.5s ease;
+}
+
+.view-animals-btn {
+    display: block;
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 1rem;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.view-animals-btn:hover {
+    background: #2980b9;
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+    color: #7f8c8d;
+}
+
+.error {
+    text-align: center;
+    padding: 2rem;
+    color: #e74c3c;
+    font-size: 1.2rem;
+}
