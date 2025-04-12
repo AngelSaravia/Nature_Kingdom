@@ -19,6 +19,8 @@ const handleCalendar = require("./helpers/calendar_helper");
 const handleGiftShop = require("./helpers/giftShop_helper");
 const handleGiftOrder = require("./helpers/order_helper");
 const giftshopHelper = require("./helpers/giftshopPurchasesHelper");
+const handleGiftShopHistory = require("./helpers/giftshopHistoryHelper");
+const handleGiftShopRestock = require("./helpers/giftshopRestockHelper");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -62,6 +64,10 @@ const server = http.createServer(async (req, res) => {
     handleCalendar(req, res);
   } else if (path === "/api/giftshop" && req.method === "GET") {
     handleGiftShop(req, res);
+  } else if (path === "/api/giftshop/history" && req.method === "GET") {
+    handleGiftShopHistory(req, res);
+  } else if (path === "/api/restock" && req.method === "POST") {
+    handleGiftShopRestock.restockProduct(req, res);
   } else if (path === "/employee_login" && req.method === "POST") {
     handleEmployeeLogin(req, res);
 
