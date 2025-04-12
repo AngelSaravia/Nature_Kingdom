@@ -17,7 +17,18 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
     const email = localStorage.getItem("email");
+    const employeeId = localStorage.getItem("employeeId");
+    const managerId = localStorage.getItem("managerId");
     let role = localStorage.getItem("role");
+
+    console.log("refreshAuthState values:", {
+      token: !!token,
+      username,
+      email,
+      role,
+      employeeId,
+      managerId,
+    });
 
     // Add default role handling in the refresh function as well
     if (!role && token && username) {
@@ -26,7 +37,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     if (token && username) {
-      setUser({ username, email, role });
+      setUser({ username, email, role, employeeId, managerId });
       setIsAuthenticated(true);
     } else {
       setUser(null);
@@ -35,7 +46,6 @@ export const AuthProvider = ({ children }) => {
 
     setLoading(false);
   };
-
   // Use the refreshAuthState on component mount
   useEffect(() => {
     refreshAuthState();
@@ -90,11 +100,9 @@ export const AuthProvider = ({ children }) => {
     };
 
     checkAuthStatus();
-  }, []); // Only run on mount, not on location change
+  }, []);
 
-  // Add a validation check to detect invalid auth state
   useEffect(() => {
-    // If authenticated but missing critical data, force logout
     if (isAuthenticated && (!user || !user.role)) {
       console.warn(
         "Invalid auth state detected: authenticated but missing role or user data"
@@ -103,24 +111,19 @@ export const AuthProvider = ({ children }) => {
     }
   }, [isAuthenticated, user]);
 
-  // Enhanced force logout function
   const forceLogout = (shouldNavigate = true) => {
     console.log("Forcing logout, clearing auth state", { shouldNavigate });
 
-    // Clear localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("email");
     localStorage.removeItem("role");
 
-    // Clear axios headers
     delete axios.defaults.headers.common["Authorization"];
 
-    // Update state
     setUser(null);
     setIsAuthenticated(false);
 
-    // Navigate only if requested
     if (shouldNavigate) {
       navigate("/login");
     }
@@ -151,24 +154,20 @@ export const AuthProvider = ({ children }) => {
 
       const authToken = token || result.token;
 
-      // Store all relevant user data
       localStorage.setItem("username", extractedUsername);
       localStorage.setItem("token", authToken);
       localStorage.setItem("role", userRole);
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${authToken}`;
 
-      // Update auth state
       setUser({ extractedUsername, role: userRole });
       setIsAuthenticated(true);
 
-      // Debug log
       console.log("Employee login successful:", {
         extractedUsername,
         role: userRole,
       });
 
-      // Redirect to dashboard after successful login
       navigate("/dashboard");
 
       return { success: true };
@@ -191,22 +190,22 @@ export const AuthProvider = ({ children }) => {
       const result = await employeeLoginService(email, password);
       console.log("Employee login response:", result);
 
-      // Check if the service returned an error
       if (!result.success) {
         return { success: false, message: "Login failed" };
       }
 
-      // Extract necessary data, with defaults if not provided
       const { userData, token } = result;
+
+      console.log("Raw userData from API:", userData);
+
       const {
         username,
         role,
         email: userEmail,
-        Employee_id: userEmployee_id,
-        Manager_id: userManager_id,
+        employee_id,
+        manager_id,
       } = userData || {};
 
-      // If the necessary data is missing, return an error
       if (!token) {
         console.error("Employee login missing token:", result);
         return {
@@ -215,32 +214,40 @@ export const AuthProvider = ({ children }) => {
         };
       }
 
-      // Store relevant data in localStorage
+      console.log("Extracted fields:", {
+        username,
+        role,
+        email: userEmail || email,
+        employeeId: employee_id,
+        managerId: manager_id,
+      });
+
       localStorage.setItem("username", username);
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
       localStorage.setItem("email", userEmail || email);
-      localStorage.setItem("employeeId", userEmployee_id);
-      localStorage.setItem("managerId", userManager_id);
+      localStorage.setItem("employeeId", employee_id);
+      localStorage.setItem("managerId", manager_id);
 
-      // Set axios authorization header
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-      // Update authentication state
       setUser({
         username,
         role,
         email: userEmail || email,
-        employeeId: userEmployee_id,
-        managerId: userManager_id,
+        employeeId: employee_id,
+        managerId: manager_id,
       });
 
       setIsAuthenticated(true);
 
-      // Debug log
-      console.log("Employee login successful:", { username, role });
+      console.log("Employee login successful:", {
+        username,
+        role,
+        employeeId: employee_id,
+        managerId: manager_id,
+      });
 
-      // Redirect to dashboard
       navigate("/dashboard");
 
       return { success: true, role };

@@ -17,12 +17,12 @@ const handleEmployeeForm = require("./helpers/employeeFormHelper");
 const handleEventForm = require("./helpers/eventFormHelper");
 const handleCalendar = require("./helpers/calendar_helper");
 const handleGiftShop = require("./helpers/giftShop_helper");
-const handleAnimalsByEnclosure = require("./helpers/handleanimalEnclosures");
 const handleGiftOrder = require("./helpers/order_helper");
-const { updateAnimalHealth } = require("./helpers/modifytheAniStatus");
+const handleAnimalsByEnclosure = require("./helpers/handleanimalEnclosures");
 const {
   getEnclosuresByUserManagerQuery,
 } = require("./helpers/enclosuresByManagerQuery");
+const { updateAnimalHealth } = require("./helpers/modifytheAniStatus");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -87,6 +87,17 @@ const server = http.createServer(async (req, res) => {
         JSON.stringify({ success: true, data: results.map((row) => row.name) })
       ); // Return only the names
     });
+  } else if (path === "/query_report/events" && req.method === "POST") {
+    handleQueryReport(req, res);
+  } else if (path === "/query_report/employees" && req.method === "POST") {
+    handleQueryReport(req, res);
+  } else if (path === "/query_report/enclosures" && req.method === "POST") {
+    handleQueryReport(req, res);
+  } else if (path === "/query_report/tickets" && req.method === "POST") {
+    handleQueryReport(req, res);
+  } else if (path === "/query_report/visitors" && req.method === "POST") {
+    handleQueryReport(req, res);
+    // Data Entry Forms
   } else if (path.startsWith("/animals/enclosure/") && req.method === "GET") {
     console.log("Animals by enclosure route matched!", path);
     handleAnimalsByEnclosure(req, res, db_connection);
@@ -108,57 +119,6 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({ success: false, error: error.message }));
       }
     });
-  }
-  if (
-    path.startsWith("/query_report/enclosures_by_manager") &&
-    req.method === "GET"
-  ) {
-    try {
-      // Extract Manager_id from query parameters
-      const queryParams = url.parse(req.url, true).query;
-      const userManagerId = queryParams.managerId;
-
-      if (!userManagerId) {
-        res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Missing managerId parameter" }));
-        return;
-      }
-
-      // Use the parameterized query
-      const query = getEnclosuresByUserManagerQuery(userManagerId);
-      console.log("Executing query:", query); // Log the query for debugging
-
-      const [results] = await db_connection.promise().query(query);
-
-      console.log("Query results:", results);
-      console.log("Number of records returned:", results.length);
-
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(
-        JSON.stringify({
-          success: true,
-          data: results,
-        })
-      );
-    } catch (error) {
-      console.error("Database error:", error);
-      res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(
-        JSON.stringify({ error: "Database error", message: error.message })
-      );
-    }
-  } else if (path === "/query_report/events" && req.method === "POST") {
-    handleQueryReport(req, res);
-  } else if (path === "/query_report/employees" && req.method === "POST") {
-    handleQueryReport(req, res);
-  } else if (path === "/query_report/enclosures" && req.method === "POST") {
-    handleQueryReport(req, res);
-  } else if (path === "/query_report/tickets" && req.method === "POST") {
-    handleQueryReport(req, res);
-  } else if (path === "/query_report/visitors" && req.method === "POST") {
-    handleQueryReport(req, res);
-
-    // Data Entry Forms
   } else if (path === "/enclosure_form" && req.method === "POST") {
     handleEnclosureForm(req, res);
   } else if (path === "/get_enclosures" && req.method === "GET") {
@@ -180,6 +140,19 @@ const server = http.createServer(async (req, res) => {
     db_connection.query(sql, (err, results) => {
       if (err) {
         console.error("Error fetching animals:", err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Database error" }));
+        return;
+      }
+      console.log("Animals from DB:", results); // Check what's actually returned
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: results }));
+    });
+  } else if (path === "/get_exhibits" && req.method === "GET") {
+    const sql = "SELECT * FROM exhibits"; // Query to fetch all exhibits
+    db_connection.query(sql, (err, results) => {
+      if (err) {
+        console.error("Error fetching exhibits:", err);
         res.writeHead(500, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ success: false, message: "Database error" }));
         return;

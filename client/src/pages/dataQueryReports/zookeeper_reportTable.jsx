@@ -16,7 +16,6 @@ const ZooKeeperReportTable = ({ data = [], columns = [] }) => {
       [enclosureId]: !prev[enclosureId],
     }));
 
-    // If expanding and animal data is not already loaded
     if (!expandedRows[enclosureId] && !animalData[enclosureId]) {
       try {
         const response = await fetch(
@@ -52,6 +51,21 @@ const ZooKeeperReportTable = ({ data = [], columns = [] }) => {
     }
   };
 
+  const handleAnimalAction = (animal) => {
+    console.log("View details for animal:", animal);
+  };
+
+  const calculateAge = (dob) => {
+    if (!dob) return "Unknown";
+
+    const birthDate = new Date(dob);
+    const ageDifMs = Date.now() - birthDate.getTime();
+    const ageDate = new Date(ageDifMs);
+    const years = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+    return `${years} years`;
+  };
+
   if (!Array.isArray(data) || data.length === 0) {
     return <div className="no-data-message">No data available.</div>;
   }
@@ -61,12 +75,6 @@ const ZooKeeperReportTable = ({ data = [], columns = [] }) => {
       <div className="no-data-message">No columns defined for the table.</div>
     );
   }
-  const calculateAge = (dob) => {
-    const birthDate = new Date(dob);
-    const ageDifMs = Date.now() - birthDate.getTime();
-    const ageDate = new Date(ageDifMs);
-    return Math.abs(ageDate.getUTCFullYear() - 1970);
-  };
 
   return (
     <div className="report-table-wrapper">
@@ -124,7 +132,9 @@ const ZooKeeperReportTable = ({ data = [], columns = [] }) => {
                                   <tr key={animal.animal_id || animalIndex}>
                                     <td>{animal.animal_name}</td>
                                     <td>{animal.species}</td>
-                                    <td>{animal.date_of_birth}</td>
+                                    <td>
+                                      {calculateAge(animal.date_of_birth)}
+                                    </td>
                                     <td>{animal.health_status}</td>
                                     <td>
                                       <button

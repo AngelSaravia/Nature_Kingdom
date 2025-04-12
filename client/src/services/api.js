@@ -83,22 +83,20 @@ export const employeeLogin = async (email, password) => {
       password,
     });
 
-    const { token, username, role, Employee_id, Manager_id } = response.data;
+    console.log("Full API response:", response.data); 
 
-    localStorage.setItem("username", username);
-    localStorage.setItem("email", email);
-    localStorage.setItem("token", token);
-    localStorage.setItem("role", role);
-    localStorage.setItem("Employee_id", Employee_id);
-    localStorage.setItem("Manager_id", Manager_id);
+    const { token, username, role, employee_id, manager_id } = response.data;
 
-    apiClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-    console.log("Employee login successful:", { username, role });
-
+  
     return {
       success: true,
-      userData: { username, email, role, Employee_id, Manager_id },
+      userData: {
+        username,
+        email,
+        role,
+        employee_id,
+        manager_id,
+      },
       token,
       role,
     };

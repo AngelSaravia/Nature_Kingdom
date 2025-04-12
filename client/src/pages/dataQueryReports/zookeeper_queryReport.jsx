@@ -3,7 +3,6 @@ import ZooKeeperReportTable from "./zookeeper_reportTable";
 import "./zookeeperStyle.css";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-// Define column headers based on provided attributes
 const columnHeaders = [
   "name",
   "current_capacity",
@@ -13,7 +12,6 @@ const columnHeaders = [
   "exhibit_name",
 ];
 
-// Define animal column headers based on provided attributes
 const animalColumnHeaders = [
   "animal_name",
   "species",
@@ -28,7 +26,7 @@ const EnclosureQueryReport = () => {
   const [expandedEnclosure, setExpandedEnclosure] = useState(null);
   const [animalsData, setAnimalsData] = useState({});
   const [updateLoading, setUpdateLoading] = useState(false);
-  // Better state for popup modal
+
   const [popupState, setPopupState] = useState({
     isOpen: false,
     animal: null,
@@ -36,36 +34,52 @@ const EnclosureQueryReport = () => {
   });
 
   useEffect(() => {
-    fetchReport(); //runs once fetchReport is called
+    fetchReport();
   }, []);
 
   const fetchReport = async () => {
     setLoading(true);
     try {
-      const userManagerId = localStorage.getItem("Manager_id");
+      const role = localStorage.getItem("role");
+      const managerId = localStorage.getItem("managerId");
 
-      if (!userManagerId) {
-        console.error("User not logged in or missing Manager_id");
-        return;
+      const queryParams = {
+        table1: "enclosures",
+        table2: "employees",
+        join_condition: "enclosures.Manager_id = employees.employee_id",
+        additional_joins: [
+          {
+            table: "exhibits",
+            join_condition: "enclosures.exhibit_id = exhibits.exhibit_id",
+          },
+        ],
+        computed_fields: `
+            enclosures.*, 
+            CONCAT(employees.first_name, ' ', employees.last_name) AS manager_name,
+            exhibits.name AS exhibit_name,
+            CASE enclosures.temp_control WHEN 1 THEN 'Yes' WHEN 0 THEN 'No' END AS temp_control
+          `,
+      };
+
+      if (role === "zookeeper" && managerId) {
+        queryParams["enclosures.Manager_id"] = managerId;
+
+        console.log("Applying zookeeper filter:", queryParams.where_condition);
       }
 
-      // Include the Manager_id as a query parameter
-      const response = await fetch(
-        `${API_BASE_URL}/query_report/enclosures_by_manager?managerId=${userManagerId}`,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/query_report/enclosures`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(queryParams),
+      });
 
-      console.log("Response status:", response.status);
       const data = await response.json();
-      console.log("Response data:", data);
 
-      if (data.success && Array.isArray(data.data)) {
+      if (data.success) {
         setReportData(data.data);
+        console.log("Fetched enclosures:", data.data.length);
       } else {
-        console.error("Unexpected response format:", data);
+        console.error("Error fetching report:", data.message);
         setReportData([]);
       }
     } catch (error) {
@@ -118,13 +132,12 @@ const EnclosureQueryReport = () => {
       case "NEEDS CARE":
         return "Mark as Critical";
       case "CRITICAL":
-        return "Already Critical"; // Changed text for Critical status
+        return "Already Critical";
       default:
         return "Update Health Status";
     }
   };
 
-  // Modified to prevent cycling back from critical
   const getNextHealthStatusValue = (currentStatus) => {
     switch (currentStatus) {
       case "HEALTHY":
@@ -132,13 +145,12 @@ const EnclosureQueryReport = () => {
       case "NEEDS CARE":
         return "CRITICAL";
       case "CRITICAL":
-        return "CRITICAL"; // Stay as CRITICAL - won't cycle back
+        return "CRITICAL";
       default:
         return "HEALTHY";
     }
   };
 
-  // Get description for status change
   const getStatusChangeDescription = (currentStatus, nextStatus) => {
     if (currentStatus === "HEALTHY" && nextStatus === "NEEDS CARE") {
       return "This animal will be marked as needing care. Regular monitoring and appropriate care will be initiated.";
@@ -149,11 +161,8 @@ const EnclosureQueryReport = () => {
     }
   };
 
-  // Open the popup with animal information
   const initiateHealthStatusChange = (animal) => {
-    // If already in CRITICAL state, don't show popup
     if (animal.health_status === "CRITICAL") {
-      // Maybe show a toast or a small notification instead
       return;
     }
 
@@ -203,7 +212,6 @@ const EnclosureQueryReport = () => {
     }
   };
 
-  // Modify the button style for critical animals to be disabled
   const getButtonStyleByStatus = (currentStatus) => {
     const baseStyle = {
       color: "white",
@@ -240,7 +248,6 @@ const EnclosureQueryReport = () => {
     const nextStatus = getNextHealthStatusValue(animal.health_status);
 
     try {
-      // API call to update the animal's health status
       const response = await fetch(
         `${API_BASE_URL}/animals/${animal.animal_id}/health`,
         {
@@ -255,15 +262,13 @@ const EnclosureQueryReport = () => {
       const data = await response.json();
 
       if (data.success) {
-        // Update the local state with a safety check
         setAnimalsData((prevState) => {
-          // Check if enclosureId exists in prevState
           if (!prevState || !prevState[enclosureId]) {
             console.warn(
               `Enclosure ID ${enclosureId} not found in state`,
               prevState
             );
-            return prevState; // Return unchanged state
+            return prevState;
           }
 
           const updatedAnimals = prevState[enclosureId].map((a) =>
@@ -378,7 +383,6 @@ const EnclosureQueryReport = () => {
     );
   };
 
-  // Render the new modal popup
   const renderStatusChangePopup = () => {
     if (!popupState.isOpen || !popupState.animal) return null;
 
@@ -386,7 +390,6 @@ const EnclosureQueryReport = () => {
     const currentStatus = animal.health_status;
     const isCritical = nextStatus === "CRITICAL";
 
-    // Get the appropriate color for current and next status
     const getStatusColor = (status) => {
       switch (status) {
         case "HEALTHY":
@@ -486,9 +489,16 @@ const EnclosureQueryReport = () => {
 
   return (
     <div className="enclosure-query-report">
+      <div className="report-title">
+        <h2>Enclosure Report</h2>
+      </div>
       <div className="report-table-container">
         {loading ? (
           <div className="loading-message">Loading data...</div>
+        ) : reportData.length === 0 ? (
+          <div className="no-data-message">
+            No enclosures found for your account.
+          </div>
         ) : (
           <table className="enclosure-table">
             <thead>
@@ -508,7 +518,6 @@ const EnclosureQueryReport = () => {
         )}
       </div>
 
-      {/* Render the new popup */}
       {renderStatusChangePopup()}
     </div>
   );
