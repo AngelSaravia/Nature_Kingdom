@@ -93,6 +93,7 @@ const GiftDash = () => {
             <h2>Inventory</h2>
             <p>Total Items: {products.length}</p>
             <p>Total Stocked Items: {products.filter(item => item.stock > 0).length}</p>
+            <p>Total Low Stock Items: {products.filter(item => item.status === "Low Stock").length}</p>
           </div>
           <div className="dashboard-box">
             <h2>Sales</h2>
@@ -149,9 +150,9 @@ const GiftDash = () => {
             </tbody>
           </table>
 
-          <div className="dashboard-button-group">
+          {/* <div className="dashboard-button-group">
             <button className="dashboard-button">Export Inventory</button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
