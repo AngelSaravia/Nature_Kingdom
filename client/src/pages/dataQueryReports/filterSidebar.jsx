@@ -57,7 +57,6 @@ const FilterSidebar = ({ filters, onFilterChange, onRunReport, onClearAll, filte
                 {option}
               </label>
             ))}
-
           {name === "price" && (
             <>
               <label>Min Price:</label>
