@@ -130,7 +130,74 @@ const server = http.createServer(async (req, res) => {
     });
   } else if (path === "/event_form" && req.method === "POST") {
     handleEventForm(req, res);
-  } else if (path === "/get_events" && req.method === "GET") {
+  } 
+  else if (path === "/get_events" && req.method === "GET") {
+    try {
+      const currentDate = new Date().toISOString().split('T')[0];
+      const limit = parseInt(parsedUrl.query.limit) || 3;
+      const upcomingOnly = parsedUrl.query.upcoming === 'true';
+      
+      console.log(`Fetching events - upcomingOnly: ${upcomingOnly}, limit: ${limit}`);
+  
+      let sql = `SELECT id, name, date, start_time, end_time, description, image_url FROM events`;
+      const params = [];
+      
+      if (upcomingOnly) {
+        sql += ` WHERE date >= ?`;
+        params.push(currentDate);
+      }
+      
+      sql += ` ORDER BY date ASC LIMIT ?`;
+      params.push(limit);
+      
+      console.log(`Executing SQL: ${sql} with params:`, params);
+  
+      // Use a promise to handle the database query
+      new Promise((resolve, reject) => {
+        db_connection.query(sql, params, (err, results) => {
+          if (err) {
+            console.error("Database error details:", {
+              error: err,
+              sql: err.sql,
+              sqlMessage: err.sqlMessage,
+              sqlState: err.sqlState
+            });
+            reject(err);
+            return;
+          }
+          resolve(results);
+        });
+      })
+      .then(results => {
+        console.log("Query successful, results:", results);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ 
+          success: true, 
+          data: results
+        }));
+      })
+      .catch(err => {
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ 
+          success: false, 
+          message: "Database error",
+          errorDetails: {
+            code: err.code,
+            sqlMessage: err.sqlMessage
+          }
+        }));
+      });
+    } catch (err) {
+      console.error("Unexpected error in /get_events handler:", err);
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ 
+        success: false, 
+        message: "Unexpected server error",
+        error: err.message
+      }));
+    }
+  }
+  /*else if (path === "/get_events" && req.method === "GET") {
     const sql = "SELECT * FROM events"; // Query to fetch all events
     db_connection.query(sql, (err, results) => {
       if (err) {
@@ -142,7 +209,7 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true, data: results }));
     });
-  }
+  }*/
   // Add new ticket purchase route
   else if (path === "/api/tickets/purchase" && req.method === "POST") {
     let body = "";

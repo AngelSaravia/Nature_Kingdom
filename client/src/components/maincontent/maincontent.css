@@ -32,6 +32,8 @@
   gap: 20px;
 }
 
+
+
 /* Common card styles */
 .card,
 .section-header,
@@ -162,6 +164,7 @@
   box-sizing: border-box;
 }
 
+
 .donation-image {
   padding-top: 20px;
   width: 80%;
@@ -216,10 +219,18 @@
 
 .event-card {
   transition: transform 0.2s;
-  height: var(--card-height);
+  height: auto;
+  min-height: 280px;
+  display: flex;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  background-color: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  width: 90%;
 }
 
 .event-card:hover {

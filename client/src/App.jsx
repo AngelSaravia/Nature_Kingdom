@@ -42,12 +42,9 @@ import VisitorMembershipQueryReport from "./pages/dataQueryReports/visitormember
 import "./App.css";
 import HeaderManager from "./components/header/headerManager";
 import GiftShop from "./pages/giftshop/GiftShop";
-<<<<<<< HEAD
 import Exhibits from "./pages/exhibits/Exhibits";
 import EnclosureByExhibit from "./pages/exhibits/EnclosuresByExhibit";
 import AnimalsByEnclosure from "./pages/exhibits/AnimalsByEnclosure";
-=======
->>>>>>> a4a5c78e030c6471f8bedb7ca7ad19a542a24c08
 
 // Performance monitoring callback
 function onRenderCallback(id, phase, actualDuration) {
