@@ -69,14 +69,15 @@ function Header() {
 
       <nav className="nav-links">
         <Link to="/tickets" className="nav-item">
-          <span className="ticket-icon"></span> TICKETS
+          <span className="ticket-icon"></span> Tickets
         </Link>
         <Link to="/membership" className="nav-item">
-          MEMBERSHIP
+          Membership
         </Link>
         <Link to="/contact" className="nav-item">
-          CONTACT
+          Contact
         </Link>
+        <Link to="/exhibits">Exhibits</Link>
 
         {isLoggedIn ? (
           <div className="user-menu" ref={dropdownRef}>

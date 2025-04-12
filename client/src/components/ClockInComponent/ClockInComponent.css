@@ -1,0 +1,26 @@
+.clock-in-button {
+    font-size: clamp(16px, 20px, 28px);
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+
+}
+.clock-in-button:hover {
+    background-color: #f2f2f2;
+    color: #333333;
+}
+
+
+.clock-out-button {
+    font-size: clamp(16px, 20px, 28px);
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background-color: rgb(160, 23, 23);
+
+}
+.clock-out-button:hover {
+    background-color: #821515;
+}

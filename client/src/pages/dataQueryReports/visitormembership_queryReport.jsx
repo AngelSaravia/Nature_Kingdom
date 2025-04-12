@@ -142,7 +142,9 @@ const VisitorMembershipQueryReport = () => {
           <div className="report-table-container">
           <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
           <div className="edit-visitor-button-container">
-            <Link to="/visitor_form" className="edit-visitor-button">Add Visitor</Link>
+
+            <a href="/visitor_form" target="_blank" rel="noopener noreferrer" className="edit-visitor-button">Edit Visitor</a>
+
           </div>
         </div>
         </div>

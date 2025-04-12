@@ -7,6 +7,7 @@ function handleGiftOrder(req, res, data) {
         const visitorQuery = "SELECT visitor_id FROM visitors WHERE username = ?";
 
         db_connection.query(visitorQuery, [username], (err, visitorResult) => {
+            // console.log("Visitor query result:", visitorResult);
             if (err || !visitorResult.length) {
                 return sendErrorResponse(res, 500, "Error finding visitor");
             }
@@ -28,6 +29,7 @@ function handleGiftOrder(req, res, data) {
             `;
 
             db_connection.query(orderQuery, [visitor_id, shop_id, total_amount], (err, orderResult) => {
+                // console.log("Order query result:", orderResult);
                 if (err) {
                     return db_connection.rollback(() => {
                         sendErrorResponse(res, 500, "Error creating order");
@@ -52,7 +54,10 @@ function handleGiftOrder(req, res, data) {
                 ]);
 
                 // Insert order items
+                // console.log("Order items values:", orderItemsValues);
+                // console.log("Order items query:", orderItemsQuery);
                 db_connection.query(orderItemsQuery, [orderItemsValues], (err) => {
+                    console.log("Order items query result:", err);
                     if (err) {
                         return db_connection.rollback(() => {
                             sendErrorResponse(res, 500, "Error creating order items");

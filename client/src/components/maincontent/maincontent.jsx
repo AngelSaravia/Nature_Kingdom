@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./maincontent.css";
 import DonationImage from "../../zoo_pictures/baby_cougar.jpg";
@@ -6,8 +6,59 @@ import ConservationDay from "../../zoo_pictures/penguins_talk.webp";
 import EasterEgg from "../../zoo_pictures/easter_egg_hunting.jpg";
 import EarthDay from "../../zoo_pictures/earth_day_zoo.jpeg";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5004';
+
+const formatTime = (date) => {
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};
+
+const parseDurationToMs = (duration) => {
+  if (!duration) return 0;
+  const [hours, minutes, seconds] = duration.split(':').map(Number);
+  return (hours * 3600 + minutes * 60 + (seconds || 0)) * 1000;
+};
+
 const MainContent = () => {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const currentMonth = "April 2025";
+
+  useEffect(() => {
+      const fetchEvents = async () => {
+        try {
+          const response = await fetch(`${API_BASE_URL}/calendar`);
+          const data = await response.json();
+          
+          if (!response.ok) {
+            throw new Error(data.message || 'Failed to fetch events');
+          }
+      
+          if (data.success) {
+            const formattedEvents = data.events.map(event => ({
+              id: event.eventID,
+              name: event.eventName,
+              date: event.eventDate,
+              start_time: formatTime(new Date(event.eventDate)),
+              end_time: formatTime(new Date(new Date(event.eventDate).getTime() + 
+                       (parseDurationToMs(event.duration) || 3600000))),
+              description: event.description,
+              image_url: event.imageUrl
+            }));
+            setEvents(formattedEvents);
+          }
+        } catch (error) {
+          console.error("Fetch error:", error);
+          setError(error.message);
+        } finally {
+          setLoading(false);
+        }
+      
+      };
+    
+      fetchEvents();
+    }, []);
 
   return (
     <div className="main-content-container">
@@ -66,79 +117,44 @@ const MainContent = () => {
         </div>
       </div>
 
-      {/* Events Section */}
-      <div className="events-section">
-        <div className="section-header">
-          <h2>Upcoming Events</h2>
-          <Link to="/events" className="view-all">
-            {">"}All Events
-          </Link>
-        </div>
-
-        <div className="events-list">
-          {/* Event 1 */}
-          <div className="event-card">
-            <h3>Wildlife Conservation Day</h3>
-            <div className="event-details">
-              <p className="event-date">
-                Date: April 5, 2025{" "}
-                <span className="event-time">| Time: 10:00 AM - 4:00 PM</span>
-              </p>
-              <p>
-                Join us for a day focused on wildlife conservation! Learn about
-                global efforts to protect endangered species, meet
-                conservationists, and discover how you can help.
-              </p>
-            </div>
-            <img
-              src={ConservationDay}
-              alt="Wildlife conservation event"
-              className="event-image"
-            />
+      <section className="upcoming-events">
+        <div className="container">
+          <div className="section-header">
+            <h2>UPCOMING EVENTS</h2>
           </div>
-
-          {/* Event 2 */}
-          <div className="event-card">
-            <h3>Easter Egg Hunt at the Zoo</h3>
-            <div className="event-details">
-              <p className="event-date">
-                Date: April 12, 2025{" "}
-                <span className="event-time">| Time: 9:00 AM - 12:00 PM</span>
-              </p>
-              <p>
-                Hop into the zoo for a fun-filled Easter Egg Hunt! Explore the
-                exhibits, find hidden eggs, and enjoy special prizes.
-              </p>
-            </div>
-            <img
-              src={EasterEgg}
-              alt="Children at Easter egg hunt"
-              className="event-image"
-            />
-          </div>
-
-          {/* Event 3 */}
-          <div className="event-card">
-            <h3>Earth Day Celebration</h3>
-            <div className="event-details">
-              <p className="event-date">
-                Date: April 22, 2025{" "}
-                <span className="event-time">| Time: 10:00 AM - 3:00 PM</span>
-              </p>
-              <p>
-                Celebrate Earth Day with us! Enjoy eco-friendly activities,
-                learn about sustainable practices, and discover how our zoo is
-                contributing to a greener planet.
-              </p>
-            </div>
-            <img
-              src={EarthDay}
-              alt="Earth day celebration"
-              className="event-image"
-            />
+          <div className="events-container">
+            {loading ? (
+              <div className="loading-spinner">Loading events...</div>
+            ) : events.length > 0 ? (
+              events.map((event) => (
+                <div key={event.id} className="event-card">
+                  <h3>{event.name}</h3>
+                  <p className="event-meta">
+                    Date: {new Date(event.date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })} | Time: {event.start_time} - {event.end_time}
+                  </p>
+                  <p className="event-description">{event.description}</p>
+                  {event.image_url && (
+                    <img 
+                      src={event.image_url} 
+                      alt={event.name} 
+                      className="event-image"
+                      onError={(e) => {
+                        e.target.style.display = 'none'; // Hide image if it fails to load
+                      }}
+                    />
+                  )}
+                </div>
+              ))
+            ) : (
+              <p>No upcoming events scheduled.</p>
+            )}
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 };

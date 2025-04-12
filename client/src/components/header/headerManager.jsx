@@ -5,11 +5,15 @@ import AuthHeader from "./auth/authHeader";
 import AdminHeader from "./admin/adminHeader";
 import ManagerHeader from "./manager/managerHeader";
 import StaffHeader from "./staff/staffheader";
-import { useAuth } from "../../context/Authcontext"; // <-- Import the same hook
+import VeterinarianHeader from "./veterinarian/veterinarian";
+import ZookeeperHeader from "./zookeeper/zookeeper";
+import { useAuth } from "../../context/Authcontext";
+import OperatorHeader from "./operator/operator";
+import GiftShopHeader from "./giftshop/giftshop";
 
 function HeaderManager() {
   const location = useLocation();
-  const { isAuthenticated, user, loading } = useAuth(); // <-- Use the same auth context
+  const { isAuthenticated, user, loading } = useAuth();
 
   console.log("HeaderManager Auth State:", {
     isAuthenticated,
@@ -39,6 +43,19 @@ function HeaderManager() {
     case "staff":
       console.log("Showing StaffHeader");
       return <StaffHeader />;
+    case "veterinarian":
+      console.log("Showing VeterinarianHeader");
+      return <VeterinarianHeader />;
+    case "zookeeper":
+      console.log("Showing ZookeeperHeader");
+      return <ZookeeperHeader />;
+    case "operator":
+      console.log("Showing Operator Header");
+      return <OperatorHeader />;
+    case "giftshop":
+      console.log("Showing Giftshop Header");
+      return <GiftShopHeader />;
+
     default:
       console.log("Showing regular Auth Header");
       return <AuthHeader />;

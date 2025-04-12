@@ -80,7 +80,7 @@ const GiftShop = () => {
     };
     
     initialFetch();
-  }, []); // Only run on mount
+  }, []); 
 
   const addToCart = (product) => {
     setCart(prevCart => {
