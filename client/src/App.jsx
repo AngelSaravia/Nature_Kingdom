@@ -36,6 +36,8 @@ import MedicalForm from "./pages/dataEntries/medical_form";
 import FeedLogsForm from "./pages/dataEntries/feedLogs_form";
 import EventsPage from "./pages/events/EventsPage";
 import AnimalQueryReport from "./pages/dataQueryReports/animal_queryReport";
+import Zookeeper_QueryReport from "./pages/dataQueryReports/zookeeper_queryReport";
+import Zookeeper_ReportTable from "./pages/dataQueryReports/zookeeper_reportTable";
 import EventQueryReport from "./pages/dataQueryReports/event_queryReport";
 import EnclosureQueryReport from "./pages/dataQueryReports/enclosure_queryReport";
 import EmployeeQueryReport from "./pages/dataQueryReports/employee_queryReport";
@@ -217,7 +219,7 @@ function AppContent() {
                 path="/zookeeper_dash"
                 element={
                   <RoleProtectedRoute allowedRoles={["zookeeper", "admin"]}>
-                    <ZookeeperDash />
+                    <Zookeeper_QueryReport />
                   </RoleProtectedRoute>
                 }
               />

@@ -54,13 +54,14 @@
   text-decoration-thickness: 5px;
 }
 
-/* User menu section */
 .user-menu {
   display: flex;
   align-items: center;
-  gap: clamp(15px, 2vw, 30px);
-  /* margin-left: auto; */
+  justify-content: flex-end;
   white-space: nowrap;
+  gap: 30px;
+  margin-right: 0;
+  margin-left: 0;
 }
 
 .username {
