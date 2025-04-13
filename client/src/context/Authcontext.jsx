@@ -100,9 +100,11 @@ export const AuthProvider = ({ children }) => {
     };
 
     checkAuthStatus();
-  }, []);
+  }, []); // Only run on mount, not on location change
 
+  // Add a validation check to detect invalid auth state
   useEffect(() => {
+    // If authenticated but missing critical data, force logout
     if (isAuthenticated && (!user || !user.role)) {
       console.warn(
         "Invalid auth state detected: authenticated but missing role or user data"
@@ -111,19 +113,24 @@ export const AuthProvider = ({ children }) => {
     }
   }, [isAuthenticated, user]);
 
+  // Enhanced force logout function
   const forceLogout = (shouldNavigate = true) => {
     console.log("Forcing logout, clearing auth state", { shouldNavigate });
 
+    // Clear localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("email");
     localStorage.removeItem("role");
 
+    // Clear axios headers
     delete axios.defaults.headers.common["Authorization"];
 
+    // Update state
     setUser(null);
     setIsAuthenticated(false);
 
+    // Navigate only if requested
     if (shouldNavigate) {
       navigate("/login");
     }
