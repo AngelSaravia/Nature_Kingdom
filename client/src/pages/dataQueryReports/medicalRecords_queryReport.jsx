@@ -9,14 +9,15 @@ const filterOptions = [
     { label: "ANIMAL ID", type: "number", name: "animal_id"},
     { label: "EMPLOYEE EMAIL", type: "dropdown", name: "employee_email"},
     { label: "ANIMAL NAME", type: "text", name: "animal_name"},
-    { label: "ENCLOSURE NAME", type: "dropdown", name: "enclosure_name"},
     { label: "HEALTH STATUS", type: "checkbox", name: "health_status", options: ["HEALTHY", "NEEDS CARE", "CRITICAL"] },
+    { label: "ENCLOSURE NAME", type: "dropdown", name: "enclosure_name"},
+    { label: "RECORD TYPE", type: "checkbox", name: "record_type", options: ["Medication", "Surgery", "Disease", "Vaccination", "Injury", "Checkup", "Dental", "Post-Mortem", "Other"] },
     { label: "ANIMAL SPECIES", type: "dropdown", name: "species"},
     { label: "STARTING DATE OF RECORD" , type: "date", name: "dateMin"},
     { label: "ENDING DATE OF RECORD" , type: "date", name: "dateMax"},
 ];
 
-const columnHeaders = ["animal_id", "animal_name", "employee_email", "enclosure_name", "location", "health_status", "date", "species", "record_type"];
+const columnHeaders = ["animal_id", "animal_name", "employee_email", "enclosure_name", "location", "health_status", "date", "species", "record_type", "diagnosis", "treatment", "followup", "additional"];
 
 const MedicalRecordsQueryReport = () => {
     const [filters, setFilters] = useState({});
