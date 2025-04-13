@@ -53,6 +53,8 @@ import Exhibits from "./pages/exhibits/Exhibits";
 import EnclosureByExhibit from "./pages/exhibits/EnclosuresByExhibit";
 import AnimalsByEnclosure from "./pages/exhibits/AnimalsByEnclosure";
 import GiftshopPurchases from "./pages/dashboard/giftshop-purchases/giftshop-purchases"
+import ManagerTimesheets from "./pages/employee_dash/manager_timesheets/manager_timesheets"
+
 
 function DebugNavigation() {
   const location = useLocation();
@@ -210,7 +212,7 @@ function AppContent() {
               <Route
                 path="/veterinarian_dash"
                 element={
-                  <RoleProtectedRoute allowedRoles={["veterinarian", "admin"]}>
+                  <RoleProtectedRoute allowedRoles={["veterinarian", "admin", "manager"]}>
                     <VeterinarianDash />
                   </RoleProtectedRoute>
                 }
@@ -218,7 +220,7 @@ function AppContent() {
               <Route
                 path="/zookeeper_dash"
                 element={
-                  <RoleProtectedRoute allowedRoles={["zookeeper", "admin"]}>
+                  <RoleProtectedRoute allowedRoles={["zookeeper", "admin", "manager"]}>
                     <Zookeeper_QueryReport />
                   </RoleProtectedRoute>
                 }
@@ -226,7 +228,7 @@ function AppContent() {
               <Route
                 path="/operator_dash"
                 element={
-                  <RoleProtectedRoute allowedRoles={["operator", "admin"]}>
+                  <RoleProtectedRoute allowedRoles={["operator", "admin", "manager"]}>
                     <OperatorDash />
                   </RoleProtectedRoute>
                 }
@@ -234,7 +236,7 @@ function AppContent() {
               <Route
                 path="/giftshop_dash"
                 element={
-                  <RoleProtectedRoute allowedRoles={["giftshop", "admin"]}>
+                  <RoleProtectedRoute allowedRoles={["giftshop", "admin", "manager"]}>
                     <GiftShopDash />
                   </RoleProtectedRoute>
                 }
@@ -347,6 +349,16 @@ function AppContent() {
                     allowedRoles={["admin", "manager"]}
                   >
                     <MedicalRecordsQueryReport />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/manager_timesheets"
+                element={
+                  <RoleProtectedRoute
+                    allowedRoles={["admin", "manager"]}
+                  >
+                    <ManagerTimesheets />
                   </RoleProtectedRoute>
                 }
               />

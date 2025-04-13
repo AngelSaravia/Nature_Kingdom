@@ -260,6 +260,18 @@ export const clockOut = async (email) => {
   }
 };
 
+export const getEmployeeTimesheets = async (email) => {
+  try {
+    console.log(`Attempting to get timesheets regarding: ${email}`);
+    const response = await apiClient.get(`/api/employee_timesheets?email=${email}`);
+    // console.log("Response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching employee timesheets:", error);
+    throw error;
+  }
+};
+
 
 
 export default apiClient;
