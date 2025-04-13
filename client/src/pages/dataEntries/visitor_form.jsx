@@ -208,7 +208,8 @@ const VisitorForm = () => {
                 <div className={styles.formRow}>
                 <label htmlFor="genderDropdown" className={styles.label}>GENDER (choose one)</label>
                     <Dropdown
-                        label={formData.gender || "Select gender *"}
+                    label="Select gender *"
+                        selectedLabel={formData.gender || "Select gender *"}
                         onSelect={(value) => handleSelect("gender", value)}
                         id="genderDropdown"
                         value={formData.gender}

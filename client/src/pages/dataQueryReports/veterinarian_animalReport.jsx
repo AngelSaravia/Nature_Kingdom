@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./veterinarian_criticalReport.css";
-import InputFields from "../dataEntries/inputs.jsx";
 import styles from "../dataEntries/forms.module.css";
+import Dropdown from "../../components/Dropdown/Dropdown";
+import DropdownItem from "../../components/DropdownItem/DropdownItem";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const animalColumnHeaders = [
@@ -268,14 +269,36 @@ const CriticalAnimalsReport = () => {
     }
   };
 
-  const handleViewMedicalHistory = (animal) => {
-    console.log("View medical history for animal:", animal);
-    // Implementation for viewing animal's medical history
-    // Example: navigate to history page
-    // window.location.href = `/animals/${animal.animal_id}/medical-history`;
+  // Fetch medical history for an animal
+  const [medicalHistory, setMedicalHistory] = useState([]);
+  const [showMedicalHistory, setShowMedicalHistory] = useState(false);
+
+  const handleViewMedicalHistory = async (animal) => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/medical_records/animal/${animal.animal_id}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        setMedicalHistory(data.data);
+        setSelectedAnimal(animal);
+        setShowMedicalHistory(true);
+      } else {
+        console.error("Failed to fetch medical history:", data.message);
+        alert("Failed to fetch medical history: " + data.message);
+      }
+    } catch (error) {
+      console.error("Failed to fetch medical history:", error);
+      alert("Error fetching medical history. Please try again.");
+    }
   };
 
-  // Medical Form Popup Component
   const MedicalFormContent = ({ animal, onClose }) => {
     const [formData, setFormData] = useState({
       record_id: "",
@@ -285,6 +308,10 @@ const CriticalAnimalsReport = () => {
       location: "",
       date: new Date().toISOString().slice(0, 10),
       record_type: "",
+      diagnosis: "",
+      treatment: "",
+      followup: "",
+      additional: "",
     });
 
     const [submissionStatus, setSubmissionStatus] = useState(null);
@@ -302,6 +329,11 @@ const CriticalAnimalsReport = () => {
     // Handle text input changes
     const handleChange = (event) => {
       const { name, value } = event.target;
+      setFormData((prevData) => ({ ...prevData, [name]: value }));
+    };
+
+    // Handle dropdown selections
+    const handleSelect = (name, value) => {
       setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
@@ -371,7 +403,16 @@ const CriticalAnimalsReport = () => {
               location: "",
               date: new Date().toISOString().slice(0, 10),
               record_type: "",
+              diagnosis: "",
+              treatment: "",
+              followup: "",
+              additional: "",
             });
+          }
+
+          // After successful submit, refresh critical animals data
+          if (action === "add" && formData.record_type) {
+            fetchCriticalAnimals();
           }
         }
       } catch (error) {
@@ -380,12 +421,43 @@ const CriticalAnimalsReport = () => {
       }
     };
 
+    // Input Field Component
+    const InputField = ({
+      label,
+      name,
+      type,
+      value,
+      onChange,
+      onInput,
+      autoComplete,
+      disabled,
+    }) => {
+      return (
+        <div className={styles.inputGroup}>
+          <label htmlFor={name} className={styles.label}>
+            {label}
+          </label>
+          <input
+            type={type}
+            id={name}
+            name={name}
+            value={value}
+            onChange={onChange}
+            onInput={onInput}
+            className={styles.input}
+            autoComplete={autoComplete}
+            disabled={disabled}
+          />
+        </div>
+      );
+    };
+
     return (
       <div className={styles.formContainer}>
         <h2 className={styles.formTitle}>MEDICAL RECORD DATA ENTRY</h2>
         <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
           <div className={styles.formRow}>
-            <InputFields
+            <InputField
               label="ANIMAL ID *"
               name="animal_id"
               type="text"
@@ -395,7 +467,7 @@ const CriticalAnimalsReport = () => {
               autoComplete="off"
               disabled={animal ? true : false}
             />
-            <InputFields
+            <InputField
               label="EMPLOYEE ID *"
               name="employee_id"
               type="text"
@@ -406,7 +478,7 @@ const CriticalAnimalsReport = () => {
             />
           </div>
           <div className={styles.formRow}>
-            <InputFields
+            <InputField
               label="ENCLOSURE ID *"
               name="enclosure_id"
               type="text"
@@ -416,7 +488,7 @@ const CriticalAnimalsReport = () => {
               autoComplete="off"
               disabled={animal ? true : false}
             />
-            <InputFields
+            <InputField
               label="LOCATION *"
               name="location"
               type="text"
@@ -426,22 +498,102 @@ const CriticalAnimalsReport = () => {
             />
           </div>
           <div className={styles.formRow}>
-            <InputFields
-              label="DATE"
+            <div className={styles.inputGroup}>
+              <label htmlFor="diagnosis" className={styles.label}>
+                DIAGNOSIS/CONDITION
+              </label>
+              <textarea
+                id="diagnosis"
+                name="diagnosis"
+                value={formData.diagnosis}
+                placeholder="Enter diagnosis"
+                onChange={handleChange}
+                rows="5"
+                maxLength="2000"
+                style={{ width: "100%", resize: "vertical" }}
+                autoComplete="off"
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <label htmlFor="treatment" className={styles.label}>
+                PRESCRIPTION/TREATMENT
+              </label>
+              <textarea
+                id="treatment"
+                name="treatment"
+                value={formData.treatment}
+                placeholder="Enter prescription details and treatment plan"
+                onChange={handleChange}
+                rows="5"
+                maxLength="2000"
+                style={{ width: "100%", resize: "vertical" }}
+                autoComplete="off"
+              />
+            </div>
+          </div>
+          <div className={styles.formRow}>
+            <InputField
+              label="DATE OF RECORD"
               name="date"
               value={formData.date}
               type="date"
               onChange={handleChange}
               autoComplete="bday"
             />
-            <InputFields
-              label="RECORD TYPE *"
-              name="record_type"
-              type="text"
-              value={formData.record_type}
+            <InputField
+              label="FOLLOW UP DATE"
+              name="followup"
+              type="date"
+              value={formData.followup}
               onChange={handleChange}
               autoComplete="off"
             />
+          </div>
+          <div className={styles.formRow}>
+            <label htmlFor="record_typeDropdown" className={styles.label}>
+              RECORD TYPE (choose one) *
+            </label>
+            <Dropdown
+              label="Select record type *"
+              selectedLabel={formData.record_type || "Select record type *"}
+              onSelect={(value) => handleSelect("record_type", value)}
+              id="record_typeDropdown"
+              value={formData.record_type}
+            >
+              {[
+                "Medication",
+                "Surgery",
+                "Disease",
+                "Vaccination",
+                "Injury",
+                "Checkup",
+                "Dental",
+                "Post-Mortem",
+                "Other",
+              ].map((option) => (
+                <DropdownItem key={option} value={option}>
+                  {option}
+                </DropdownItem>
+              ))}
+            </Dropdown>
+          </div>
+          <div className={styles.formRow}>
+            <div className={styles.inputGroup}>
+              <label htmlFor="additional" className={styles.label}>
+                ADDITIONAL NOTES
+              </label>
+              <textarea
+                id="additional"
+                name="additional"
+                value={formData.additional}
+                placeholder="Enter any additional notes or observations"
+                onChange={handleChange}
+                rows="5"
+                maxLength="2000"
+                style={{ width: "100%", resize: "vertical" }}
+                autoComplete="off"
+              />
+            </div>
           </div>
           <div className={styles.buttonContainer}>
             <button type="button" onClick={() => handleSubmit("add")}>
@@ -469,13 +621,106 @@ const CriticalAnimalsReport = () => {
     );
   };
 
+  // Medical History Component
+  const MedicalHistoryContent = ({ animal, medicalHistory, onClose }) => {
+    return (
+      <div className="medical-history-container">
+        <h3>Medical History - {animal.animal_name}</h3>
+
+        {medicalHistory.length === 0 ? (
+          <p>No medical records found for this animal.</p>
+        ) : (
+          <div className="medical-history-list">
+            {medicalHistory.map((record, index) => (
+              <div key={index} className="medical-record-card">
+                <div className="record-header">
+                  <span className="record-date">
+                    {new Date(record.date).toLocaleDateString()}
+                  </span>
+                  <span className="record-type">{record.record_type}</span>
+                </div>
+
+                <div className="record-details">
+                  {record.diagnosis && (
+                    <div className="record-field">
+                      <strong>Diagnosis:</strong> {record.diagnosis}
+                    </div>
+                  )}
+
+                  {record.treatment && (
+                    <div className="record-field">
+                      <strong>Treatment:</strong> {record.treatment}
+                    </div>
+                  )}
+
+                  {record.location && (
+                    <div className="record-field">
+                      <strong>Location:</strong> {record.location}
+                    </div>
+                  )}
+
+                  {record.followup && (
+                    <div className="record-field">
+                      <strong>Follow-up:</strong>{" "}
+                      {new Date(record.followup).toLocaleDateString()}
+                    </div>
+                  )}
+
+                  {record.additional && (
+                    <div className="record-field">
+                      <strong>Additional Notes:</strong> {record.additional}
+                    </div>
+                  )}
+                </div>
+
+                <div className="record-footer">
+                  <button
+                    onClick={() => {
+                      // Store record data for editing
+                      sessionStorage.setItem(
+                        "medicalRecordEditData",
+                        JSON.stringify(record)
+                      );
+                      // Open the edit form with this record data
+                      setSelectedAnimal(animal);
+                      setShowMedicalHistory(false);
+                      setShowMedicalFormPopup(true);
+                    }}
+                    className="edit-record-btn"
+                  >
+                    Edit Record
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="popup-footer">
+          <button onClick={onClose} className="close-btn">
+            Close
+          </button>
+          <button
+            onClick={() => {
+              setShowMedicalHistory(false);
+              setShowMedicalFormPopup(true);
+            }}
+            className="new-record-btn"
+          >
+            Add New Record
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   // Render Medical Form Popup
   const renderMedicalFormPopup = () => {
     if (!showMedicalFormPopup || !selectedAnimal) return null;
 
     return (
-      <div className="popup-overlay">
-        <div className="popup-content-medical-form-popup">
+      <div className="popup-medicalForm-overlay">
+        <div className="popup-content-medical-form">
           <div className="popup-header">
             <h3>Medical Record - {selectedAnimal.animal_name}</h3>
             <button
@@ -489,6 +734,33 @@ const CriticalAnimalsReport = () => {
             <MedicalFormContent
               animal={selectedAnimal}
               onClose={() => setShowMedicalFormPopup(false)}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Render Medical History Popup
+  const renderMedicalHistoryPopup = () => {
+    if (!showMedicalHistory || !selectedAnimal) return null;
+
+    return (
+      <div className="popup-overlay">
+        <div className="popup-content-medical-history">
+          <div className="popup-header">
+            <button
+              className="popup-close"
+              onClick={() => setShowMedicalHistory(false)}
+            >
+              ×
+            </button>
+          </div>
+          <div className="popup-body">
+            <MedicalHistoryContent
+              animal={selectedAnimal}
+              medicalHistory={medicalHistory}
+              onClose={() => setShowMedicalHistory(false)}
             />
           </div>
         </div>
@@ -533,7 +805,7 @@ const CriticalAnimalsReport = () => {
 
     return (
       <div className="popup-overlay">
-        <div className="popup-content">
+        <div className="popup-statusChange-content">
           <div className="popup-header">
             <h3>Update Health Status</h3>
             <button className="popup-close" onClick={closePopup}>
@@ -541,7 +813,7 @@ const CriticalAnimalsReport = () => {
             </button>
           </div>
 
-          <div className="popup-body">
+          <div className="popup-statusChange-body">
             <div className="animal-name">
               <strong>{animal.animal_name}</strong> ({animal.species})
             </div>
@@ -646,7 +918,7 @@ const CriticalAnimalsReport = () => {
                         }}
                         style={actionButtonStyle}
                       >
-                        View Details
+                        Add Record
                       </button>
                       <button
                         onClick={() => handleViewMedicalHistory(animal)}
@@ -676,6 +948,7 @@ const CriticalAnimalsReport = () => {
 
       {renderStatusChangePopup()}
       {renderMedicalFormPopup()}
+      {renderMedicalHistoryPopup()}
     </div>
   );
 };

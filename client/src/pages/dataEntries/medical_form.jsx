@@ -17,6 +17,10 @@ const MedicalForm = () => {
     location: "",
     date: "",
     record_type: "",
+    diagnosis: "",
+    treatment: "",
+    followup: "",
+    additional: "",
   });
 
   const [submissionStatus, setSubmissionStatus] = useState(null);
@@ -38,6 +42,10 @@ const MedicalForm = () => {
         location: tupleData.location || "",
         date: tupleData.date ? tupleData.date.slice(0, 10) : "",
         record_type: tupleData.record_type || "",
+        diagnosis: tupleData.diagnosis || "",
+        treatment: tupleData.treatment || "",
+        followup: tupleData.followup ? tupleData.followup.slice(0, 10) : "",
+        additional: tupleData.additional || "",
       });
 
       // Clear the sessionStorage after use
@@ -135,6 +143,10 @@ const MedicalForm = () => {
             location: "",
             date: "",
             record_type: "",
+            diagnosis: "",
+            treatment: "",
+            followup: "",
+            additional: "",
           });
         }
       }
@@ -152,7 +164,7 @@ const MedicalForm = () => {
           <InputFields
             label="ANIMAL ID *"
             name="animal_id"
-            type="text"
+            type="number"
             value={formData.animal_id}
             onChange={handleChange}
             onInput={handleNumericInput}
@@ -161,7 +173,7 @@ const MedicalForm = () => {
           <InputFields
             label="EMPLOYEE ID *"
             name="employee_id"
-            type="text"
+            type="number"
             value={formData.employee_id}
             onChange={handleChange}
             onInput={handleNumericInput}
@@ -172,7 +184,7 @@ const MedicalForm = () => {
           <InputFields
             label="ENCLOSURE ID *"
             name="enclosure_id"
-            type="text"
+            type="number"
             value={formData.enclosure_id}
             onChange={handleChange}
             onInput={handleNumericInput}
@@ -188,8 +200,44 @@ const MedicalForm = () => {
           />
         </div>
         <div className={styles.formRow}>
+          <div className={styles.inputGroup}>
+            <label htmlFor="diagnosis" className={styles.label}>
+              DIAGNOSIS/CONDITION
+            </label>
+            <textarea
+              id="diagnosis"
+              name="diagnosis"
+              value={formData.diagnosis}
+              placeholder="Enter diagnosis"
+              onChange={handleChange}
+              rows="5"
+              maxLength="2000"
+              style={{ width: "100%", resize: "vertical" }}
+              required={false}
+              autoComplete="off"
+            />
+          </div>
+          <div className={styles.inputGroup}>
+            <label htmlFor="treatment" className={styles.label}>
+              PRESCRIPTION/TREATMENT
+            </label>
+            <textarea
+              id="treatment"
+              name="treatment"
+              value={formData.treatment}
+              placeholder="Enter prescription details and treatment plan"
+              onChange={handleChange}
+              rows="5"
+              maxLength="2000"
+              style={{ width: "100%", resize: "vertical" }}
+              required={false}
+              autoComplete="off"
+            />
+          </div>
+        </div>
+        <div className={styles.formRow}>
           <InputFields
-            label="DATE"
+            label="DATE OF RECORD"
             name="date"
             value={formData.date}
             type="date"
@@ -197,22 +245,69 @@ const MedicalForm = () => {
             autoComplete="bday"
           />
           <InputFields
-            label="RECORD TYPE *"
-            name="record_type"
-            type="text"
-            value={formData.record_type}
+            label="FOLLOW UP DATE"
+            name="followup"
+            type="date"
+            value={formData.followup}
             onChange={handleChange}
             autoComplete="off"
           />
         </div>
+        <div className={styles.formRow}>
+          <label htmlFor="record_typeDropdown" className={styles.label}>
+            RECORD TYPE (choose one)
+          </label>
+          <Dropdown
+            label="Select record type *"
+            selectedLabel={formData.record_type || "Select record type *"}
+            onSelect={(value) => handleSelect("record_type", value)}
+            id="record_typeDropdown"
+            value={formData.record_type}
+          >
+            {[
+              "Medication",
+              "Surgery",
+              "Disease",
+              "Vaccination",
+              "Injury",
+              "Checkup",
+              "Dental",
+              "Post-Mortem",
+              "Other",
+            ].map((option) => (
+              <DropdownItem key={option} value={option}>
+                {option}
+              </DropdownItem>
+            ))}
+          </Dropdown>
+        </div>
+        <div className={styles.formRow}>
+          <div className={styles.inputGroup}>
+            <label htmlFor="additional" className={styles.label}>
+              ADDITIONAL NOTES
+            </label>
+            <textarea
+              id="additional"
+              name="additional"
+              value={formData.additional}
+              placeholder="Enter any additional notes or observations"
+              onChange={handleChange}
+              rows="5"
+              maxLength="2000"
+              style={{ width: "100%", resize: "vertical" }}
+              required={false}
+              autoComplete="off"
+            />
+          </div>
+        </div>
         <div className={styles.buttonContainer}>
-          <button type="button" onClick={() => handleSubmit("add")}>
+          <button type="add-button" onClick={() => handleSubmit("add")}>
             ADD
           </button>
-          <button type="button" onClick={() => handleSubmit("update")}>
+          <button type="modify-button" onClick={() => handleSubmit("update")}>
             MODIFY
           </button>
-          <button type="button" onClick={() => handleSubmit("delete")}>
+          <button type="delete-button" onClick={() => handleSubmit("delete")}>
             DELETE
           </button>
         </div>

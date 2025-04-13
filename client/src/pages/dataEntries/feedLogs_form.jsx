@@ -155,7 +155,8 @@ const FeedLogsForm = () => {
                 <div className={styles.formRow}>
                 <label htmlFor="health_statusDropdown" className={styles.label}>HEALTH STATUS (choose one)</label>
                     <Dropdown
-                        label={formData.health_status || "Select health status *"}
+                    label="Select health status *"
+                        selectedLabel={formData.health_status || "Select health status *"}
                         onSelect={(value) => handleSelect("health_status", value)}
                         id="health_statusDropdown"
                         value={formData.health_status}
