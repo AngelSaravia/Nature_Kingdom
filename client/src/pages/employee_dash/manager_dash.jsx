@@ -3,7 +3,6 @@ import "./manager_dash.css";
 
 const ManagerDash = () => {
   const navigate = useNavigate();
-  const email = localStorage.getItem("email");
 
   return (
     <div className="dashboard-container">
