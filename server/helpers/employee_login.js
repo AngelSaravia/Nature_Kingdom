@@ -64,8 +64,6 @@ const handleEmployeeLogin = (req, res) => {
                 ? `${user.first_name} ${user.last_name || ""}`.trim()
                 : user.email,
               role: user.role,
-              employee_id: user.Employee_id,
-              manager_id: user.Manager_id,
             })
           );
         }

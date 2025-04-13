@@ -28,9 +28,11 @@
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr; /* Creates a single column layout */
+  grid-auto-rows: auto; /* Automatically sizes rows based on content */
   gap: 16px;
   margin-bottom: 20px;
+  font-size: 20px;
 }
 
 .dashboard-box {
@@ -41,8 +43,8 @@
   text-align: left;
   height: auto;
   width: auto;
+  margin-bottom: 16px; /* Add margin between boxes */
 }
-
 .dashboard-box.single {
   margin-bottom: 20px;
   height: auto;
@@ -53,8 +55,8 @@
   align-items: center;
 }
 
-.dashboard-heading {
-  font-size: 18px;
+h2.dashboard-heading {
+  font-size: 30px;
   font-weight: 600;
   color: #444444;
   margin-bottom: 8px;
