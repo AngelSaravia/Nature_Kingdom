@@ -83,11 +83,23 @@ export const employeeLogin = async (email, password) => {
       password,
     });
 
-    console.log("Full API response:", response.data); 
+    console.log("Full API response:", response.data);
 
-    const { token, username, role, employee_id, manager_id } = response.data;
+    // Check for both lowercase and uppercase field name variations
+    const employee_id = response.data.employee_id || response.data.Employee_id;
+    const manager_id = response.data.manager_id || response.data.Manager_id;
 
-  
+    // Extract other fields
+    const { token, username, role } = response.data;
+
+    console.log("Extracted user data:", {
+      username,
+      role,
+      email,
+      employee_id,
+      manager_id,
+    });
+
     return {
       success: true,
       userData: {
@@ -207,7 +219,7 @@ export const createGiftOrder = async (orderData) => {
 
 export const getProductHistory = async () => {
   try {
-    const response = await apiClient.get('/api/giftshop/history');
+    const response = await apiClient.get("/api/giftshop/history");
     return response.data; // Returns an array of rows
   } catch (error) {
     console.error("Error fetching product history:", error);
@@ -263,7 +275,9 @@ export const clockOut = async (email) => {
 export const getEmployeeTimesheets = async (email) => {
   try {
     console.log(`Attempting to get timesheets regarding: ${email}`);
-    const response = await apiClient.get(`/api/employee_timesheets?email=${email}`);
+    const response = await apiClient.get(
+      `/api/employee_timesheets?email=${email}`
+    );
     // console.log("Response:", response.data);
     return response.data;
   } catch (error) {
@@ -271,7 +285,5 @@ export const getEmployeeTimesheets = async (email) => {
     throw error;
   }
 };
-
-
 
 export default apiClient;

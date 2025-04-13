@@ -198,13 +198,10 @@ export const AuthProvider = ({ children }) => {
 
       console.log("Raw userData from API:", userData);
 
-      const {
-        username,
-        role,
-        email: userEmail,
-        employee_id,
-        manager_id,
-      } = userData || {};
+      // Extract employee ID and manager ID, checking for both uppercase and lowercase variations
+      const employee_id = userData?.employee_id || userData?.Employee_id;
+      const manager_id = userData?.manager_id || userData?.Manager_id;
+      const { username, role, email: userEmail } = userData || {};
 
       if (!token) {
         console.error("Employee login missing token:", result);
@@ -222,12 +219,25 @@ export const AuthProvider = ({ children }) => {
         managerId: manager_id,
       });
 
-      localStorage.setItem("username", username);
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", role);
+      // Store all values in localStorage with proper error checking
+      if (username) localStorage.setItem("username", username);
+      if (token) localStorage.setItem("token", token);
+      if (role) localStorage.setItem("role", role);
       localStorage.setItem("email", userEmail || email);
-      localStorage.setItem("employeeId", employee_id);
-      localStorage.setItem("managerId", manager_id);
+
+      // Only set these if they're not undefined/null
+      if (employee_id) localStorage.setItem("employeeId", employee_id);
+      if (manager_id) localStorage.setItem("managerId", manager_id);
+
+      // Log what's being stored
+      console.log("localStorage after login:", {
+        username: localStorage.getItem("username"),
+        token: localStorage.getItem("token") ? "exists" : "missing",
+        role: localStorage.getItem("role"),
+        email: localStorage.getItem("email"),
+        employeeId: localStorage.getItem("employeeId"),
+        managerId: localStorage.getItem("managerId"),
+      });
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 

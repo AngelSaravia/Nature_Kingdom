@@ -176,7 +176,6 @@
   transition: all 0.3s ease;
 }
 .popup-content-medical-form-popup {
-  border-radius: 30px;
   width: 80%;
   max-width: 800px;
   height: auto;
