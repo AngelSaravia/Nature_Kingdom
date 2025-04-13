@@ -85,7 +85,20 @@ export const employeeLogin = async (email, password) => {
 
     console.log("Full API response:", response.data);
 
-    const { token, username, role, employee_id, manager_id } = response.data;
+    // Check for both lowercase and uppercase field name variations
+    const employee_id = response.data.employee_id || response.data.Employee_id;
+    const manager_id = response.data.manager_id || response.data.Manager_id;
+
+    // Extract other fields
+    const { token, username, role } = response.data;
+
+    console.log("Extracted user data:", {
+      username,
+      role,
+      email,
+      employee_id,
+      manager_id,
+    });
 
     return {
       success: true,

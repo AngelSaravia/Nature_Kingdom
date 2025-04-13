@@ -12,13 +12,12 @@
 .report-title {
   display: inline-block;
   margin: 0 auto 1rem;
-  padding: 0.5rem 1.5rem;
+  padding: 0.5rem 1rem;
   font-size: 1.5rem;
   font-weight: bold;
-  background: linear-gradient(to right, #0b2c1f, #1e4435);
-  color: #ffffff;
+  background: #000;
+  color: #fff;
   border-radius: 0.5rem;
-  letter-spacing: 0.5px;
 }
 
 .loading-message {

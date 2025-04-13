@@ -246,6 +246,36 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true, data: results }));
     });
+  } else if (path === "/api/animals/critical-stats" && req.method === "GET") {
+    console.log("Received request for /api/animals/critical-stats");
+
+    // Using callback style with db_connection instead of pool with async/await
+    db_connection.query(
+      "SELECT COUNT(*) as total FROM animals WHERE health_status = ?",
+      ["CRITICAL"],
+      (error, results) => {
+        if (error) {
+          console.error("Database query error details:", {
+            message: error.message,
+            code: error.code,
+            errno: error.errno,
+            sqlMessage: error.sqlMessage,
+            sqlState: error.sqlState,
+            sql: error.sql,
+          });
+          res.writeHead(500, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ error: "Database query failed" }));
+          return;
+        }
+
+        const criticalStats = {
+          total: results[0].total,
+        };
+
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(criticalStats));
+      }
+    );
   } else if (path === "/visitor_form" && req.method === "POST") {
     handleVisitorForm(req, res);
   } else if (path === "/get_visitors" && req.method === "GET") {
