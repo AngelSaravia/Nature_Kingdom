@@ -9,6 +9,7 @@
   align-items: flex-start;
   width: 100%;
 }
+
 .report-title {
   display: inline-block;
   margin: 0 auto 1rem;
@@ -117,21 +118,27 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
 }
 
 .popup-content {
-  background-color: white;
+  background-color: #ffffff;
   border-radius: 8px;
-  width: 450px;
-  max-width: 90%;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-  animation: popup-fade-in 0.3s ease;
+  width: 550px;
+  max-width: 92%;
+  max-height: 90vh; /* Fixed: prevent popup from exceeding viewport height */
+  height: auto; /* Fixed: allow content to determine height */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  overflow: hidden; /* Changed to hidden to match screenshot */
+  animation: popup-fade-in 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex; /* Fixed: enable flex layout for proper structuring */
+  flex-direction: column; /* Fixed: stack header, body, footer vertically */
 }
 
 @keyframes popup-fade-in {
@@ -149,14 +156,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  background-color: #2c5e4e;
+  padding: 18px 24px;
+  background-color: #3b6259;
   color: white;
+  position: relative;
 }
 
 .popup-header h3 {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .popup-close {
@@ -170,7 +180,12 @@
 }
 
 .popup-body {
-  padding: 25px 20px;
+  padding: 30px; /* Increased padding */
+  width: 90%; /* Fixed: use full width of parent */
+  background-color: white;
+  color: #333;
+  flex-grow: 1; /* Fixed: allow body to expand */
+  overflow-y: auto; /* Fixed: enable scrolling for long content */
 }
 
 .animal-name {
@@ -187,12 +202,24 @@
 }
 
 .status-box {
-  padding: 10px 15px;
+  padding: 15px 25px;
   border-radius: 6px;
   font-weight: 600;
+  font-size: 1.2rem;
   text-align: center;
-  min-width: 120px;
+  min-width: 180px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Add specific status box styles based on the screenshot */
+.status-box.needs-care {
+  background-color: #fff9c4;
+  color: #8c6d00;
+}
+
+.status-box.critical {
+  background-color: #ffd8d8;
+  color: #8b2e2e;
 }
 
 .arrow {
@@ -203,25 +230,33 @@
 
 .status-description {
   text-align: center;
-  margin-bottom: 20px;
-  line-height: 1.5;
+  margin-bottom: 30px;
+  line-height: 1.6;
   color: #495057;
   padding: 0 10px;
+  font-size: 1.05rem;
 }
 
 .warning-message {
-  background-color: #fff3cd;
-  border-left: 4px solid #ffc107;
-  padding: 10px 15px;
-  margin: 15px 0 5px;
+  background-color: #fff9c4;
+  padding: 15px;
+  margin: 20px 0;
   border-radius: 4px;
   text-align: center;
+  border-left: 4px solid #f3b100;
 }
 
 .warning-message p {
   margin: 0;
   color: #856404;
   font-weight: 500;
+}
+
+/* Add specific icon styling */
+.warning-icon {
+  color: #f3b100;
+  margin-right: 8px;
+  font-size: 1.2rem;
 }
 
 .popup-footer {
@@ -242,19 +277,21 @@
 }
 
 .confirm-button {
-  background-color: #2c5e4e;
+  background-color: #3b6259;
   color: white;
   border: none;
+  min-width: 120px;
 }
 
 .confirm-button:hover {
-  background-color: #224a3e;
+  background-color: #2c4e42;
 }
 
 .cancel-button {
   background-color: #f8f9fa;
   color: #6c757d;
   border: 1px solid #ced4da;
+  min-width: 120px;
 }
 
 .cancel-button:hover {
@@ -282,5 +319,18 @@
 
   .animals-container {
     padding: 10px;
+  }
+
+  .popup-content {
+    width: 95%; /* Fixed: make popup more responsive on small screens */
+  }
+
+  .status-change {
+    flex-direction: column; /* Fixed: stack status boxes on small screens */
+  }
+
+  .arrow {
+    transform: rotate(90deg); /* Fixed: change arrow direction when stacked */
+    margin: 10px 0; /* Fixed: adjust margin for vertical layout */
   }
 }
