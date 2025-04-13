@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./veterinarian_criticalReport.css";
+import InputFields from "../dataEntries/inputs.jsx";
+import styles from "../dataEntries/forms.module.css";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const animalColumnHeaders = [
@@ -21,6 +23,10 @@ const CriticalAnimalsReport = () => {
     animal: null,
     nextStatus: null,
   });
+
+  // Added state for medical form popup
+  const [showMedicalFormPopup, setShowMedicalFormPopup] = useState(false);
+  const [selectedAnimal, setSelectedAnimal] = useState(null);
 
   useEffect(() => {
     fetchCriticalAnimals();
@@ -164,6 +170,7 @@ const CriticalAnimalsReport = () => {
     if (popupState.animal) {
       // Apply the health status change
       handleHealthStatusProgression(popupState.animal);
+      //window.location.reload(); optional if you want to reload
     }
     // Close the popup
     setPopupState({
@@ -259,6 +266,234 @@ const CriticalAnimalsReport = () => {
     } finally {
       setUpdateLoading(false);
     }
+  };
+
+  const handleViewMedicalHistory = (animal) => {
+    console.log("View medical history for animal:", animal);
+    // Implementation for viewing animal's medical history
+    // Example: navigate to history page
+    // window.location.href = `/animals/${animal.animal_id}/medical-history`;
+  };
+
+  // Medical Form Popup Component
+  const MedicalFormContent = ({ animal, onClose }) => {
+    const [formData, setFormData] = useState({
+      record_id: "",
+      animal_id: animal ? animal.animal_id : "",
+      employee_id: "",
+      enclosure_id: animal ? animal.enclosure_id : "",
+      location: "",
+      date: new Date().toISOString().slice(0, 10),
+      record_type: "",
+    });
+
+    const [submissionStatus, setSubmissionStatus] = useState(null);
+    const [records, setRecords] = useState([]);
+
+    useEffect(() => {
+      fetch(`${API_BASE_URL}/get_medical_records`)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) setRecords(data.data);
+        })
+        .catch((error) => console.error("Error fetching records:", error));
+    }, []);
+
+    // Handle text input changes
+    const handleChange = (event) => {
+      const { name, value } = event.target;
+      setFormData((prevData) => ({ ...prevData, [name]: value }));
+    };
+
+    // Handles only numeric input
+    const handleNumericInput = (event) => {
+      event.target.value = event.target.value.replace(/\D/g, "");
+    };
+
+    // Handle form submission
+    const handleSubmit = async (action) => {
+      if (action !== "delete") {
+        const requiredFields = [
+          "animal_id",
+          "employee_id",
+          "enclosure_id",
+          "location",
+          "record_type",
+        ];
+        const missingFields = requiredFields.filter(
+          (field) => !formData[field]
+        );
+        if (missingFields.length > 0) {
+          setSubmissionStatus(
+            `Please fill out all of the required fields. Missing: ${missingFields.join(
+              ", "
+            )}`
+          );
+          return;
+        }
+      }
+
+      if (action === "delete" && !formData.record_id) {
+        setSubmissionStatus("Medical record ID is required for deletion.");
+        return;
+      }
+      const requestData = { ...formData };
+      if (action === "add") {
+        delete requestData.record_id; // Remove record_id for add action
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/medical_form`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...requestData, action }),
+        });
+        if (!response.ok) {
+          throw new Error(`Server responded with ${response.status}`);
+        }
+        const result = await response.json();
+        setSubmissionStatus(result.message);
+
+        if (result.success) {
+          if (action === "delete") {
+            const freshResponse = await fetch(
+              `${API_BASE_URL}/get_medical_records`
+            );
+            const freshData = await freshResponse.json();
+            if (freshData.success) setRecords(freshData.data);
+          }
+          if (action !== "delete") {
+            setFormData({
+              record_id: "",
+              animal_id: animal ? animal.animal_id : "",
+              employee_id: "",
+              enclosure_id: animal ? animal.enclosure_id : "",
+              location: "",
+              date: new Date().toISOString().slice(0, 10),
+              record_type: "",
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        setSubmissionStatus("Server error. Please try again.");
+      }
+    };
+
+    return (
+      <div className={styles.formContainer}>
+        <h2 className={styles.formTitle}>MEDICAL RECORD DATA ENTRY</h2>
+        <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
+          <div className={styles.formRow}>
+            <InputFields
+              label="ANIMAL ID *"
+              name="animal_id"
+              type="text"
+              value={formData.animal_id}
+              onChange={handleChange}
+              onInput={handleNumericInput}
+              autoComplete="off"
+              disabled={animal ? true : false}
+            />
+            <InputFields
+              label="EMPLOYEE ID *"
+              name="employee_id"
+              type="text"
+              value={formData.employee_id}
+              onChange={handleChange}
+              onInput={handleNumericInput}
+              autoComplete="off"
+            />
+          </div>
+          <div className={styles.formRow}>
+            <InputFields
+              label="ENCLOSURE ID *"
+              name="enclosure_id"
+              type="text"
+              value={formData.enclosure_id}
+              onChange={handleChange}
+              onInput={handleNumericInput}
+              autoComplete="off"
+              disabled={animal ? true : false}
+            />
+            <InputFields
+              label="LOCATION *"
+              name="location"
+              type="text"
+              value={formData.location}
+              onChange={handleChange}
+              autoComplete="off"
+            />
+          </div>
+          <div className={styles.formRow}>
+            <InputFields
+              label="DATE"
+              name="date"
+              value={formData.date}
+              type="date"
+              onChange={handleChange}
+              autoComplete="bday"
+            />
+            <InputFields
+              label="RECORD TYPE *"
+              name="record_type"
+              type="text"
+              value={formData.record_type}
+              onChange={handleChange}
+              autoComplete="off"
+            />
+          </div>
+          <div className={styles.buttonContainer}>
+            <button type="button" onClick={() => handleSubmit("add")}>
+              ADD
+            </button>
+            <button type="button" onClick={() => handleSubmit("update")}>
+              MODIFY
+            </button>
+            <button type="button" onClick={() => handleSubmit("delete")}>
+              DELETE
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className={styles.cancelButton}
+            >
+              CLOSE
+            </button>
+          </div>
+        </form>
+        {submissionStatus && (
+          <p className={styles.statusMessage}>{submissionStatus}</p>
+        )}
+      </div>
+    );
+  };
+
+  // Render Medical Form Popup
+  const renderMedicalFormPopup = () => {
+    if (!showMedicalFormPopup || !selectedAnimal) return null;
+
+    return (
+      <div className="popup-overlay">
+        <div className="popup-content-medical-form-popup">
+          <div className="popup-header">
+            <h3>Medical Record - {selectedAnimal.animal_name}</h3>
+            <button
+              className="popup-close"
+              onClick={() => setShowMedicalFormPopup(false)}
+            >
+              ×
+            </button>
+          </div>
+          <div className="popup-body">
+            <MedicalFormContent
+              animal={selectedAnimal}
+              onClose={() => setShowMedicalFormPopup(false)}
+            />
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const renderStatusChangePopup = () => {
@@ -365,6 +600,18 @@ const CriticalAnimalsReport = () => {
     );
   };
 
+  // Common style for action buttons
+  const actionButtonStyle = {
+    marginRight: "8px",
+    padding: "6px 12px",
+    borderRadius: "4px",
+    border: "none",
+    backgroundColor: "#2c5e4e",
+    color: "white",
+    cursor: "pointer",
+    fontSize: "0.9rem",
+  };
+
   return (
     <div className="critical-animals-report">
       <div className="report-table-container">
@@ -391,17 +638,34 @@ const CriticalAnimalsReport = () => {
                     <td key={headerIdx}>{animal[header]}</td>
                   ))}
                   <td>
-                    <button
-                      onClick={() => {
-                        if (animal.health_status !== "CRITICAL") {
-                          initiateHealthStatusChange(animal);
-                        }
-                      }}
-                      style={getButtonStyleByStatus(animal.health_status)}
-                      disabled={animal.health_status === "CRITICAL"}
-                    >
-                      {getButtonTextByStatus(animal.health_status)}
-                    </button>
+                    <div className="button-group">
+                      <button
+                        onClick={() => {
+                          setSelectedAnimal(animal);
+                          setShowMedicalFormPopup(true);
+                        }}
+                        style={actionButtonStyle}
+                      >
+                        View Details
+                      </button>
+                      <button
+                        onClick={() => handleViewMedicalHistory(animal)}
+                        style={actionButtonStyle}
+                      >
+                        Medical History
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (animal.health_status !== "CRITICAL") {
+                            initiateHealthStatusChange(animal);
+                          }
+                        }}
+                        style={getButtonStyleByStatus(animal.health_status)}
+                        disabled={animal.health_status === "CRITICAL"}
+                      >
+                        {getButtonTextByStatus(animal.health_status)}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -411,6 +675,7 @@ const CriticalAnimalsReport = () => {
       </div>
 
       {renderStatusChangePopup()}
+      {renderMedicalFormPopup()}
     </div>
   );
 };

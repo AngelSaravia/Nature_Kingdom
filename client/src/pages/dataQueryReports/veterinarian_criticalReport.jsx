@@ -6,11 +6,7 @@ const ZooKeeperReportTable = ({ data = [], columns = [] }) => {
   const [animalData, setAnimalData] = useState({});
   const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-  console.log("ReportTable props:", { data, columns });
-
   const toggleRow = async (enclosureId) => {
-    console.log("Toggle row clicked for enclosure:", enclosureId);
-
     setExpandedRows((prev) => ({
       ...prev,
       [enclosureId]: !prev[enclosureId],
@@ -27,7 +23,6 @@ const ZooKeeperReportTable = ({ data = [], columns = [] }) => {
         }
 
         const result = await response.json();
-        console.log("Fetched animals:", result);
 
         if (result.success) {
           setAnimalData((prev) => ({
@@ -53,6 +48,22 @@ const ZooKeeperReportTable = ({ data = [], columns = [] }) => {
 
   const handleAnimalAction = (animal) => {
     console.log("View details for animal:", animal);
+  };
+
+  const handleMedicalHistory = (animal) => {
+    console.log("Medical history for animal:", animal);
+    // Example: navigate to history page
+    // window.location.href = `/animals/${animal.animal_id}/medical-history`;
+  };
+
+  const handleViewEnclosureHistory = (enclosureId) => {
+    console.log("View enclosure history for:", enclosureId);
+    // Implementation for viewing enclosure history
+  };
+
+  const handleViewMoreEnclosureDetails = (enclosureId) => {
+    console.log("View more details for enclosure:", enclosureId);
+    // Implementation for viewing more enclosure details
   };
 
   const calculateAge = (dob) => {
@@ -85,6 +96,7 @@ const ZooKeeperReportTable = ({ data = [], columns = [] }) => {
             {columns.map((column, index) => (
               <th key={index}>{column.replace(/_/g, " ").toUpperCase()}</th>
             ))}
+            <th>Additional Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -108,10 +120,27 @@ const ZooKeeperReportTable = ({ data = [], columns = [] }) => {
                       : ""}
                   </td>
                 ))}
+                <td className="additional-actions">
+                  <button
+                    className="enclosure-action-btn"
+                    onClick={() => handleViewEnclosureHistory(row.enclosure_id)}
+                  >
+                    History
+                  </button>
+                  <button
+                    className="enclosure-action-btn"
+                    onClick={() =>
+                      handleViewMoreEnclosureDetails(row.enclosure_id)
+                    }
+                    style={{ marginLeft: "8px" }}
+                  >
+                    View More
+                  </button>
+                </td>
               </tr>
               {expandedRows[row.enclosure_id] && (
                 <tr className="animal-details-row">
-                  <td colSpan={columns.length + 1}>
+                  <td colSpan={columns.length + 2}>
                     <div className="animal-details-container">
                       <h4>Animals in this enclosure:</h4>
                       {animalData[row.enclosure_id] ? (
@@ -144,6 +173,15 @@ const ZooKeeperReportTable = ({ data = [], columns = [] }) => {
                                         }
                                       >
                                         View Details
+                                      </button>
+                                      <button
+                                        className="animal-action-btn"
+                                        onClick={() =>
+                                          handleMedicalHistory(animal)
+                                        }
+                                        style={{ marginLeft: "8px" }}
+                                      >
+                                        Medical History
                                       </button>
                                     </td>
                                   </tr>
