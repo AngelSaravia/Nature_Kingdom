@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const handleSignUp = require("./helpers/sign_up_helper");
 const handleLogin = require("./helpers/login_helper");
-const db_connection = require("./database"); // Import the database connection
+const db_connection = require("./database");
 const handleEmployeeLogin = require("./helpers/employee_login");
 const {
   handleQueryReport,
@@ -36,6 +36,8 @@ const handleGiftShopHistory = require("./helpers/giftshopHistoryHelper");
 const handleGiftShopRestock = require("./helpers/giftshopRestockHelper");
 const getClockInStatus = require("./helpers/ClockInHelper");
 const getEmployeeTimesheets = require("./helpers/timeSheetsHelper");
+const alertsHelper = require("./helpers/vetNotificationHelper");
+const managerAlertsHelper = require("./helpers/managerNotificationHelper");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -66,7 +68,7 @@ const server = http.createServer(async (req, res) => {
 
   const parsedUrl = url.parse(req.url, true);
   const path = parsedUrl.pathname;
-  req.query = parsedUrl.query; // Attach query parameters to the request object (Bahar's addition)
+  req.query = parsedUrl.query;
   console.log("path ", path);
 
   if (path === "/" && req.method === "GET") {
@@ -109,6 +111,221 @@ const server = http.createServer(async (req, res) => {
     handleQueryReport(req, res);
   } else if (path === "/query_report/employees" && req.method === "POST") {
     handleQueryReport(req, res);
+  } else if (
+    path === "/api/veterinarian/resolve-alert" &&
+    req.method === "POST"
+  ) {
+    let body = "";
+    req.on("data", (chunk) => {
+      body += chunk.toString();
+    });
+
+    req.on("end", async () => {
+      try {
+        const { alertId } = JSON.parse(body);
+
+        if (!alertId) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({ success: false, message: "Alert ID is required" })
+          );
+          return;
+        }
+
+        alertsHelper
+          .resolveAlert(alertId)
+          .then(() => {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: true }));
+          })
+          .catch((error) => {
+            console.error("Error resolving alert:", error);
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(
+              JSON.stringify({
+                success: false,
+                message: error.message || "Failed to resolve alert",
+              })
+            );
+          });
+      } catch (error) {
+        console.error("Error parsing resolve alert request:", error);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Server error" }));
+      }
+    });
+  }
+  // Veterinarian alerts endpoint (fixed to remove duplicate)
+  else if (path === "/api/veterinarian/alerts" && req.method === "GET") {
+    try {
+      const managerId = req.query.managerId;
+
+      if (!managerId) {
+        console.log("DEBUG: Missing managerId parameter");
+        res.writeHead(400, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({ success: false, message: "Manager ID is required" })
+        );
+        return;
+      }
+
+      // Check if managerId is numeric
+      if (isNaN(parseInt(managerId, 10))) {
+        console.log("DEBUG: managerId is not a valid number");
+        res.writeHead(400, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            success: false,
+            message: "Manager ID must be a valid number",
+          })
+        );
+        return;
+      }
+
+      alertsHelper
+        .getVeterinarianAlerts(managerId)
+        .then((alerts) => {
+          console.log(
+            "DEBUG: Successfully fetched alerts, count:",
+            alerts.length
+          );
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ success: true, data: alerts }));
+        })
+        .catch((error) => {
+          console.error("Error getting veterinarian alerts:", error);
+          console.error("Error stack:", error.stack);
+          res.writeHead(500, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              success: false,
+              message: "Failed to fetch alerts",
+              error: error.message,
+            })
+          );
+        });
+    } catch (error) {
+      console.error("Error in veterinarian alerts endpoint:", error);
+      console.error("Error stack:", error.stack);
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(
+        JSON.stringify({
+          success: false,
+          message: "Server error",
+          error: error.message,
+        })
+      );
+    }
+  }
+  // Manager alerts endpoint
+  else if (path === "/api/manager/alerts" && req.method === "GET") {
+    try {
+      console.log("DEBUG: Received request to /api/manager/alerts");
+      console.log("DEBUG: Full query parameters:", req.query);
+
+      const employeeId = req.query.employeeId;
+      console.log("DEBUG: Extracted employeeId:", employeeId);
+      console.log("DEBUG: Type of employeeId:", typeof employeeId);
+
+      if (!employeeId) {
+        console.log("DEBUG: Missing employeeId parameter");
+        res.writeHead(400, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({ success: false, message: "Employee ID is required" })
+        );
+        return;
+      }
+
+      // Check if employeeId is numeric
+      if (isNaN(parseInt(employeeId, 10))) {
+        console.log("DEBUG: employeeId is not a valid number");
+        res.writeHead(400, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            success: false,
+            message: "Employee ID must be a valid number",
+          })
+        );
+        return;
+      }
+
+      console.log("DEBUG: About to call managerAlertsHelper.getManagerAlerts");
+      managerAlertsHelper
+        .getManagerAlerts(employeeId)
+        .then((alerts) => {
+          console.log(
+            "DEBUG: Successfully fetched alerts, count:",
+            alerts.length
+          );
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ success: true, data: alerts }));
+        })
+        .catch((error) => {
+          console.error("Error getting manager alerts:", error);
+          console.error("Error stack:", error.stack);
+          res.writeHead(500, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              success: false,
+              message: "Failed to fetch alerts",
+              error: error.message,
+            })
+          );
+        });
+    } catch (error) {
+      console.error("Error in manager alerts endpoint:", error);
+      console.error("Error stack:", error.stack);
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(
+        JSON.stringify({
+          success: false,
+          message: "Server error",
+          error: error.message,
+        })
+      );
+    }
+  }
+  // Manager resolve alert endpoint
+  else if (path === "/api/manager/resolve-alert" && req.method === "POST") {
+    let body = "";
+    req.on("data", (chunk) => {
+      body += chunk.toString();
+    });
+
+    req.on("end", async () => {
+      try {
+        const { alertId } = JSON.parse(body);
+
+        if (!alertId) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({ success: false, message: "Alert ID is required" })
+          );
+          return;
+        }
+
+        managerAlertsHelper
+          .resolveAlert(alertId)
+          .then(() => {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: true }));
+          })
+          .catch((error) => {
+            console.error("Error resolving alert:", error);
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(
+              JSON.stringify({
+                success: false,
+                message: error.message || "Failed to resolve alert",
+              })
+            );
+          });
+      } catch (error) {
+        console.error("Error parsing resolve alert request:", error);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Server error" }));
+      }
+    });
   } else if (path === "/query_report/enclosures" && req.method === "POST") {
     handleQueryReport(req, res);
   } else if (path === "/query_report/tickets" && req.method === "POST") {
@@ -440,22 +657,6 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({ success: false, message: "Server error" }));
       }
     });
-  } else if (path === "/api/giftshop/order" && req.method === "POST") {
-    let body = "";
-    req.on("data", (chunk) => {
-      body += chunk;
-    });
-    req.on("end", async () => {
-      try {
-        const orderData = JSON.parse(body);
-        console.log("Received gift order data:", orderData);
-        await handleGiftOrder.handleGiftOrder(req, res, orderData);
-      } catch (error) {
-        console.error("Error processing gift order:", error);
-        res.writeHead(500, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ success: false, message: "Server error" }));
-      }
-    });
   } else if (path === "/api/clock_in" && req.method === "GET") {
     console.log("Received clock in request");
     const urlParams = new URL(req.url, `http://${req.headers.host}`);
@@ -496,17 +697,14 @@ const server = http.createServer(async (req, res) => {
     console.log("Received employee timesheets request");
     const urlParams = new URL(req.url, `http://${req.headers.host}`);
     const email = urlParams.searchParams.get("email");
-  
+
     if (!email) {
       res.writeHead(400, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: false, message: "email is required" }));
     } else {
       getEmployeeTimesheets.getEmployeeTimesheets(email, res);
     }
-  }
-  
-  
-  else if (path === "/api/giftshop/purchases" && req.method === "GET") {
+  } else if (path === "/api/giftshop/purchases" && req.method === "GET") {
     const username = url.parse(req.url, true).query.username;
 
     if (!username) {

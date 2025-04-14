@@ -1,17 +1,28 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react"; // Add these imports
+import { useState, useEffect } from "react";
 import "./veterinarian_dash.css";
-import TaskNotification from "../../components/notification/TaskNotification";
+import VeterinarianNotification from "../../components/notification/TaskNotification";
 import ZooKeeperReportTable from "../dataQueryReports/veterinarian_animalReport";
+import { useAuth } from "../../context/Authcontext"; // Import useAuth hook
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const AdminDash = () => {
   const navigate = useNavigate();
+  const { user } = useAuth(); // Get user data from AuthContext
   const [criticalStats, setCriticalStats] = useState({
     total: 0,
     new: 0,
     improving: 0,
   });
+
+  useEffect(() => {
+    // Debug log to see what's in the user object from context
+    console.log("User data from AuthContext:", user);
+
+    // Also check localStorage directly as a fallback
+    const employeeId = localStorage.getItem("employeeId");
+    console.log("employeeId from localStorage:", employeeId);
+  }, [user]);
 
   useEffect(() => {
     const fetchCriticalAnimalsStats = async () => {
@@ -46,10 +57,15 @@ const AdminDash = () => {
     fetchCriticalAnimalsStats();
   }, []);
 
+  // Get employeeId either from context or directly from localStorage
+  const employeeId = user?.employeeId || localStorage.getItem("employeeId");
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-card">
-        <TaskNotification />
+        {/* Pass employeeId to the VeterinarianNotification component */}
+        {employeeId && <VeterinarianNotification managerId={employeeId} />}
+
         <h1 className="dashboard-title">Veterinarian Dashboard</h1>
 
         {/* First container */}
