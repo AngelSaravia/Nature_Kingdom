@@ -122,7 +122,7 @@ const CriticalAnimalsReport = () => {
       case "NEEDS CARE":
         return "Mark as Critical";
       case "CRITICAL":
-        return "Already Critical";
+        return "Mark as Healthy";
       default:
         return "Update Health Status";
     }
@@ -135,7 +135,7 @@ const CriticalAnimalsReport = () => {
       case "NEEDS CARE":
         return "CRITICAL";
       case "CRITICAL":
-        return "CRITICAL";
+        return "HEALTHY";
       default:
         return "HEALTHY";
     }
@@ -146,19 +146,17 @@ const CriticalAnimalsReport = () => {
       return "This animal will be marked as needing care. Regular monitoring and appropriate care will be initiated.";
     } else if (currentStatus === "NEEDS CARE" && nextStatus === "CRITICAL") {
       return "This animal will be marked as critical. Immediate veterinary attention will be required and emergency protocols will be activated.";
+    } else if (currentStatus === "CRITICAL" && nextStatus === "HEALTHY") {
+      return "This animal will be marked as healthy. This indicates the animal has recovered and no longer requires special medical attention.";
     } else {
       return `Health status will be updated from ${currentStatus} to ${nextStatus}.`;
     }
   };
 
   const initiateHealthStatusChange = (animal) => {
-    if (animal.health_status === "CRITICAL") {
-      return;
-    }
-
     const nextStatus = getNextHealthStatusValue(animal.health_status);
 
-    // For any other status change, show the popup
+    // For any status change, show the popup
     setPopupState({
       isOpen: true,
       animal: animal,
@@ -211,15 +209,6 @@ const CriticalAnimalsReport = () => {
       borderRadius: "4px",
       fontSize: "0.9rem",
     };
-
-    if (currentStatus === "CRITICAL") {
-      return {
-        ...baseStyle,
-        backgroundColor: "#d9534f",
-        opacity: "0.7",
-        cursor: "not-allowed",
-      };
-    }
 
     return {
       ...baseStyle,
@@ -845,12 +834,6 @@ const CriticalAnimalsReport = () => {
             </div>
 
             <div className="status-description">{description}</div>
-
-            {isCritical && (
-              <div className="warning-message">
-                <p>⚠️ Warning: Critical status cannot be changed once set.</p>
-              </div>
-            )}
           </div>
 
           <div className="popup-footer">
@@ -927,13 +910,8 @@ const CriticalAnimalsReport = () => {
                         Medical History
                       </button>
                       <button
-                        onClick={() => {
-                          if (animal.health_status !== "CRITICAL") {
-                            initiateHealthStatusChange(animal);
-                          }
-                        }}
+                        onClick={() => initiateHealthStatusChange(animal)}
                         style={getButtonStyleByStatus(animal.health_status)}
-                        disabled={animal.health_status === "CRITICAL"}
                       >
                         {getButtonTextByStatus(animal.health_status)}
                       </button>

@@ -5,17 +5,17 @@ import logoImage from "../../../zoo_pictures/Nature's_Kingdom.jpeg";
 import { useAuth } from "../../../context/Authcontext";
 import apiClient from "../../../services/api";
 import ClockInComponent from "../../ClockInComponent/ClockInComponent";
+import VeterinarianNotification from "../../../components/notification/TaskNotification";
 
-function managerHeader() {
+function ManagerHeader() {
   const navigate = useNavigate();
-  const auth = useAuth();
+  const { user, logout } = useAuth();
 
-  const username =
-    auth?.user?.username || localStorage.getItem("username") || "User";
+  const username = user?.username || localStorage.getItem("username") || "User";
 
   const handleLogout = () => {
-    if (auth && auth.logout) {
-      auth.logout();
+    if (logout) {
+      logout();
     } else {
       localStorage.removeItem("token");
       localStorage.removeItem("username");
@@ -26,6 +26,7 @@ function managerHeader() {
       navigate("/employee_login");
     }
   };
+  const employeeId = user?.employeeId || localStorage.getItem("employeeId");
 
   return (
     <header className="header">
@@ -47,6 +48,7 @@ function managerHeader() {
         <Link to="/manager_dash">Dashboard</Link>
         <Link to="/event_form">Events Form</Link>
         <Link to="/enclosure_form">Enclosure Form</Link>
+        {employeeId && <VeterinarianNotification managerId={employeeId} />}
       </nav>
       <div className="user-menu">
         <ClockInComponent />
@@ -59,4 +61,4 @@ function managerHeader() {
   );
 }
 
-export default managerHeader;
+export default ManagerHeader;
