@@ -496,17 +496,14 @@ const server = http.createServer(async (req, res) => {
     console.log("Received employee timesheets request");
     const urlParams = new URL(req.url, `http://${req.headers.host}`);
     const email = urlParams.searchParams.get("email");
-  
+
     if (!email) {
       res.writeHead(400, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: false, message: "email is required" }));
     } else {
       getEmployeeTimesheets.getEmployeeTimesheets(email, res);
     }
-  }
-  
-  
-  else if (path === "/api/giftshop/purchases" && req.method === "GET") {
+  } else if (path === "/api/giftshop/purchases" && req.method === "GET") {
     const username = url.parse(req.url, true).query.username;
 
     if (!username) {
