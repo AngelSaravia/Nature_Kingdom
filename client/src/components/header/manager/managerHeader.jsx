@@ -5,7 +5,7 @@ import logoImage from "../../../zoo_pictures/Nature's_Kingdom.jpeg";
 import { useAuth } from "../../../context/Authcontext";
 import apiClient from "../../../services/api";
 import ClockInComponent from "../../ClockInComponent/ClockInComponent";
-import VeterinarianNotification from "../../../components/notification/TaskNotification";
+import ManagerNotification from "../../../components/notification/ManagerNotification";
 
 function ManagerHeader() {
   const navigate = useNavigate();
@@ -26,7 +26,6 @@ function ManagerHeader() {
       navigate("/employee_login");
     }
   };
-  const employeeId = user?.employeeId || localStorage.getItem("employeeId");
 
   return (
     <header className="header">
@@ -48,7 +47,7 @@ function ManagerHeader() {
         <Link to="/manager_dash">Dashboard</Link>
         <Link to="/event_form">Events Form</Link>
         <Link to="/enclosure_form">Enclosure Form</Link>
-        {employeeId && <VeterinarianNotification managerId={employeeId} />}
+        <ManagerNotification />
       </nav>
       <div className="user-menu">
         <ClockInComponent />

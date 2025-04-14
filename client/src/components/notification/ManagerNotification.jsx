@@ -2,17 +2,16 @@ import React, { useState, useEffect } from "react";
 import "./TaskNotification.css";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-const VeterinarianNotification = ({ managerId }) => {
+const ManagerNotification = ({ employeeId }) => {
   const [alerts, setAlerts] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch veterinarian alerts on component mount and when managerId changes
   useEffect(() => {
-    const managerId = localStorage.getItem("managerId");
+    const employeeId = localStorage.getItem("employeeId");
 
-    if (!managerId) {
+    if (!employeeId) {
       return;
     }
 
@@ -21,9 +20,9 @@ const VeterinarianNotification = ({ managerId }) => {
       setError(null);
 
       try {
-        // Ensure the parameter name matches what your backend expects
+        // Use employeeId to fetch alerts where receiver_id matches
         const response = await fetch(
-          `${API_BASE_URL}/api/veterinarian/alerts?managerId=${managerId}`
+          `${API_BASE_URL}/api/manager/alerts?employeeId=${employeeId}`
         );
 
         if (!response.ok) {
@@ -39,7 +38,7 @@ const VeterinarianNotification = ({ managerId }) => {
         }
       } catch (err) {
         setError("Network error when fetching alerts");
-        console.error("Error fetching veterinarian alerts:", err);
+        console.error("Error fetching manager alerts:", err);
       } finally {
         setLoading(false);
       }
@@ -52,7 +51,7 @@ const VeterinarianNotification = ({ managerId }) => {
 
     // Clean up interval on component unmount
     return () => clearInterval(intervalId);
-  }, [managerId]);
+  }, [employeeId]);
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
@@ -61,7 +60,7 @@ const VeterinarianNotification = ({ managerId }) => {
   const resolveAlert = async (alertId) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/veterinarian/resolve-alert`,
+        `${API_BASE_URL}/api/manager/resolve-alert`,
         {
           method: "POST",
           headers: {
@@ -122,7 +121,7 @@ const VeterinarianNotification = ({ managerId }) => {
       {isPopupOpen && (
         <div className="notification-popup">
           <div className="popup-header">
-            <h3>Veterinarian Alerts</h3>
+            <h3>Manager Alerts</h3>
           </div>
 
           <div className="popup-content">
@@ -175,4 +174,4 @@ const VeterinarianNotification = ({ managerId }) => {
   );
 };
 
-export default VeterinarianNotification;
+export default ManagerNotification;

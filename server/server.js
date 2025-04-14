@@ -37,6 +37,7 @@ const handleGiftShopRestock = require("./helpers/giftshopRestockHelper");
 const getClockInStatus = require("./helpers/ClockInHelper");
 const getEmployeeTimesheets = require("./helpers/timeSheetsHelper");
 const alertsHelper = require("./helpers/vetNotificationHelper");
+const managerAlertsHelper = require("./helpers/managerNotificationHelper");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -154,16 +155,10 @@ const server = http.createServer(async (req, res) => {
       }
     });
   }
-  // Enhanced code for your server.js veterinarian alerts endpoint
-  // Replace the existing endpoint with this code
+  // Veterinarian alerts endpoint (fixed to remove duplicate)
   else if (path === "/api/veterinarian/alerts" && req.method === "GET") {
     try {
-      console.log("DEBUG: Received request to /api/veterinarian/alerts");
-      console.log("DEBUG: Full query parameters:", req.query);
-
       const managerId = req.query.managerId;
-      console.log("DEBUG: Extracted managerId:", managerId);
-      console.log("DEBUG: Type of managerId:", typeof managerId);
 
       if (!managerId) {
         console.log("DEBUG: Missing managerId parameter");
@@ -187,7 +182,6 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      console.log("DEBUG: About to call alertsHelper.getVeterinarianAlerts");
       alertsHelper
         .getVeterinarianAlerts(managerId)
         .then((alerts) => {
@@ -222,66 +216,42 @@ const server = http.createServer(async (req, res) => {
         })
       );
     }
-  } else if (path === "/api/veterinarian/alerts" && req.method === "GET") {
+  }
+  // Manager alerts endpoint
+  else if (path === "/api/manager/alerts" && req.method === "GET") {
     try {
-      console.log("DEBUG: Received request to /api/veterinarian/alerts");
+      console.log("DEBUG: Received request to /api/manager/alerts");
       console.log("DEBUG: Full query parameters:", req.query);
 
-      // Change to userId for consistency with your frontend
-      const userId = req.query.userId;
-      console.log("DEBUG: Extracted userId:", userId);
-      console.log("DEBUG: Type of userId:", typeof userId);
+      const employeeId = req.query.employeeId;
+      console.log("DEBUG: Extracted employeeId:", employeeId);
+      console.log("DEBUG: Type of employeeId:", typeof employeeId);
 
-      if (!userId) {
-        console.log("DEBUG: Missing userId parameter");
+      if (!employeeId) {
+        console.log("DEBUG: Missing employeeId parameter");
         res.writeHead(400, { "Content-Type": "application/json" });
         res.end(
-          JSON.stringify({ success: false, message: "User ID is required" })
+          JSON.stringify({ success: false, message: "Employee ID is required" })
         );
         return;
       }
 
-      // Check if userId is numeric
-      if (isNaN(parseInt(userId, 10))) {
-        console.log("DEBUG: userId is not a valid number");
+      // Check if employeeId is numeric
+      if (isNaN(parseInt(employeeId, 10))) {
+        console.log("DEBUG: employeeId is not a valid number");
         res.writeHead(400, { "Content-Type": "application/json" });
         res.end(
           JSON.stringify({
             success: false,
-            message: "User ID must be a valid number",
+            message: "Employee ID must be a valid number",
           })
         );
         return;
       }
 
-      console.log("DEBUG: About to call alertsHelper.getVeterinarianAlerts");
-
-      // Make sure alertsHelper is properly imported and has getVeterinarianAlerts function
-      if (
-        !alertsHelper ||
-        typeof alertsHelper.getVeterinarianAlerts !== "function"
-      ) {
-        console.error(
-          "DEBUG: alertsHelper or getVeterinarianAlerts function is not properly defined"
-        );
-        console.error("DEBUG: alertsHelper type:", typeof alertsHelper);
-        console.error(
-          "DEBUG: alertsHelper functions:",
-          Object.keys(alertsHelper || {})
-        );
-
-        res.writeHead(500, { "Content-Type": "application/json" });
-        res.end(
-          JSON.stringify({
-            success: false,
-            message: "Server configuration error",
-          })
-        );
-        return;
-      }
-
-      alertsHelper
-        .getVeterinarianAlerts(userId)
+      console.log("DEBUG: About to call managerAlertsHelper.getManagerAlerts");
+      managerAlertsHelper
+        .getManagerAlerts(employeeId)
         .then((alerts) => {
           console.log(
             "DEBUG: Successfully fetched alerts, count:",
@@ -291,7 +261,7 @@ const server = http.createServer(async (req, res) => {
           res.end(JSON.stringify({ success: true, data: alerts }));
         })
         .catch((error) => {
-          console.error("Error getting veterinarian alerts:", error);
+          console.error("Error getting manager alerts:", error);
           console.error("Error stack:", error.stack);
           res.writeHead(500, { "Content-Type": "application/json" });
           res.end(
@@ -303,7 +273,7 @@ const server = http.createServer(async (req, res) => {
           );
         });
     } catch (error) {
-      console.error("Error in veterinarian alerts endpoint:", error);
+      console.error("Error in manager alerts endpoint:", error);
       console.error("Error stack:", error.stack);
       res.writeHead(500, { "Content-Type": "application/json" });
       res.end(
@@ -314,6 +284,48 @@ const server = http.createServer(async (req, res) => {
         })
       );
     }
+  }
+  // Manager resolve alert endpoint
+  else if (path === "/api/manager/resolve-alert" && req.method === "POST") {
+    let body = "";
+    req.on("data", (chunk) => {
+      body += chunk.toString();
+    });
+
+    req.on("end", async () => {
+      try {
+        const { alertId } = JSON.parse(body);
+
+        if (!alertId) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({ success: false, message: "Alert ID is required" })
+          );
+          return;
+        }
+
+        managerAlertsHelper
+          .resolveAlert(alertId)
+          .then(() => {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: true }));
+          })
+          .catch((error) => {
+            console.error("Error resolving alert:", error);
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(
+              JSON.stringify({
+                success: false,
+                message: error.message || "Failed to resolve alert",
+              })
+            );
+          });
+      } catch (error) {
+        console.error("Error parsing resolve alert request:", error);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Server error" }));
+      }
+    });
   } else if (path === "/query_report/enclosures" && req.method === "POST") {
     handleQueryReport(req, res);
   } else if (path === "/query_report/tickets" && req.method === "POST") {
@@ -629,22 +641,6 @@ const server = http.createServer(async (req, res) => {
         })
       );
     }
-  } else if (path === "/api/giftshop/order" && req.method === "POST") {
-    let body = "";
-    req.on("data", (chunk) => {
-      body += chunk;
-    });
-    req.on("end", async () => {
-      try {
-        const orderData = JSON.parse(body);
-        console.log("Received gift order data:", orderData);
-        await handleGiftOrder.handleGiftOrder(req, res, orderData);
-      } catch (error) {
-        console.error("Error processing gift order:", error);
-        res.writeHead(500, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ success: false, message: "Server error" }));
-      }
-    });
   } else if (path === "/api/giftshop/order" && req.method === "POST") {
     let body = "";
     req.on("data", (chunk) => {
