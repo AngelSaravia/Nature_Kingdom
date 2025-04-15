@@ -65,7 +65,7 @@ const MembershipForm = () => {
 
     const handleSubmit = async (action) => {
         if (action !== "delete") {
-            const requiredFields = ["membership_id", "visitor_id", "start_date", "end_date", "max_guests"];
+            const requiredFields = ["visitor_id", "start_date", "end_date", "max_guests"];
             const missingFields = requiredFields.filter(field => {
                 const value = formData[field];
                 if (typeof value === 'string') {
@@ -103,9 +103,9 @@ const MembershipForm = () => {
                 throw new Error(`Server responded with ${response.status}`);
             }
             const data = await response.json();
-            setSubmissionStatus(result.message);
+            setSubmissionStatus(data.message);
 
-            if (result.success) {
+            if (data.success) {
                 if (action === "delete") {
                     const freshResponse = await fetch (`${API_BASE_URL}/get_memberships`);
                     const freshData = await freshResponse.json();

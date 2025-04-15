@@ -10,6 +10,41 @@ const ManagerDash = () => {
         <h1 className="dashboard-title">Manager Dashboard</h1>
 
         {/* Dashboard Buttons */}
+        <div className="dashboard-single">
+          <div className="dashboard-box">
+            <h2 className="dashboard-heading shortcuts-heading">Manager Shortcuts</h2>
+            <div className="short-cut-grid">
+              <button
+                onClick={() => navigate("/manager_timesheets")}
+                className="dashboard-button"
+              >
+                {" "}
+                View Timesheets
+              </button>
+              <button
+                onClick={() => navigate("/giftshop_dash")}
+                className="dashboard-button"
+              >
+                {" "}
+                View Gift Shop Portal
+              </button>
+              <button
+                onClick={() => navigate("/zookeeper_dash")}
+                className="dashboard-button"
+              >
+                {" "}
+                View Zoo Keeper Portal
+              </button>
+              <button
+                onClick={() => navigate("/veterinarian_dash")}
+                className="dashboard-button"
+              >
+                {" "}
+                View Veterinarian Portal
+              </button>
+            </div>
+          </div> 
+        </div>
         <div className="dashboard-grid">
           <div className="dashboard-box">
             <h2 className="dashboard-heading">Query for Data</h2>

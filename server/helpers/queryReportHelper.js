@@ -155,12 +155,14 @@ function handleAnimalFilters(key, value, conditions, values) {
             values.push(...valueArray);
         }
     } else if (key === "enclosures.name") {
+        console.log("Matched enclosures.name filter"); // Debugging log
         const valueArray = Array.isArray(value) ? value : value.split(',');
         if (valueArray.length > 0) {
             conditions.push(`enclosures.name IN (${valueArray.map(() => '?').join(', ')})`);
             values.push(...valueArray);
         }
     } else {
+        console.log("Falling into else block for key:", key); // Debugging log
         conditions.push(`${key} LIKE ?`);
         values.push(`%${value}%`);
     }
