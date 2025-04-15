@@ -280,26 +280,22 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = (redirectPath = "/login") => {
     console.log("Logout initiated");
 
-    // Clear all auth data
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("email");
     localStorage.removeItem("role");
 
-    // Clear axios headers
     delete axios.defaults.headers.common["Authorization"];
 
-    // Update state BEFORE navigation
     setUser(null);
     setIsAuthenticated(false);
 
-    // Force immediate state update to ensure logout is complete
     setTimeout(() => {
-      // Navigate to login
-      navigate("/login");
+      // Navigate to specified path
+      navigate(redirectPath);
       console.log("Logout completed, state cleared");
     }, 0);
   };
