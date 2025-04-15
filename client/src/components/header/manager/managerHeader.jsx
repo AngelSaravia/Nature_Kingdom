@@ -47,11 +47,11 @@ function ManagerHeader() {
         <Link to="/manager_dash">Dashboard</Link>
         <Link to="/event_form">Events Form</Link>
         <Link to="/enclosure_form">Enclosure Form</Link>
-        <ManagerNotification />
       </nav>
       <div className="user-menu">
         <ClockInComponent />
         <span className="username">Welcome, {username}</span>
+        <ManagerNotification />
         <button className="logout-btn" onClick={handleLogout}>
           Logout
         </button>
