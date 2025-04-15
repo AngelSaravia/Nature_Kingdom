@@ -6,9 +6,9 @@ function getManagerType(employeeId, res) {
       FROM managers_type
       WHERE manager_id = ?
     `;
-  console.log("Query:", query);
+  //   console.log("Query:", query);
   db_connection.query(query, [employeeId], (err, results) => {
-    console.log("Results:", results);
+    //   console.log("Results:", results);
     if (err) {
       console.error("Database error:", err);
       res.writeHead(500, { "Content-Type": "application/json" });
