@@ -1,8 +1,27 @@
 import { useNavigate } from "react-router-dom";
 import "./manager_dash.css";
+import { useEffect, useState } from "react";
+import { getManagerType } from "../../services/api";
 
 const ManagerDash = () => {
   const navigate = useNavigate();
+  const [managerType,setManagerType] = useState("");
+
+  // console.log("employeeid: ", localStorage.getItem("employeeId"));
+
+  useEffect(() => {
+    const initialFetch = async () => {
+      try{
+        const managerType = await getManagerType(localStorage.getItem("employeeId"));
+        setManagerType(managerType.data.type_of_manager);
+      } catch (error) {
+        console.log('Error Fetching Manager Type', error);
+      }
+    };
+    initialFetch();
+  }, []);
+
+  console.log("manager type:", managerType)
 
   return (
     <div className="dashboard-container">
@@ -13,39 +32,51 @@ const ManagerDash = () => {
         <div className="dashboard-single">
           <div className="dashboard-box">
             <h2 className="dashboard-heading shortcuts-heading">Manager Shortcuts</h2>
-            <div className="short-cut-grid">
-              <button
-                onClick={() => navigate("/manager_timesheets")}
-                className="dashboard-button"
-              >
-                {" "}
-                View Timesheets
-              </button>
-              <button
-                onClick={() => navigate("/giftshop_dash")}
-                className="dashboard-button"
-              >
-                {" "}
-                View Gift Shop Portal
-              </button>
-              <button
-                onClick={() => navigate("/zookeeper_dash")}
-                className="dashboard-button"
-              >
-                {" "}
-                View Zoo Keeper Portal
-              </button>
-              <button
-                onClick={() => navigate("/veterinarian_dash")}
-                className="dashboard-button"
-              >
-                {" "}
-                View Veterinarian Portal
-              </button>
+            <div>
+              {managerType === "Giftshop" ? (<div className="short-cut-grid">
+                <button
+                  onClick={() => navigate("/manager_timesheets")}
+                  className="dashboard-button"
+                >
+                  {" "}
+                  View Timesheets
+                </button>
+                <button
+                  onClick={() => navigate("/giftshop_dash")}
+                  className="dashboard-button"
+                >
+                  {" "}
+                  View Gift Shop Portal
+                </button>
+                </div>) : null}
+              {managerType === "Veterinarian" ? (<div className="short-cut-grid">
+                <button
+                  onClick={() => navigate("/manager_timesheets")}
+                  className="dashboard-button"
+                >
+                  {" "}
+                  View Timesheets
+                </button>
+                <button
+                  onClick={() => navigate("/zookeeper_dash")}
+                  className="dashboard-button"
+                >
+                  {" "}
+                  View Zoo Keeper Portal
+                </button>
+                <button
+                  onClick={() => navigate("/veterinarian_dash")}
+                  className="dashboard-button"
+                >
+                  {" "}
+                  View Veterinarian Portal
+                </button>
+              </div>) : null}
+              
             </div>
           </div> 
         </div>
-        <div className="dashboard-grid">
+        {/* <div className="dashboard-grid">
           <div className="dashboard-box">
             <h2 className="dashboard-heading">Query for Data</h2>
             <div className="dashboard-grid">
@@ -128,7 +159,7 @@ const ManagerDash = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

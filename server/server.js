@@ -38,6 +38,7 @@ const getClockInStatus = require("./helpers/ClockInHelper");
 const getEmployeeTimesheets = require("./helpers/timeSheetsHelper");
 const alertsHelper = require("./helpers/vetNotificationHelper");
 const managerAlertsHelper = require("./helpers/managerNotificationHelper");
+const getManagerType = require("./helpers/managerTypeHelper");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -220,12 +221,12 @@ const server = http.createServer(async (req, res) => {
   // Manager alerts endpoint
   else if (path === "/api/manager/alerts" && req.method === "GET") {
     try {
-      console.log("DEBUG: Received request to /api/manager/alerts");
-      console.log("DEBUG: Full query parameters:", req.query);
+      // console.log("DEBUG: Received request to /api/manager/alerts");
+      // console.log("DEBUG: Full query parameters:", req.query);
 
       const employeeId = req.query.employeeId;
-      console.log("DEBUG: Extracted employeeId:", employeeId);
-      console.log("DEBUG: Type of employeeId:", typeof employeeId);
+      // console.log("DEBUG: Extracted employeeId:", employeeId);
+      // console.log("DEBUG: Type of employeeId:", typeof employeeId);
 
       if (!employeeId) {
         console.log("DEBUG: Missing employeeId parameter");
@@ -249,12 +250,12 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      console.log("DEBUG: About to call managerAlertsHelper.getManagerAlerts");
+      // console.log("DEBUG: About to call managerAlertsHelper.getManagerAlerts");
       managerAlertsHelper
         .getManagerAlerts(employeeId)
         .then((alerts) => {
           console.log(
-            "DEBUG: Successfully fetched alerts, count:",
+            // "DEBUG: Successfully fetched alerts, count:",
             alerts.length
           );
           res.writeHead(200, { "Content-Type": "application/json" });
@@ -657,10 +658,10 @@ const server = http.createServer(async (req, res) => {
       }
     });
   } else if (path === "/api/clock_in" && req.method === "GET") {
-    console.log("Received clock in request");
+    // console.log("Received clock in request");
     const urlParams = new URL(req.url, `http://${req.headers.host}`);
     const email = urlParams.searchParams.get("email");
-    console.log("email", email);
+    // console.log("email", email);
 
     if (!email) {
       res.writeHead(400, { "Content-Type": "application/json" });
@@ -669,7 +670,7 @@ const server = http.createServer(async (req, res) => {
       getClockInStatus.getClockInStatus(email, res);
     }
   } else if (path === "/api/set_clock_in" && req.method === "GET") {
-    console.log("Received set clock-in request");
+    // console.log("Received set clock-in request");
     const urlParams = new URL(req.url, `http://${req.headers.host}`);
     const email = urlParams.searchParams.get("email");
     // console.log("email", email);
@@ -681,7 +682,7 @@ const server = http.createServer(async (req, res) => {
       getClockInStatus.setClockInStatus(email, false, res);
     }
   } else if (path === "/api/set_clock_out" && req.method === "GET") {
-    console.log("Received set clock-out request");
+    // console.log("Received set clock-out request");
     const urlParams = new URL(req.url, `http://${req.headers.host}`);
     const email = urlParams.searchParams.get("email");
     // console.log("email", email);
@@ -691,6 +692,18 @@ const server = http.createServer(async (req, res) => {
       res.end(JSON.stringify({ success: false, message: "email is required" }));
     } else {
       getClockInStatus.setClockOutStatus(email, true, res);
+    }
+  } else if (path === "/api/getManagerType" && req.method === "GET") {
+    console.log("Received getManagerType Request");
+    const urlParams = new URL(req.url, `http://${req.headers.host}`);
+    const employeeId = urlParams.searchParams.get("employeeId");
+    console.log("employeeId", employeeId);
+
+    if (!employeeId) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: false, message: "employeeId is required" }));
+    } else {
+      getManagerType.getManagerType(employeeId, res);
     }
   } else if (path === "/api/employee_timesheets" && req.method === "GET") {
     console.log("Received employee timesheets request");

@@ -202,7 +202,8 @@ const EventForm = () => {
                 </div>
 
                 <div className={styles.buttonContainer}>
-                    <button type="button" onClick={() => handleSubmit("add")}>ADD</button>
+                    {location.state?.noadd ? 
+                    <button type="button" onClick={() => handleSubmit("add")}>ADD</button> : null}
                     <button type="button" onClick={() => handleSubmit("update")}>MODIFY</button>
                     <button type="button" onClick={() => handleSubmit("delete")}>DELETE</button>
                 </div>

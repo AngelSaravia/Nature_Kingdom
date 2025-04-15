@@ -250,6 +250,17 @@ export const getClockIn = async (email) => {
   }
 };
 
+export const getManagerType = async (employeeId) => {
+  try {
+    console.log("employeeId", employeeId)
+    const response = await apiClient.get(`/api/getManagerType?employeeId=${employeeId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching Manager Type:", error);
+    throw error;
+  }
+};
+
 export const clockIn = async (email) => {
   try {
     console.log(`Attempting to clock in for: ${email}`);
