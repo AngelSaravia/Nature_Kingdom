@@ -15,7 +15,7 @@ function ManagerHeader() {
 
   const handleLogout = () => {
     if (logout) {
-      logout();
+      logout("/employee_login");
     } else {
       localStorage.removeItem("token");
       localStorage.removeItem("username");

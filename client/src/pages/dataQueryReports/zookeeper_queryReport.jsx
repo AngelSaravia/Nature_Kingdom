@@ -33,6 +33,13 @@ const EnclosureQueryReport = () => {
     nextStatus: null,
   });
 
+  // New state for entry feed and history feed popups
+  const [feedPopupState, setFeedPopupState] = useState({
+    isOpen: false,
+    animal: null,
+    feedType: null, // 'entry' or 'history'
+  });
+
   useEffect(() => {
     fetchReport();
   }, []);
@@ -176,6 +183,32 @@ const EnclosureQueryReport = () => {
     });
   };
 
+  // New functions for handling Entry Feed and History Feed
+  const handleEntryFeed = (animal) => {
+    setFeedPopupState({
+      isOpen: true,
+      animal: animal,
+      feedType: "entry",
+    });
+  };
+
+  const handleHistoryFeed = (animal) => {
+    setFeedPopupState({
+      isOpen: true,
+      animal: animal,
+      feedType: "history",
+    });
+  };
+
+  // Function to close feed popup
+  const closeFeedPopup = () => {
+    setFeedPopupState({
+      isOpen: false,
+      animal: null,
+      feedType: null,
+    });
+  };
+
   // Function for confirming the health status change
   const confirmHealthStatusChange = () => {
     if (popupState.animal) {
@@ -234,6 +267,33 @@ const EnclosureQueryReport = () => {
       ...baseStyle,
       backgroundColor: getButtonColorByStatus(currentStatus),
       cursor: "pointer",
+    };
+  };
+
+  // Styles for the new buttons
+  const getEntryFeedButtonStyle = () => {
+    return {
+      color: "white",
+      backgroundColor: "#2c5e4e", // Primary zoo color
+      border: "none",
+      padding: "6px 12px",
+      borderRadius: "4px",
+      fontSize: "0.9rem",
+      cursor: "pointer",
+      marginLeft: "5px",
+    };
+  };
+
+  const getHistoryFeedButtonStyle = () => {
+    return {
+      color: "white",
+      backgroundColor: "#4a6d8c", // Different color for history
+      border: "none",
+      padding: "6px 12px",
+      borderRadius: "4px",
+      fontSize: "0.9rem",
+      cursor: "pointer",
+      marginLeft: "5px",
     };
   };
 
@@ -349,20 +409,51 @@ const EnclosureQueryReport = () => {
                               ))}
 
                               <td>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation(); // Prevent row toggle
-                                    if (animal.health_status !== "CRITICAL") {
-                                      initiateHealthStatusChange(animal);
-                                    }
-                                  }}
-                                  style={getButtonStyleByStatus(
-                                    animal.health_status
-                                  )}
-                                  disabled={animal.health_status === "CRITICAL"}
+                                <div
+                                  className="action-buttons-container"
+                                  style={{ display: "flex" }}
                                 >
-                                  {getButtonTextByStatus(animal.health_status)}
-                                </button>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation(); // Prevent row toggle
+                                      if (animal.health_status !== "CRITICAL") {
+                                        initiateHealthStatusChange(animal);
+                                      }
+                                    }}
+                                    style={getButtonStyleByStatus(
+                                      animal.health_status
+                                    )}
+                                    disabled={
+                                      animal.health_status === "CRITICAL"
+                                    }
+                                  >
+                                    {getButtonTextByStatus(
+                                      animal.health_status
+                                    )}
+                                  </button>
+
+                                  {/* New Entry Feed Button */}
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation(); // Prevent row toggle
+                                      handleEntryFeed(animal);
+                                    }}
+                                    style={getEntryFeedButtonStyle()}
+                                  >
+                                    Entry Feed
+                                  </button>
+
+                                  {/* New History Feed Button */}
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation(); // Prevent row toggle
+                                      handleHistoryFeed(animal);
+                                    }}
+                                    style={getHistoryFeedButtonStyle()}
+                                  >
+                                    History Feed
+                                  </button>
+                                </div>
                               </td>
                             </tr>
                           )
@@ -487,6 +578,104 @@ const EnclosureQueryReport = () => {
     );
   };
 
+  // New function to render feed popup
+  const renderFeedPopup = () => {
+    if (!feedPopupState.isOpen || !feedPopupState.animal) return null;
+
+    const { animal, feedType } = feedPopupState;
+    const isEntryFeed = feedType === "entry";
+
+    return (
+      <div className="popup-overlay">
+        <div className="popup-content">
+          <div className="popup-header">
+            <h3>{isEntryFeed ? "Entry Feed" : "History Feed"}</h3>
+            <button className="popup-close" onClick={closeFeedPopup}>
+              ×
+            </button>
+          </div>
+
+          <div className="popup-body">
+            <div className="animal-name">
+              <strong>{animal.animal_name}</strong> ({animal.species})
+            </div>
+
+            {isEntryFeed ? (
+              <div className="feed-entry-form">
+                <h4>Record New Feed Entry</h4>
+                <div className="form-group">
+                  <label htmlFor="feedType">Feed Type:</label>
+                  <select id="feedType" className="form-control">
+                    <option value="">Select Feed Type</option>
+                    <option value="regular">Regular Feed</option>
+                    <option value="special">Special Diet Feed</option>
+                    <option value="medication">Medication</option>
+                    <option value="supplements">Supplements</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="feedQuantity">Quantity (kg):</label>
+                  <input
+                    type="number"
+                    id="feedQuantity"
+                    className="form-control"
+                    min="0"
+                    step="0.1"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="feedNotes">Notes:</label>
+                  <textarea
+                    id="feedNotes"
+                    className="form-control"
+                    rows="3"
+                  ></textarea>
+                </div>
+              </div>
+            ) : (
+              <div className="feed-history">
+                <h4>Feed History</h4>
+                <div className="feed-history-placeholder">
+                  <p>Feed history will be displayed here.</p>
+                  <p>
+                    You can implement the actual feed history fetching logic
+                    from your API.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="popup-footer">
+            {isEntryFeed ? (
+              <>
+                <button
+                  className="confirm-button"
+                  onClick={() => {
+                    // Add logic to save feed entry
+                    closeFeedPopup();
+                  }}
+                  style={{
+                    backgroundColor: "#2c5e4e",
+                  }}
+                >
+                  Save Entry
+                </button>
+                <button className="cancel-button" onClick={closeFeedPopup}>
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <button className="close-button" onClick={closeFeedPopup}>
+                Close
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="enclosure-query-report">
       <div className="report-title">
@@ -519,6 +708,7 @@ const EnclosureQueryReport = () => {
       </div>
 
       {renderStatusChangePopup()}
+      {renderFeedPopup()}
     </div>
   );
 };

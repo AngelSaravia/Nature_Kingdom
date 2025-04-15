@@ -156,7 +156,6 @@ const CriticalAnimalsReport = () => {
   const initiateHealthStatusChange = (animal) => {
     const nextStatus = getNextHealthStatusValue(animal.health_status);
 
-    // For any status change, show the popup
     setPopupState({
       isOpen: true,
       animal: animal,
@@ -164,12 +163,11 @@ const CriticalAnimalsReport = () => {
     });
   };
 
-  // Function for confirming the health status change
   const confirmHealthStatusChange = () => {
     if (popupState.animal) {
-      // Apply the health status change
       handleHealthStatusProgression(popupState.animal);
-      //window.location.reload(); optional if you want to reload
+
+      window.location.reload();
     }
     // Close the popup
     setPopupState({
