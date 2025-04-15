@@ -2,19 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./maincontent.css";
 import DonationImage from "../../zoo_pictures/baby_cougar.jpg";
-import ConservationDay from "../../zoo_pictures/penguins_talk.webp";
-import EasterEgg from "../../zoo_pictures/easter_egg_hunting.jpg";
-import EarthDay from "../../zoo_pictures/earth_day_zoo.jpeg";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5004';
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5004";
 
 const formatTime = (date) => {
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 };
 
 const parseDurationToMs = (duration) => {
   if (!duration) return 0;
-  const [hours, minutes, seconds] = duration.split(':').map(Number);
+  const [hours, minutes, seconds] = duration.split(":").map(Number);
   return (hours * 3600 + minutes * 60 + (seconds || 0)) * 1000;
 };
 
@@ -26,39 +23,42 @@ const MainContent = () => {
   const currentMonth = "April 2025";
 
   useEffect(() => {
-      const fetchEvents = async () => {
-        try {
-          const response = await fetch(`${API_BASE_URL}/calendar`);
-          const data = await response.json();
-          
-          if (!response.ok) {
-            throw new Error(data.message || 'Failed to fetch events');
-          }
-      
-          if (data.success) {
-            const formattedEvents = data.events.map(event => ({
-              id: event.eventID,
-              name: event.eventName,
-              date: event.eventDate,
-              start_time: formatTime(new Date(event.eventDate)),
-              end_time: formatTime(new Date(new Date(event.eventDate).getTime() + 
-                       (parseDurationToMs(event.duration) || 3600000))),
-              description: event.description,
-              image_url: event.imageUrl
-            }));
-            setEvents(formattedEvents);
-          }
-        } catch (error) {
-          console.error("Fetch error:", error);
-          setError(error.message);
-        } finally {
-          setLoading(false);
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/calendar`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to fetch events");
         }
-      
-      };
-    
-      fetchEvents();
-    }, []);
+
+        if (data.success) {
+          const formattedEvents = data.events.map((event) => ({
+            id: event.eventID,
+            name: event.eventName,
+            date: event.eventDate,
+            start_time: formatTime(new Date(event.eventDate)),
+            end_time: formatTime(
+              new Date(
+                new Date(event.eventDate).getTime() +
+                  (parseDurationToMs(event.duration) || 3600000)
+              )
+            ),
+            description: event.description,
+            image_url: event.imageUrl,
+          }));
+          setEvents(formattedEvents);
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   return (
     <div className="main-content-container">
@@ -130,20 +130,22 @@ const MainContent = () => {
                 <div key={event.id} className="event-card">
                   <h3>{event.name}</h3>
                   <p className="event-meta">
-                    Date: {new Date(event.date).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })} | Time: {event.start_time} - {event.end_time}
+                    Date:{" "}
+                    {new Date(event.date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}{" "}
+                    | Time: {event.start_time} - {event.end_time}
                   </p>
                   <p className="event-description">{event.description}</p>
                   {event.image_url && (
-                    <img 
-                      src={event.image_url} 
-                      alt={event.name} 
+                    <img
+                      src={event.image_url}
+                      alt={event.name}
                       className="event-image"
                       onError={(e) => {
-                        e.target.style.display = 'none'; // Hide image if it fails to load
+                        e.target.style.display = "none"; // Hide image if it fails to load
                       }}
                     />
                   )}

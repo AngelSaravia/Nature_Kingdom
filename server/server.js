@@ -38,6 +38,7 @@ const getClockInStatus = require("./helpers/ClockInHelper");
 const getEmployeeTimesheets = require("./helpers/timeSheetsHelper");
 const alertsHelper = require("./helpers/vetNotificationHelper");
 const managerAlertsHelper = require("./helpers/managerNotificationHelper");
+const handleMedicalRecords = require("./helpers/medicalRecordsHelper");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -107,6 +108,11 @@ const server = http.createServer(async (req, res) => {
         JSON.stringify({ success: true, data: results.map((row) => row.name) })
       ); // Return only the names
     });
+  } else if (
+    path.startsWith("/medical_records") ||
+    path === "/get_medical_records"
+  ) {
+    handleMedicalRecords(req, res);
   } else if (path === "/query_report/events" && req.method === "POST") {
     handleQueryReport(req, res);
   } else if (path === "/query_report/employees" && req.method === "POST") {
@@ -510,7 +516,7 @@ const server = http.createServer(async (req, res) => {
   } else if (path === "/feedLog_form" && req.method === "POST") {
     handleFeedForm(req, res);
   } else if (path === "/get_feedLogs" && req.method === "GET") {
-    const sql = "SELECT * FROM feed_schedules"; // Query to fetch all feed logs
+    const sql = "SELECT * FROM feed_schedules ORDER BY date DESC"; // Query to fetch all feed logs
     db_connection.query(sql, (err, results) => {
       if (err) {
         console.error("Error fetching feed logs:", err);
