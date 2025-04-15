@@ -11,6 +11,7 @@ const Checkout = () => {
   const { state } = location;
   const [showProcessing, setShowProcessing] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
   const purchaseType = location.pathname.includes('/tickets/') 
   ? 'tickets' 
   : location.pathname.includes('/membership') 
@@ -137,6 +138,7 @@ const Checkout = () => {
   
     const renderPurchaseDetails = () => {
       if (purchaseType === 'tickets') {
+        // console.log('tickets', state.tickets);
         return (
           <div className="purchase-details">
             <h3>Ticket Purchase Details</h3>
@@ -153,6 +155,14 @@ const Checkout = () => {
               return null;
             }).filter(Boolean)}
             <div className="total">
+              <div className='ticket-date-input'>
+                <label htmlFor="startDate">Choose Date:</label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+              </div>
               <h4>Total: ${state.total.toFixed(2)}</h4>
             </div>
           </div>
@@ -212,7 +222,8 @@ const Checkout = () => {
             const ticketPurchaseData = {
               tickets: state.tickets,
               total: state.total,
-              username: localStorage.getItem('username')
+              username: localStorage.getItem('username'),
+              start_date: startDate
             };
     
             // Make API call to process tickets

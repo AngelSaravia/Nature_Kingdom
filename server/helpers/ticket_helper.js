@@ -8,10 +8,16 @@ const insertTicketQuery = `
     purchase_date,
     start_date,
     end_date
-  ) VALUES (?, ?, ?, NOW(), NOW(), DATE_ADD(NOW(), INTERVAL 60 DAY))
+  ) VALUES (?, ?, ?, NOW(), ?, DATE_ADD(?, INTERVAL 24 HOUR))
 `;
 
-
+const prices = {
+  membership: 79.99,
+  adult: 24.99,
+  child: 14.99,
+  senior: 19.99,
+  member: 0
+};
 
 
 const getVisitorIdQuery = `
@@ -25,7 +31,8 @@ const processTicketPurchase = async (ticketData) => {
       username: ticketData.username,
       tickets: ticketData.tickets,
       prices: ticketData.prices,
-      total: ticketData.total
+      total: ticketData.total,
+      start_date: ticketData.start_date
     });
 
     // Log visitor query
@@ -40,6 +47,7 @@ const processTicketPurchase = async (ticketData) => {
     console.log('Found visitor_id:', visitor[0].visitor_id);
     const visitor_id = visitor[0].visitor_id;
     const purchasePromises = [];
+    const start_date = ticketData.start_date;
 
     // Log ticket processing
     console.log('Processing tickets...');
@@ -47,13 +55,15 @@ const processTicketPurchase = async (ticketData) => {
       if (quantity > 0) {
         console.log(`Creating ${quantity} tickets of type: ${type}`);
         for (let i = 0; i < quantity; i++) {
-          const price = ticketData.total / quantity;
+          const price = quantity * prices[type];
           console.log(`Inserting ticket - Type: ${type}, Price: ${price}`);
           purchasePromises.push(
             db_connection.promise().query(insertTicketQuery, [
               visitor_id,
               type,
               price,
+              start_date,
+              start_date
             ])
           );
         }
