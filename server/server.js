@@ -408,7 +408,7 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true, data: results }));
     });
-  } else if (path === "/get_exhibits" && req.method === "GET") {
+  /*} else if (path === "/get_exhibits" && req.method === "GET") {
     const sql = "SELECT * FROM exhibits"; // Query to fetch all exhibits
     db_connection.query(sql, (err, results) => {
       if (err) {
@@ -419,8 +419,7 @@ const server = http.createServer(async (req, res) => {
       }
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true, data: results }));
-    });
-  } else if (path === "/employee_form" && req.method === "POST") {
+    });*/
   } else if (path === "/employee_form" && req.method === "POST") {
     handleEmployeeForm(req, res);
   } else if (path === "/get_employees" && req.method === "GET") {

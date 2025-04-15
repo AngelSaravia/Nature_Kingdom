@@ -22,17 +22,18 @@ const FeedLogsForm = () => {
     const [submissionStatus, setSubmissionStatus] = useState(null);
     const [feedLogs, setfeedLogs] = useState([]);
 
+    const formatDateTime = (dateTime) => {
+        if (!dateTime) return null;
+        return new Date(dateTime).toISOString().slice(0, 16); // Format as 'YYYY-MM-DDTHH:mm'
+    };
+
     useEffect(() => {
         console.log("Location object:", location);
         const tupleData = location.state?.tuple || JSON.parse(sessionStorage.getItem('feedLogEditData') || null);
         
         if (tupleData) {
             console.log("Loading feed log data:", tupleData);
-            // Format date fields as TIMESTAMP strings
-            const formatDateTime = (dateTime) => {
-                if (!dateTime) return null;
-                return new Date(dateTime).toISOString().slice(0, 16); // Format as 'YYYY-MM-DD HH:mm:ss'
-            };
+            
             setFormData({
                 schedule_id: tupleData.schedule_id || "",
                 animal_id: tupleData.animal_id || "",
