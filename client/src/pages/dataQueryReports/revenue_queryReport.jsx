@@ -11,7 +11,12 @@ const filterOptions = [
     { label: "END DATE", type: "date", name: "end_date" },
 ];
 
-const columnHeaders = ["tuple_id", "type_of_product", "price", "purchase_date"];
+const columnHeaders = {
+    tuple_id: "Product ID",
+    type_of_product: "Type of Product",
+    price: "Price",
+    purchase_date: "Purchase Date",
+};
 
 const RevenueQueryReport = () => {
     const [filters, setFilters] = useState({
@@ -20,7 +25,15 @@ const RevenueQueryReport = () => {
         end_date: null
     });
     const [reportData, setReportData] = useState([]);
-
+    const [totals, setTotals] = useState({
+        totalTickets: 0,
+        totalTicketEarnings: 0,
+        totalGifts: 0,
+        totalGiftEarnings: 0,
+        totalMemberships: 0,
+        totalMembershipEarnings: 0,
+    });
+    
     useEffect(() => {
         fetchReport(false);
     }, []);
@@ -82,12 +95,39 @@ const RevenueQueryReport = () => {
             const data = await response.json();
             if (data.success) {
                 setReportData(data.data);
+                calculateTotals(data.data); //updating totals based on new data
             } else {
                 console.error("Error fetching report:", data.message);
             }
         } catch (error) {
             console.error("Error fetching report:", error);
         }
+    };
+
+    const calculateTotals = (data) => {
+        const totals = {
+            totalTickets: 0,
+            totalTicketEarnings: 0,
+            totalGifts: 0,
+            totalGiftEarnings: 0,
+            totalMemberships: 0,
+            totalMembershipEarnings: 0,
+        };
+
+        data.forEach((item) => {
+            if (item.type_of_product === "ticket") {
+                totals.totalTickets += 1;
+                totals.totalTicketEarnings += parseFloat(item.price);
+            } else if (item.type_of_product === "gift") {
+                totals.totalGifts += 1;
+                totals.totalGiftEarnings += parseFloat(item.price);
+            } else if (item.type_of_product === "membership") {
+                totals.totalMemberships += 1;
+                totals.totalMembershipEarnings += parseFloat(item.price);
+            }
+        });
+
+        setTotals(totals);
     };
 
     const onClearAll = () => {
@@ -102,9 +142,28 @@ const RevenueQueryReport = () => {
     return (
         <div className="revenue-query-report">
             <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={() => fetchReport(true)} onClearAll={onClearAll} filterOptions={filterOptions}/>
-            <div className="report-table-container">
-                <ReportTable data={reportData} columns={columnHeaders} />
-            </div>
+                <div className="report-content">
+                    <div className="report-table-container">
+                        <ReportTable data={reportData} columns={Object.keys(columnHeaders)} columnLabels={columnHeaders}/>
+                    </div>
+                    <div className="totals-container">
+                        <div className="totals-block">
+                            <h4>Tickets</h4>
+                            <p>Total Tickets Purchased: <span>{totals.totalTickets}</span></p>
+                            <p>Total Ticket Earnings: <span>${totals.totalTicketEarnings.toFixed(2)}</span></p>
+                        </div>
+                        <div className="totals-block">
+                            <h4>Gifts</h4>
+                            <p>Total Gifts Purchased: <span>{totals.totalGifts}</span></p>
+                            <p>Total Giftshop Earnings: <span>${totals.totalGiftEarnings.toFixed(2)}</span></p>
+                        </div>
+                        <div className="totals-block">
+                            <h4>Memberships</h4>
+                            <p>Total Memberships Purchased: <span>{totals.totalMemberships}</span></p>
+                            <p>Total Membership Earnings: <span>${totals.totalMembershipEarnings.toFixed(2)}</span></p>
+                        </div>
+                    </div>
+                </div>
         </div>
     );
 };

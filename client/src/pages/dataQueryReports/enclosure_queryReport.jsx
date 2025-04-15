@@ -18,7 +18,18 @@ const filterOptions = [
   { label: "EXHIBIT NAME", type: "checkbox", name: "exhibit_name", options: ['Feather Fiesta','Creepy Crawlies','Tundra Treasures','Sunlit Savanna','Rainforest Rumble','Willowing Wetlands','Desert Mirage','Underwater Utopia'] },
 ];
 
-const columnHeaders = ["name", "current_capacity", "capacity", "location", "opens_at", "closes_at", "status", "temp_control", "manager_name", "exhibit_name"];
+const columnHeaders = {
+  name: "Enclosure Name",
+  current_capacity: "Current Capacity",
+  capacity: "Maximum Capacity",
+  location: "Location",
+  opens_at: "Opening Time",
+  closes_at: "Closing Time",
+  status: "Status",
+  temp_control: "Temperature Control",
+  manager_name: "Manager Name",
+  exhibit_name: "Exhibit Name",
+};
 
 const EnclosureQueryReport = () => {
   const [filters, setFilters] = useState({});
@@ -140,9 +151,9 @@ const EnclosureQueryReport = () => {
     <div className="enclosure-query-report">
       <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
       <div className="report-table-container">
-        <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
+        <ReportTable data={reportData} columns={Object.keys(columnHeaders)} renderActions={(tuple) => renderEditButton(tuple)} columnLabels={columnHeaders}/>
         <div className="edit-enclosure-button-container">
-          <a href="/enclosure_form" target="_blank" rel="noopener noreferrer" className="edit-enclosure-button">Edit Enclosure</a>
+          <a href="/enclosure_form" className="edit-enclosure-button">Add Enclosure</a>
         </div>
       </div>
       </div>

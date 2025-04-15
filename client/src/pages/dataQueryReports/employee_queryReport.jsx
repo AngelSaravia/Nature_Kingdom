@@ -24,7 +24,23 @@ const filterOptions = [
     { label: "MANAGER EMAIL", type: "text", name: "manager_email"},
 ];
 
-const columnHeaders = ["first_name", "last_name", "user_name", "department_name", "date_of_birth", "street_address", "city", "state", "zip_code", "country", "salary", "gender", "email", "phone", "manager_email"];
+const columnHeaders = {
+  first_name: "First Name",
+  last_name: "Last Name",
+  user_name: "User Name",
+  department_name: "Department Name",
+  date_of_birth: "Date of Birth",
+  street_address: "Street Address",
+  city: "City",
+  state: "State",
+  zip_code: "Zip Code",
+  country: "Country",
+  salary: "Salary",
+  gender: "Gender",
+  email: "Email",
+  phone: "Phone Number",
+  manager_email: "Manager Email",
+};
 
 const EmployeeQueryReport = () => {
     const [filters, setFilters] = useState({});
@@ -159,10 +175,10 @@ const EmployeeQueryReport = () => {
         <div className="employee-query-report">
           <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
           <div className="report-table-container">
-          <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
+          <ReportTable data={reportData} columns={Object.keys(columnHeaders)} renderActions={(tuple) => renderEditButton(tuple)} columnLabels={columnHeaders}/>
           <div className="edit-employee-button-container">
 
-            <a href="/employee_form" target="_blank" rel="noopener noreferrer" className="edit-employee-button">Edit Employee</a>
+            <a href="/employee_form" className="edit-employee-button">Add Employee</a>
 
           </div>
         </div>

@@ -14,7 +14,14 @@ const filterOptions = [
     { label: "HEALTH STATUS", type: "checkbox", name: "health_status", options: ["HEALTHY", "NEEDS CARE", "CRITICAL"] },
 ];
 
-const columnHeaders = ["animal_name", "enclosure_name", "employee_name", "date", "health_status", "summary"];
+const columnHeaders = {
+    animal_name: "Animal Name",
+    enclosure_name: "Enclosure Name",
+    employee_name: "Employee Name",
+    date: "Feed Schedule Date",
+    health_status: "Health Status",
+    summary: "Summary",
+};
 
 const FeedLogsQueryReport = () => {
     const[filters, setFilters] = useState({});
@@ -141,7 +148,7 @@ const FeedLogsQueryReport = () => {
         <div className="feedLogs-query-report">
           <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
           <div className="report-table-container">
-          <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
+          <ReportTable data={reportData} columns={Object.keys(columnHeaders)} renderActions={(tuple) => renderEditButton(tuple)} columnLabels={columnHeaders}/>
           <div className="edit-feedLogs-button-container">
             <Link to="/feedLog_form" className="edit-feedLogs-button">Add Feed Logs</Link>
           </div>

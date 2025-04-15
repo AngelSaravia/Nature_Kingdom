@@ -3,7 +3,7 @@ import InputFields from "./inputs.jsx";
 import styles from "./forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const FeedLogsForm = () => {
@@ -21,6 +21,7 @@ const FeedLogsForm = () => {
 
     const [submissionStatus, setSubmissionStatus] = useState(null);
     const [feedLogs, setfeedLogs] = useState([]);
+    const [isEditMode, setIsEditMode] = useState(false); // New state to track if data is being passed
 
     const formatDateTime = (dateTime) => {
         if (!dateTime) return null;
@@ -43,11 +44,13 @@ const FeedLogsForm = () => {
                 health_status: tupleData.health_status || "",
                 summary: tupleData.summary || "",
             });
+            setIsEditMode(true); // Set edit mode to true if data is passed
             
             // Clear the sessionStorage after use
             sessionStorage.removeItem('feedLogEditData');
         } else {
             console.log("No feed log data found - creating new form");
+            setIsEditMode(false); // Set edit mode to false if no data is passed
         }
         fetch(`${API_BASE_URL}/get_feedLogs`)
             .then(response => response.json())
@@ -143,6 +146,11 @@ const FeedLogsForm = () => {
 
     return (
         <div className={styles.formContainer}>
+            <div className={styles.queryReportLink}>
+                <Link to="/query_report/feedLogs" className={styles.queryReportButton}>
+                    View Feed Logs Query Report
+                </Link>
+            </div>
             <h2 className={styles.formTitle}>FEED LOGS DATA ENTRY FORM</h2>
             <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
                 <div className={styles.formRow}>
@@ -174,9 +182,14 @@ const FeedLogsForm = () => {
                 </div>
 
                 <div className={styles.buttonContainer}>
-                    <button type="button" onClick={() => handleSubmit("add")}>ADD</button>
-                    <button type="button" onClick={() => handleSubmit("update")}>MODIFY</button>
-                    <button type="button" onClick={() => handleSubmit("delete")}>DELETE</button>
+                    {isEditMode ? (
+                        <>
+                            <button type="button" onClick={() => handleSubmit("update")}>MODIFY</button>
+                            <button type="button" onClick={() => handleSubmit("delete")}>DELETE</button>
+                        </>
+                    ) : (
+                        <button type="button" onClick={() => handleSubmit("add")}>ADD</button>
+                    )}
                 </div>
 
                 {submissionStatus && <p className={styles.statusMessage}>{submissionStatus}</p>}

@@ -1,7 +1,7 @@
 import React from "react";
 import "./reportStyles.css";
 
-const ReportTable = ({ data, columns, renderActions }) => {
+const ReportTable = ({ data, columns, renderActions, columnLabels }) => {
   return (
     <div className="report-table">
       <h3>Report</h3>
@@ -10,7 +10,7 @@ const ReportTable = ({ data, columns, renderActions }) => {
           <thead>
             <tr>
               {columns.map((col) => (
-                <th key={col}>{col}</th>
+                <th key={col}>{columnLabels[col] || col}</th> // Use columnLabels if available
               ))}
               {renderActions && <th>Actions</th>}
             </tr>
@@ -21,7 +21,7 @@ const ReportTable = ({ data, columns, renderActions }) => {
                 {columns.map((col) => (
                   <td key={col}>
                     {/* Format specific date-related columns */}
-                    {["date", "start_date", "end_date", "purchase_date", "eventDate"].includes(col) && row[col]
+                    {["date", "start_date", "end_date", "purchase_date", "eventDate", "date_of_birth", "followup"].includes(col) && row[col]
                       ? new Date(row[col]).toISOString().split("T")[0] // Format to YYYY-MM-DD
                       : row[col]}
                   </td>

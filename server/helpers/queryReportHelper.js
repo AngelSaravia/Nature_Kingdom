@@ -69,7 +69,11 @@ const handleQueryReport = (req, res) => {
                         } else if (key.startsWith('visitors.') || key === 'membership_status') {           
                             handleVisitorFilters(key, value, conditions, values);
                         } else if (key.startsWith('enclosures.')) {
-                            handleEnclosureFilters(key, value, conditions, values, entity_type);
+                            if (entity_type === 'animals') {
+                                handleAnimalEnclosureFilters(key, value, conditions, values); // New handler for animals
+                            } else if (entity_type === 'enclosures') {
+                                handleEnclosureFilters(key, value, conditions, values, entity_type);
+                            }
                         } else if (key.startsWith('events.')) {
                             handleEventFilters(key, value, conditions, values);
                         } else if (key.startsWith('tickets.')) {
@@ -155,8 +159,8 @@ function handleAnimalFilters(key, value, conditions, values) {
             values.push(...valueArray);
         }
     } else if (key === "enclosures.name") {
-        console.log("Matched enclosures.name filter"); // Debugging log
-        const valueArray = Array.isArray(value) ? value : value.split(',');
+        console.log("Processing enclosures.name filter with value:", value); // Debugging
+        const valueArray = Array.isArray(value) ? value : value.split(",");
         if (valueArray.length > 0) {
             conditions.push(`enclosures.name IN (${valueArray.map(() => '?').join(', ')})`);
             values.push(...valueArray);
@@ -165,6 +169,17 @@ function handleAnimalFilters(key, value, conditions, values) {
         console.log("Falling into else block for key:", key); // Debugging log
         conditions.push(`${key} LIKE ?`);
         values.push(`%${value}%`);
+    }
+}
+function handleAnimalEnclosureFilters(key, value, conditions, values) {
+    if (key === "enclosures.name") {
+        const valueArray = Array.isArray(value) ? value : value.split(",");
+        if (valueArray.length > 0) {
+            conditions.push(`enclosures.name IN (${valueArray.map(() => '?').join(', ')})`);
+            values.push(...valueArray);
+        }
+    } else {
+        console.log("Unhandled filter for Animal Enclosure:", key); // Debugging
     }
 }
 function handleVisitorFilters(key, value, conditions, values) {
