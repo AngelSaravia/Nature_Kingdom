@@ -21,11 +21,12 @@ const ManagerDash = () => {
     initialFetch();
   }, []);
 
-  console.log("manager type:", managerType)
+  // console.log("manager type:", managerType)
+  localStorage.setItem("managerType", managerType);
 
   return (
     <div className="dashboard-container">
-      <div className="dashboard-card">
+      <div className="dashboard-card ">
         <h1 className="dashboard-title">Manager Dashboard</h1>
 
         {/* Dashboard Buttons */}
