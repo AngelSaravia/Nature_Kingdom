@@ -96,7 +96,7 @@ const getUserActiveTickets = async (username) => {
   try {
     console.log('Fetching tickets for user:', username);
     const [tickets] = await db_connection.promise().query(query, [username]);
-    console.log('Found tickets:', tickets);
+    // console.log('Found tickets:', tickets);
 
     return {
       success: true,

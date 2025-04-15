@@ -19,7 +19,7 @@ const checkExistingVisitor = async (username) => {
       return null; // Or return a message to indicate no visitor found
     }
 
-    console.log("visitor check result:", visitor);
+    // console.log("visitor check result:", visitor);
     return visitor[0];
   } catch (error) {
     console.error("Error checking visitor status:", error);
