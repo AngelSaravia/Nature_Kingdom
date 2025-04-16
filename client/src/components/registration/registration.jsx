@@ -105,7 +105,7 @@ function Registration() {
     } else {
       const birthDate = new Date(formData.date_of_birth);
       const currentDate = new Date();
-    
+
       // Check if it's a valid date
       if (isNaN(birthDate.getTime())) {
         errors.date_of_birth = "Please enter a valid Date of Birth";
@@ -114,12 +114,16 @@ function Registration() {
         let age = currentDate.getFullYear() - birthDate.getFullYear();
         const birthMonth = birthDate.getMonth(); // Birth month (0-indexed)
         const currentMonth = currentDate.getMonth(); // Current month (0-indexed)
-    
+
         // If the birthday hasn't occurred yet this year (considering month and day)
-        if (currentMonth < birthMonth || (currentMonth === birthMonth && currentDate.getDate() < birthDate.getDate())) {
-          age--;  // Subtract 1 if the birthday hasn't passed yet this year
+        if (
+          currentMonth < birthMonth ||
+          (currentMonth === birthMonth &&
+            currentDate.getDate() < birthDate.getDate())
+        ) {
+          age--; // Subtract 1 if the birthday hasn't passed yet this year
         }
-    
+
         // Validate age range: 0 to 120
         if (age < 0 || age > 120) {
           errors.date_of_birth = "Please enter a valid Date of Birth";
@@ -161,7 +165,7 @@ function Registration() {
       errors.zipcode =
         "Please enter a valid zip code (e.g., 12345 or 12345-6789)";
     }
-    
+
     if (!formData.gender) {
       errors.gender = "Gender selection is required";
     }
@@ -203,7 +207,9 @@ function Registration() {
 
       const correctedFormData = {
         ...formData,
-        date_of_birth: new Date(formData.date_of_birth).toISOString().split('T')[0], 
+        date_of_birth: new Date(formData.date_of_birth)
+          .toISOString()
+          .split("T")[0],
       };
 
       try {
@@ -455,7 +461,7 @@ function Registration() {
           </div>
         </div>
 
-        <label  >GENDER (choose one)</label>
+        <label>GENDER (choose one)</label>
         <div className="form-group">
           <select
             name="gender"
@@ -475,8 +481,6 @@ function Registration() {
           )}
         </div>
 
-                    
-
         <div className="form-actions">
           <button type="button" onClick={resetForm} disabled={isSubmitting}>
             Reset
@@ -485,7 +489,6 @@ function Registration() {
             {isSubmitting ? "Submitting..." : "Submit"}
           </button>
         </div>
-        
       </form>
     </div>
   );

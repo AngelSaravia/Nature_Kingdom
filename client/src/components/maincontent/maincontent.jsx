@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./maincontent.css";
 import DonationImage from "../../zoo_pictures/baby_cougar.jpg";
+import MyCalendar from "../../pages/events/calendar";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5004";
 
@@ -71,30 +72,8 @@ const MainContent = () => {
           </Link>
         </div>
 
-        <div className="calendar">
-          <div className="calendar-header">
-            <h3>{currentMonth}</h3>
-          </div>
-          <div className="calendar-days">
-            <div className="weekdays">
-              <div>Su</div>
-              <div>Mo</div>
-              <div>Tu</div>
-              <div>We</div>
-              <div>Th</div>
-              <div>Fr</div>
-              <div>Sa</div>
-            </div>
-            {/* Calendar grid would be dynamically generated */}
-            <div className="calendar-grid">
-              {/* This would typically be generated programmatically */}
-              {/* Sample of a few days */}
-              <div className="day prev-month">30</div>
-              <div className="day">1</div>
-              <div className="day">2</div>
-              {/* ... other days */}
-            </div>
-          </div>
+        <div className="mini-calendar">
+          <MyCalendar showOnlyCurrentMonth={true} showTooltip={false} />
         </div>
 
         {/* Donation Section */}
@@ -126,8 +105,8 @@ const MainContent = () => {
             {loading ? (
               <div className="loading-spinner">Loading events...</div>
             ) : events.length > 0 ? (
-              events.map((event) => (
-                <div key={event.id} className="event-card">
+              events.map((event, index) => (
+                <div key={event.id || `event-${index}`} className="event-card">
                   <h3>{event.name}</h3>
                   <p className="event-meta">
                     Date:{" "}
@@ -145,14 +124,14 @@ const MainContent = () => {
                       alt={event.name}
                       className="event-image"
                       onError={(e) => {
-                        e.target.style.display = "none"; // Hide image if it fails to load
+                        e.target.style.display = "none";
                       }}
                     />
                   )}
                 </div>
               ))
             ) : (
-              <p>No upcoming events scheduled.</p>
+              <div className="no-events">No upcoming events found.</div>
             )}
           </div>
         </div>
