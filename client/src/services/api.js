@@ -249,6 +249,161 @@ export const getClockIn = async (email) => {
     throw error;
   }
 };
+export const getManagerType = async (employeeId) => {
+  try {
+    const empId = employeeId || localStorage.getItem("employeeId") || "1";
+    console.log("employeeId", empId);
+
+    const response = await apiClient.get(
+      `/api/getManagerType?employeeId=${empId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching Manager Type:", error);
+
+    return { success: false, data: null };
+  }
+};
+
+const getAuthHeaders = () => {
+  const token = localStorage.getItem("token");
+  return {
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
+  };
+};
+
+export const getAnimalHealthStatus = async () => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/api/animals/health-status`,
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching animal health status:", error);
+    throw error;
+  }
+};
+
+export const getCriticalAnimals = async () => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/api/animals/critical-stats`,
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching critical animals:", error);
+    throw error;
+  }
+};
+
+export const updateAnimalHealthStatus = async (animalId, newStatus) => {
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/api/animals/${animalId}/health`,
+      { healthStatus: newStatus },
+      { headers: getAuthHeaders() }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error updating animal health status:", error);
+    throw error;
+  }
+};
+
+export const getAnimalMedicalRecords = async (animalId) => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/api/medical-records/animal/${animalId}`,
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching animal medical records:", error);
+    throw error;
+  }
+};
+
+export const getTodaysMedicalProcedures = async () => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/api/medical-procedures/today`,
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching today's medical procedures:", error);
+    throw error;
+  }
+};
+
+export const getRecentMedicalAlerts = async () => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/api/medical-alerts/recent`,
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching recent medical alerts:", error);
+    throw error;
+  }
+};
+
+export const createMedicalRecord = async (recordData) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/api/medical-records`,
+      recordData,
+      { headers: getAuthHeaders() }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error creating medical record:", error);
+    throw error;
+  }
+};
+
+export const updateMedicalRecord = async (recordId, recordData) => {
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/api/medical-records/${recordId}`,
+      recordData,
+      { headers: getAuthHeaders() }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error updating medical record:", error);
+    throw error;
+  }
+};
+
+export const deleteMedicalRecord = async (recordId) => {
+  try {
+    const response = await axios.delete(
+      `${API_BASE_URL}/api/medical-records/${recordId}`,
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error deleting medical record:", error);
+    throw error;
+  }
+};
 
 export const clockIn = async (email) => {
   try {

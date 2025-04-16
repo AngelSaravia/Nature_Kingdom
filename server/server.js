@@ -38,6 +38,8 @@ const getClockInStatus = require("./helpers/ClockInHelper");
 const getEmployeeTimesheets = require("./helpers/timeSheetsHelper");
 const alertsHelper = require("./helpers/vetNotificationHelper");
 const managerAlertsHelper = require("./helpers/managerNotificationHelper");
+const getManagerType = require("./helpers/managerTypeHelper");
+const handleMedicalRecords = require("./helpers/medicalRecordsHelper");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -107,6 +109,11 @@ const server = http.createServer(async (req, res) => {
         JSON.stringify({ success: true, data: results.map((row) => row.name) })
       ); // Return only the names
     });
+  } else if (
+    path.startsWith("/medical_records") ||
+    path === "/get_medical_records"
+  ) {
+    handleMedicalRecords(req, res);
   } else if (path === "/query_report/events" && req.method === "POST") {
     handleQueryReport(req, res);
   } else if (path === "/query_report/employees" && req.method === "POST") {
@@ -220,12 +227,12 @@ const server = http.createServer(async (req, res) => {
   // Manager alerts endpoint
   else if (path === "/api/manager/alerts" && req.method === "GET") {
     try {
-      console.log("DEBUG: Received request to /api/manager/alerts");
-      console.log("DEBUG: Full query parameters:", req.query);
+      // console.log("DEBUG: Received request to /api/manager/alerts");
+      // console.log("DEBUG: Full query parameters:", req.query);
 
       const employeeId = req.query.employeeId;
-      console.log("DEBUG: Extracted employeeId:", employeeId);
-      console.log("DEBUG: Type of employeeId:", typeof employeeId);
+      // console.log("DEBUG: Extracted employeeId:", employeeId);
+      // console.log("DEBUG: Type of employeeId:", typeof employeeId);
 
       if (!employeeId) {
         console.log("DEBUG: Missing employeeId parameter");
@@ -249,14 +256,10 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      console.log("DEBUG: About to call managerAlertsHelper.getManagerAlerts");
+      // console.log("DEBUG: About to call managerAlertsHelper.getManagerAlerts");
       managerAlertsHelper
         .getManagerAlerts(employeeId)
         .then((alerts) => {
-          console.log(
-            "DEBUG: Successfully fetched alerts, count:",
-            alerts.length
-          );
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ success: true, data: alerts }));
         })
@@ -408,7 +411,7 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true, data: results }));
     });
-  } else if (path === "/get_exhibits" && req.method === "GET") {
+    /*} else if (path === "/get_exhibits" && req.method === "GET") {
     const sql = "SELECT * FROM exhibits"; // Query to fetch all exhibits
     db_connection.query(sql, (err, results) => {
       if (err) {
@@ -419,8 +422,7 @@ const server = http.createServer(async (req, res) => {
       }
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true, data: results }));
-    });
-  } else if (path === "/employee_form" && req.method === "POST") {
+    });*/
   } else if (path === "/employee_form" && req.method === "POST") {
     handleEmployeeForm(req, res);
   } else if (path === "/get_employees" && req.method === "GET") {
@@ -510,7 +512,7 @@ const server = http.createServer(async (req, res) => {
   } else if (path === "/feedLog_form" && req.method === "POST") {
     handleFeedForm(req, res);
   } else if (path === "/get_feedLogs" && req.method === "GET") {
-    const sql = "SELECT * FROM feed_schedules"; // Query to fetch all feed logs
+    const sql = "SELECT * FROM feed_schedules ORDER BY date DESC"; // Query to fetch all feed logs
     db_connection.query(sql, (err, results) => {
       if (err) {
         console.error("Error fetching feed logs:", err);
@@ -523,6 +525,24 @@ const server = http.createServer(async (req, res) => {
     });
   } else if (path === "/medical_form" && req.method === "POST") {
     handleMedicalForm(req, res);
+  } else if (path === "/api/animals/health-status" && req.method === "GET") {
+    const sql =
+      "SELECT health_status, COUNT(*) as total FROM animals GROUP BY health_status";
+
+    db_connection.query(sql, (err, results) => {
+      if (err) {
+        console.error("Error fetching animal health status:", err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Database error" }));
+        return;
+      }
+
+      // Log results for debugging
+      console.log("Health status results:", results);
+
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: results }));
+    });
   } else if (path === "/get_medical_records" && req.method === "GET") {
     const sql = "SELECT * FROM medical_records";
     db_connection.query(sql, (err, results) => {
@@ -658,10 +678,10 @@ const server = http.createServer(async (req, res) => {
       }
     });
   } else if (path === "/api/clock_in" && req.method === "GET") {
-    console.log("Received clock in request");
+    // console.log("Received clock in request");
     const urlParams = new URL(req.url, `http://${req.headers.host}`);
     const email = urlParams.searchParams.get("email");
-    console.log("email", email);
+    // console.log("email", email);
 
     if (!email) {
       res.writeHead(400, { "Content-Type": "application/json" });
@@ -670,7 +690,7 @@ const server = http.createServer(async (req, res) => {
       getClockInStatus.getClockInStatus(email, res);
     }
   } else if (path === "/api/set_clock_in" && req.method === "GET") {
-    console.log("Received set clock-in request");
+    // console.log("Received set clock-in request");
     const urlParams = new URL(req.url, `http://${req.headers.host}`);
     const email = urlParams.searchParams.get("email");
     // console.log("email", email);
@@ -682,7 +702,7 @@ const server = http.createServer(async (req, res) => {
       getClockInStatus.setClockInStatus(email, false, res);
     }
   } else if (path === "/api/set_clock_out" && req.method === "GET") {
-    console.log("Received set clock-out request");
+    // console.log("Received set clock-out request");
     const urlParams = new URL(req.url, `http://${req.headers.host}`);
     const email = urlParams.searchParams.get("email");
     // console.log("email", email);
@@ -692,6 +712,20 @@ const server = http.createServer(async (req, res) => {
       res.end(JSON.stringify({ success: false, message: "email is required" }));
     } else {
       getClockInStatus.setClockOutStatus(email, true, res);
+    }
+  } else if (path === "/api/getManagerType" && req.method === "GET") {
+    console.log("Received getManagerType Request");
+    const urlParams = new URL(req.url, `http://${req.headers.host}`);
+    const employeeId = urlParams.searchParams.get("employeeId");
+    console.log("employeeId", employeeId);
+
+    if (!employeeId) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(
+        JSON.stringify({ success: false, message: "employeeId is required" })
+      );
+    } else {
+      getManagerType.getManagerType(employeeId, res);
     }
   } else if (path === "/api/employee_timesheets" && req.method === "GET") {
     console.log("Received employee timesheets request");

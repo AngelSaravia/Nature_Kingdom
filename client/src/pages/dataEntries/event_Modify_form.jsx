@@ -300,11 +300,6 @@ const EventForm = () => {
         </div>
 
         <div className={styles.buttonContainer}>
-          {location.state?.noadd ? (
-            <button type="button" onClick={() => handleSubmit("add")}>
-              ADD
-            </button>
-          ) : null}
           <button type="button" onClick={() => handleSubmit("update")}>
             MODIFY
           </button>

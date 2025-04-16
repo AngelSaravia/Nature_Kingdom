@@ -156,7 +156,6 @@ const CriticalAnimalsReport = () => {
   const initiateHealthStatusChange = (animal) => {
     const nextStatus = getNextHealthStatusValue(animal.health_status);
 
-    // For any status change, show the popup
     setPopupState({
       isOpen: true,
       animal: animal,
@@ -164,12 +163,11 @@ const CriticalAnimalsReport = () => {
     });
   };
 
-  // Function for confirming the health status change
   const confirmHealthStatusChange = () => {
     if (popupState.animal) {
-      // Apply the health status change
       handleHealthStatusProgression(popupState.animal);
-      //window.location.reload(); optional if you want to reload
+
+      window.location.reload();
     }
     // Close the popup
     setPopupState({
@@ -264,6 +262,9 @@ const CriticalAnimalsReport = () => {
 
   const handleViewMedicalHistory = async (animal) => {
     try {
+      // Set loading state if needed
+      setSelectedAnimal(animal);
+
       const response = await fetch(
         `${API_BASE_URL}/medical_records/animal/${animal.animal_id}`,
         {
@@ -275,8 +276,8 @@ const CriticalAnimalsReport = () => {
       const data = await response.json();
 
       if (data.success) {
+        // Store the medical records for this specific animal
         setMedicalHistory(data.data);
-        setSelectedAnimal(animal);
         setShowMedicalHistory(true);
       } else {
         console.error("Failed to fetch medical history:", data.message);
@@ -288,20 +289,44 @@ const CriticalAnimalsReport = () => {
     }
   };
 
+  const formatDateYMD = (dateString) => {
+    if (!dateString) return "Unknown";
+
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0]; // Returns YYYY-MM-DD format
+  };
+
   const MedicalFormContent = ({ animal, onClose }) => {
+    // Check if there's record data stored in sessionStorage
+    const storedRecordData = sessionStorage.getItem("medicalRecordEditData");
+    const initialRecordData = storedRecordData
+      ? JSON.parse(storedRecordData)
+      : null;
+
     const [formData, setFormData] = useState({
-      record_id: "",
+      record_id: initialRecordData ? initialRecordData.record_id : "",
       animal_id: animal ? animal.animal_id : "",
-      employee_id: "",
+      employee_id: initialRecordData ? initialRecordData.employee_id : "",
       enclosure_id: animal ? animal.enclosure_id : "",
-      location: "",
-      date: new Date().toISOString().slice(0, 10),
-      record_type: "",
-      diagnosis: "",
-      treatment: "",
-      followup: "",
-      additional: "",
+      location: initialRecordData ? initialRecordData.location : "",
+      date: initialRecordData
+        ? formatDateYMD(initialRecordData.date)
+        : formatDateYMD(new Date()),
+      record_type: initialRecordData ? initialRecordData.record_type : "",
+      diagnosis: initialRecordData ? initialRecordData.diagnosis : "",
+      treatment: initialRecordData ? initialRecordData.treatment : "",
+      followup: initialRecordData
+        ? formatDateYMD(initialRecordData.followup)
+        : "",
+      additional: initialRecordData ? initialRecordData.additional : "",
     });
+
+    // Clear the stored record data after loading it
+    useEffect(() => {
+      if (storedRecordData) {
+        sessionStorage.removeItem("medicalRecordEditData");
+      }
+    }, []);
 
     const [submissionStatus, setSubmissionStatus] = useState(null);
     const [records, setRecords] = useState([]);
@@ -329,6 +354,17 @@ const CriticalAnimalsReport = () => {
     // Handles only numeric input
     const handleNumericInput = (event) => {
       event.target.value = event.target.value.replace(/\D/g, "");
+    };
+
+    // After successful submission, refresh related data
+    const handleAfterSubmit = async () => {
+      // Clear form and reload data
+      fetchCriticalAnimals();
+
+      // If user is viewing medical history for an animal, refresh that too
+      if (selectedAnimal) {
+        handleViewMedicalHistory(selectedAnimal);
+      }
     };
 
     // Handle form submission
@@ -399,10 +435,8 @@ const CriticalAnimalsReport = () => {
             });
           }
 
-          // After successful submit, refresh critical animals data
-          if (action === "add" && formData.record_type) {
-            fetchCriticalAnimals();
-          }
+          // After successful submit, refresh data
+          handleAfterSubmit();
         }
       } catch (error) {
         console.error("Error submitting form:", error);
@@ -610,23 +644,31 @@ const CriticalAnimalsReport = () => {
     );
   };
 
-  // Medical History Component
+  // Medical History Component with enhanced display
   const MedicalHistoryContent = ({ animal, medicalHistory, onClose }) => {
     return (
       <div className="medical-history-container">
-        <h3>Medical History - {animal.animal_name}</h3>
+        <h3>
+          Medical History - {animal.animal_name} (ID: {animal.animal_id})
+        </h3>
 
         {medicalHistory.length === 0 ? (
           <p>No medical records found for this animal.</p>
         ) : (
           <div className="medical-history-list">
             {medicalHistory.map((record, index) => (
-              <div key={index} className="medical-record-card">
+              <div
+                key={record.record_id || index}
+                className="medical-record-card"
+              >
                 <div className="record-header">
                   <span className="record-date">
-                    {new Date(record.date).toLocaleDateString()}
+                    {formatDateYMD(record.date)}
                   </span>
                   <span className="record-type">{record.record_type}</span>
+                  <span className="record-id">
+                    Record ID: {record.record_id}
+                  </span>
                 </div>
 
                 <div className="record-details">
@@ -651,7 +693,7 @@ const CriticalAnimalsReport = () => {
                   {record.followup && (
                     <div className="record-field">
                       <strong>Follow-up:</strong>{" "}
-                      {new Date(record.followup).toLocaleDateString()}
+                      {formatDateYMD(record.followup)}
                     </div>
                   )}
 
@@ -671,7 +713,6 @@ const CriticalAnimalsReport = () => {
                         JSON.stringify(record)
                       );
                       // Open the edit form with this record data
-                      setSelectedAnimal(animal);
                       setShowMedicalHistory(false);
                       setShowMedicalFormPopup(true);
                     }}
