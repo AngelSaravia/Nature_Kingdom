@@ -260,10 +260,6 @@ const server = http.createServer(async (req, res) => {
       managerAlertsHelper
         .getManagerAlerts(employeeId)
         .then((alerts) => {
-          console.log(
-            // "DEBUG: Successfully fetched alerts, count:",
-            alerts.length
-          );
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ success: true, data: alerts }));
         })
