@@ -611,7 +611,8 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({ success: false, message: "Server error" }));
       }
     });
-  } else if (path.startsWith("/api/tickets/user/") && req.method === "GET") {
+  } 
+  else if (path.startsWith("/api/tickets/user/") && req.method === "GET") {
     try {
       const username = path.split("/").pop();
       const result = await ticketHelper.getUserActiveTickets(username);
