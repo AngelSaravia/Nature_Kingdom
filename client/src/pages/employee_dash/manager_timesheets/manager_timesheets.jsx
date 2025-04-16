@@ -22,6 +22,7 @@ const ManagerTimesheets = () => {
       const response = await getEmployeeTimesheets(email);
       if (response.success && Array.isArray(response.data)) {
         setTimesheets(response.data);
+        console.log("Timesheets fetched successfully:", response.data);
       } else {
         console.warn("Unexpected response format:", response);
         setTimesheets([]);
@@ -110,7 +111,7 @@ const ManagerTimesheets = () => {
 
         {/* Date Range Filter Inputs */}
         <div className="date-filter">
-        <p className="date-filter-text">Filter by Date Range:</p>
+          <p className="date-filter-text">Filter by Date Range:</p>
           <input
             type="date"
             value={startDate}
@@ -158,18 +159,32 @@ const ManagerTimesheets = () => {
                     <thead>
                       <tr>
                         <th>Date</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
                         <th>Hours Worked</th>
                         <th>Hours Paid</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {records.map((r, index) => (
-                        <tr key={index}>
-                          <td>{r.date || "—"}</td>
-                          <td>{r.hours ?? "—"}</td>
-                          <td>{r.hours_paid ?? "—"}</td>
-                        </tr>
-                      ))}
+                      {records.map((r, index) => {
+                        const formattedDate = r.date
+                          ? new Date(r.date).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                            })
+                          : "—";
+              
+                        return (
+                          <tr key={index}>
+                            <td>{formattedDate}</td>
+                            <td>{r.clock_in ? new Date(r.clock_in).toLocaleTimeString() : "—"}</td>
+                            <td>{r.clock_out ? new Date(r.clock_out).toLocaleTimeString() : "—"}</td>
+                            <td>{r.hours ?? "—"}</td>
+                            <td>{r.hours_paid ?? "—"}</td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
