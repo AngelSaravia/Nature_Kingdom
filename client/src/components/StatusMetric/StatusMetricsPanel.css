@@ -1,0 +1,81 @@
+/* StatusMetricsPanel.css */
+.status-panel {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.status-panel-heading {
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: 600;
+}
+
+.status-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.status-metric-card {
+  flex: 1;
+  min-width: 120px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.metric-value {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.metric-label {
+  font-size: 1rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.view-all-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.view-all-btn {
+  background-color: #4a89dc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.view-all-btn:hover {
+  background-color: #3a70c0;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .status-metrics {
+    flex-direction: column;
+  }
+
+  .status-metric-card {
+    min-width: 100%;
+  }
+}

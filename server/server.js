@@ -529,6 +529,24 @@ const server = http.createServer(async (req, res) => {
     });
   } else if (path === "/medical_form" && req.method === "POST") {
     handleMedicalForm(req, res);
+  } else if (path === "/api/animals/health-status" && req.method === "GET") {
+    const sql =
+      "SELECT health_status, COUNT(*) as total FROM animals GROUP BY health_status";
+
+    db_connection.query(sql, (err, results) => {
+      if (err) {
+        console.error("Error fetching animal health status:", err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ success: false, message: "Database error" }));
+        return;
+      }
+
+      // Log results for debugging
+      console.log("Health status results:", results);
+
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: results }));
+    });
   } else if (path === "/get_medical_records" && req.method === "GET") {
     const sql = "SELECT * FROM medical_records";
     db_connection.query(sql, (err, results) => {

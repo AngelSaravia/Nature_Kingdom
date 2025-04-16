@@ -45,8 +45,6 @@ function ManagerHeader() {
 
       <nav className="nav-links">
         <Link to="/manager_dash">Dashboard</Link>
-        <Link to="/event_form">Events Form</Link>
-        <Link to="/enclosure_form">Enclosure Form</Link>
       </nav>
       <div className="user-menu">
         <ClockInComponent />
