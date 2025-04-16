@@ -17,36 +17,20 @@
 
 /* Main layout */
 .main-content-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Two equal columns */
+  display: flex;
   gap: 20px;
   padding: 20px;
   background-color: var(--zoo-green);
   font-family: "Arial", sans-serif;
 }
 
-/* Calendar section - takes full width of first column */
-.calendar-section {
-  grid-column: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* Events section - takes full width of second column */
-.events-section {
-  grid-column: 2;
-  display: flex;
-  flex-direction: column;
-}
-
-/*.calendar-section,
+.calendar-section,
 .events-section {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 20px;
-}*/
+}
 
 
 
@@ -98,9 +82,8 @@
   padding: 15px;
   display: flex;
   flex-direction: column;
-  height: 500px;
+  height: var(--card-height);
   box-sizing: border-box;
-  width: 100%; /* Take full width of container */
 }
 
 .calendar-header h3 {
@@ -306,52 +289,15 @@
 }
 
 /* Fix for full calendar display */
-.mini-calendar {
-  height: 400px; /* Adjust height as needed */
+.calendar-days {
   width: 100%;
-  margin-bottom: 20px;
 }
 
-.mini-calendar .rbc-calendar {
-  height: 100% !important;
-  width: 100% !important; /* Ensure calendar fills container */
-}
-
-.mini-calendar .rbc-month-view {
-  display: flex;
-  flex-direction: column;
-}
-
-.mini-calendar .rbc-month-row{
-  flex: 1;
-}
-.mini-calendar .rbc-day-bg {
-  flex: 1;
-}
-
-.mini-calendar .rbc-row-bg {
-  display: flex;
-}
-
-.mini-calendar .rbc-header {
-  padding: 5px 0;
-  font-size: 12px;
-}
-
-.mini-calendar .rbc-date-cell {
-  padding: 8px 4px;
-  font-size: 12px;
-}
-
-.mini-calendar .rbc-event {
-  font-size: 10px;
-  padding: 0 2px;
-}
-
-.mini-calendar .rbc-event-content {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+/* Weekday row */
+.weekday-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
 }
 
 /* Media queries for responsiveness */
@@ -372,6 +318,10 @@
     flex-direction: column;
   }
 
+  .day {
+    height: 25px;
+    width: 25px;
+  }
 
   .section-header h2 {
     font-size: 28px;

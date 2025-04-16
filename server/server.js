@@ -23,7 +23,7 @@ const handleVisitorForm = require("./helpers/visitorFormHelper");
 const handleMembershipForm = require("./helpers/membershipFormHelper");
 const handleMedicalForm = require("./helpers/medicalFormHelper");
 const handleCalendar = require("./helpers/calendar_helper");
-const handleGiftShop = require("./helpers/giftShop_helper");
+const giftShopHelper = require("./helpers/giftShop_helper");
 const handleGiftOrder = require("./helpers/order_helper");
 const handleAnimalsByEnclosure = require("./helpers/handleanimalEnclosures");
 const {
@@ -86,9 +86,31 @@ const server = http.createServer(async (req, res) => {
   } else if (path === "/calendar" && req.method === "GET") {
     handleCalendar(req, res);
   } else if (path === "/api/giftshop" && req.method === "GET") {
-    handleGiftShop(req, res);
+    giftShopHelper.handleGiftShop(req, res);
   } else if (path === "/api/giftshop/history" && req.method === "GET") {
     handleGiftShopHistory(req, res);
+  } else if (path === "/api/giftshop" && req.method === "POST") {
+    let body = '';
+    req.on('data', chunk => {
+        body += chunk;
+    });
+    req.on('end', () => {
+        const parsedBody = JSON.parse(body); 
+        giftShopHelper.addProduct(req, res, parsedBody);  
+    });
+  } else if (path === "/api/giftshop" && req.method === "PUT") {
+    let body = '';
+    req.on('data', chunk => {
+        body += chunk;
+    });
+    req.on('end', () => {
+        const parsedBody = JSON.parse(body);  
+        giftShopHelper.updateProduct(req, res, parsedBody);  
+    });
+  } else if (path === "/api/giftshop" && req.method === "DELETE") {
+    const productId = parsedUrl.query.product_id;  
+    giftShopHelper.deleteProduct(req, res, productId);  
+
   } else if (path === "/api/restock" && req.method === "POST") {
     handleGiftShopRestock.restockProduct(req, res);
   } else if (path === "/employee_login" && req.method === "POST") {

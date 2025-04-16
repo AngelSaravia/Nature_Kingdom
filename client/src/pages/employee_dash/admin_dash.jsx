@@ -32,34 +32,18 @@ const AdminDash = () => {
                 <div className="dashboard-single">
                     <button onClick={() => navigate("/query_report/visitors")} className="dashboard-button"> Visitors</button>
                 </div>
-            </div>
-          </div>
-          <div className="dashboard-box">
-            <h2 className="dashboard-heading">Add/Alter/Delete Data</h2>
-            <div className="dashboard-grid">
                 <div className="dashboard-single">
-                    <button onClick={() => navigate("/employee_form")} className="dashboard-button"> Employees</button>
+                    <button onClick={() => navigate("/query_report/revenue")} className="dashboard-button"> Revenue</button>
                 </div>
                 <div className="dashboard-single">
-                    <button onClick={() => navigate("/enclosure_form")} className="dashboard-button"> Enclosures</button>
+                    <button onClick={() => navigate("/query_report/feedlogs")} className="dashboard-button"> Feed Logs</button>
                 </div>
                 <div className="dashboard-single">
-                    <button onClick={() => navigate("/animal_form")} className="dashboard-button"> Animals</button>
-                </div>
-                <div className="dashboard-single">
-                    <button onClick={() => navigate("/event_form")} className="dashboard-button"> Events</button>
-                </div>
-                <div className="dashboard-single">
-                    <button onClick={() => navigate("/ticket_form")} className="dashboard-button"> Tickets</button>
-                </div>
-                <div className="dashboard-single">
-                    <button onClick={() => navigate("/visitor_form")} className="dashboard-button"> Visitors</button>
-                </div>
-                <div className="dashboard-single">
-                    <button onClick={() => navigate("/membership_form")} className="dashboard-button"> Memberships</button>
+                    <button onClick={() => navigate("/query_report/medicalRecords")} className="dashboard-button"> Medical Records</button>
                 </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
