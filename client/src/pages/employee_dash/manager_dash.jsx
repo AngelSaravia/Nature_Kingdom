@@ -303,7 +303,7 @@ const ManagerDash = () => {
   const salesMetrics = [
     {
       value: giftShopStats.totalPurchased,
-      label: "Total Items Purchased",
+      label: "Total Items Purchased from Giftshop",
       color: "#4a89dc", // Blue
     },
   ];
@@ -373,7 +373,7 @@ const ManagerDash = () => {
                           title="Sales Overview"
                           metrics={salesMetrics}
                           isLoading={isLoading}
-                          onViewAllClick={() => navigate("/giftshop_dash")}
+                          onViewAllClick={() => navigate("/query_report/giftshop")}
                           viewAllButtonText="View Sales Data"
                         />
                       </div>
@@ -450,7 +450,7 @@ const ManagerDash = () => {
                         title="Animal Health Overview"
                         metrics={animalHealthMetrics}
                         isLoading={isLoading}
-                        onViewAllClick={() => navigate("/animal_health")}
+                        onViewAllClick={() => navigate("/query_report/medicalRecords")}
                         viewAllButtonText="View All Animal Health Records"
                       >
                         {animalHealth.criticalAnimals?.length > 0 && (
@@ -507,6 +507,12 @@ const ManagerDash = () => {
                         className="dashboard-button"
                       >
                         View Timesheets
+                      </button>
+                      <button
+                        onClick={() => navigate("/query_report/revenue")}
+                        className="dashboard-button"
+                      >
+                        View Revenue Reports
                       </button>
                       {/* <button
                         onClick={() => navigate("/general_reports")}
