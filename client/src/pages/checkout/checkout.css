@@ -46,9 +46,32 @@
   
   .total {
     margin-top: 20px;
-    text-align: right;
+    display: flex;
+    justify-content: space-between;
     padding-top: 15px;
     border-top: 2px solid #4A8E51;
+  }
+
+  .ticket-date-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #2C5530;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 18px;
+    width: 25%;
+    transition: border-color 0.3s;
+  }
+  
+  .ticket-date-input:focus {
+    border-color: #4A8E51;
+    outline: none;
+  }
+
+  .ticket-date-input input{
+    height: 20px;
   }
   
   .total h4 {
