@@ -50,7 +50,6 @@ import "./App.css";
 import HeaderManager from "./components/header/headerManager";
 import GiftShop from "./pages/giftshop/GiftShop";
 import Exhibits from "./pages/exhibits/Exhibits";
-import Map from "./pages/exhibits/Map";
 import EnclosureByExhibit from "./pages/exhibits/EnclosuresByExhibit";
 import AnimalsByEnclosure from "./pages/exhibits/AnimalsByEnclosure";
 import GiftshopPurchases from "./pages/dashboard/giftshop-purchases/giftshop-purchases"
