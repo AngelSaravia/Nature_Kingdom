@@ -83,20 +83,32 @@ export const employeeLogin = async (email, password) => {
       password,
     });
 
+    console.log("Full API response:", response.data);
+
+    // Check for both lowercase and uppercase field name variations
+    const employee_id = response.data.employee_id || response.data.Employee_id;
+    const manager_id = response.data.manager_id || response.data.Manager_id;
+
+    // Extract other fields
     const { token, username, role } = response.data;
 
-    localStorage.setItem("username", username);
-    localStorage.setItem("email", email);
-    localStorage.setItem("token", token);
-    localStorage.setItem("role", role);
-
-    apiClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-    console.log("Employee login successful:", { username, role });
+    console.log("Extracted user data:", {
+      username,
+      role,
+      email,
+      employee_id,
+      manager_id,
+    });
 
     return {
       success: true,
-      userData: { username, email, role },
+      userData: {
+        username,
+        email,
+        role,
+        employee_id,
+        manager_id,
+      },
       token,
       role,
     };
@@ -207,7 +219,7 @@ export const createGiftOrder = async (orderData) => {
 
 export const getProductHistory = async () => {
   try {
-    const response = await apiClient.get('/api/giftshop/history');
+    const response = await apiClient.get("/api/giftshop/history");
     return response.data; // Returns an array of rows
   } catch (error) {
     console.error("Error fetching product history:", error);
@@ -237,6 +249,161 @@ export const getClockIn = async (email) => {
     throw error;
   }
 };
+export const getManagerType = async (employeeId) => {
+  try {
+    const empId = employeeId || localStorage.getItem("employeeId") || "1";
+    console.log("employeeId", empId);
+
+    const response = await apiClient.get(
+      `/api/getManagerType?employeeId=${empId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching Manager Type:", error);
+
+    return { success: false, data: null };
+  }
+};
+
+const getAuthHeaders = () => {
+  const token = localStorage.getItem("token");
+  return {
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
+  };
+};
+
+export const getAnimalHealthStatus = async () => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/api/animals/health-status`,
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching animal health status:", error);
+    throw error;
+  }
+};
+
+export const getCriticalAnimals = async () => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/api/animals/critical-stats`,
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching critical animals:", error);
+    throw error;
+  }
+};
+
+export const updateAnimalHealthStatus = async (animalId, newStatus) => {
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/api/animals/${animalId}/health`,
+      { healthStatus: newStatus },
+      { headers: getAuthHeaders() }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error updating animal health status:", error);
+    throw error;
+  }
+};
+
+export const getAnimalMedicalRecords = async (animalId) => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/api/medical-records/animal/${animalId}`,
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching animal medical records:", error);
+    throw error;
+  }
+};
+
+export const getTodaysMedicalProcedures = async () => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/api/medical-procedures/today`,
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching today's medical procedures:", error);
+    throw error;
+  }
+};
+
+export const getRecentMedicalAlerts = async () => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/api/medical-alerts/recent`,
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching recent medical alerts:", error);
+    throw error;
+  }
+};
+
+export const createMedicalRecord = async (recordData) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/api/medical-records`,
+      recordData,
+      { headers: getAuthHeaders() }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error creating medical record:", error);
+    throw error;
+  }
+};
+
+export const updateMedicalRecord = async (recordId, recordData) => {
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/api/medical-records/${recordId}`,
+      recordData,
+      { headers: getAuthHeaders() }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error updating medical record:", error);
+    throw error;
+  }
+};
+
+export const deleteMedicalRecord = async (recordId) => {
+  try {
+    const response = await axios.delete(
+      `${API_BASE_URL}/api/medical-records/${recordId}`,
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error deleting medical record:", error);
+    throw error;
+  }
+};
 
 export const clockIn = async (email) => {
   try {
@@ -260,6 +427,18 @@ export const clockOut = async (email) => {
   }
 };
 
-
+export const getEmployeeTimesheets = async (email) => {
+  try {
+    console.log(`Attempting to get timesheets regarding: ${email}`);
+    const response = await apiClient.get(
+      `/api/employee_timesheets?email=${email}`
+    );
+    // console.log("Response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching employee timesheets:", error);
+    throw error;
+  }
+};
 
 export default apiClient;

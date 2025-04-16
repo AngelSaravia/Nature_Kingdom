@@ -36,6 +36,8 @@ import MedicalForm from "./pages/dataEntries/medical_form";
 import FeedLogsForm from "./pages/dataEntries/feedLogs_form";
 import EventsPage from "./pages/events/EventsPage";
 import AnimalQueryReport from "./pages/dataQueryReports/animal_queryReport";
+import Zookeeper_QueryReport from "./pages/dataQueryReports/zookeeper_queryReport";
+import Zookeeper_ReportTable from "./pages/dataQueryReports/zookeeper_reportTable";
 import EventQueryReport from "./pages/dataQueryReports/event_queryReport";
 import EnclosureQueryReport from "./pages/dataQueryReports/enclosure_queryReport";
 import EmployeeQueryReport from "./pages/dataQueryReports/employee_queryReport";
@@ -51,6 +53,8 @@ import Exhibits from "./pages/exhibits/Exhibits";
 import EnclosureByExhibit from "./pages/exhibits/EnclosuresByExhibit";
 import AnimalsByEnclosure from "./pages/exhibits/AnimalsByEnclosure";
 import GiftshopPurchases from "./pages/dashboard/giftshop-purchases/giftshop-purchases"
+import ManagerTimesheets from "./pages/employee_dash/manager_timesheets/manager_timesheets"
+
 
 function DebugNavigation() {
   const location = useLocation();
@@ -208,7 +212,7 @@ function AppContent() {
               <Route
                 path="/veterinarian_dash"
                 element={
-                  <RoleProtectedRoute allowedRoles={["veterinarian", "admin"]}>
+                  <RoleProtectedRoute allowedRoles={["veterinarian", "admin", "manager"]}>
                     <VeterinarianDash />
                   </RoleProtectedRoute>
                 }
@@ -216,15 +220,15 @@ function AppContent() {
               <Route
                 path="/zookeeper_dash"
                 element={
-                  <RoleProtectedRoute allowedRoles={["zookeeper", "admin"]}>
-                    <ZookeeperDash />
+                  <RoleProtectedRoute allowedRoles={["zookeeper", "admin", "manager"]}>
+                    <Zookeeper_QueryReport />
                   </RoleProtectedRoute>
                 }
               />
               <Route
                 path="/operator_dash"
                 element={
-                  <RoleProtectedRoute allowedRoles={["operator", "admin"]}>
+                  <RoleProtectedRoute allowedRoles={["operator", "admin", "manager"]}>
                     <OperatorDash />
                   </RoleProtectedRoute>
                 }
@@ -232,7 +236,7 @@ function AppContent() {
               <Route
                 path="/giftshop_dash"
                 element={
-                  <RoleProtectedRoute allowedRoles={["giftshop", "admin"]}>
+                  <RoleProtectedRoute allowedRoles={["giftshop", "admin", "manager"]}>
                     <GiftShopDash />
                   </RoleProtectedRoute>
                 }
@@ -345,6 +349,16 @@ function AppContent() {
                     allowedRoles={["admin", "manager"]}
                   >
                     <MedicalRecordsQueryReport />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/manager_timesheets"
+                element={
+                  <RoleProtectedRoute
+                    allowedRoles={["admin", "manager"]}
+                  >
+                    <ManagerTimesheets />
                   </RoleProtectedRoute>
                 }
               />

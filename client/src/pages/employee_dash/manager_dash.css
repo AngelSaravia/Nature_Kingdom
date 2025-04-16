@@ -6,9 +6,214 @@
   align-items: center;
   padding: 20px;
 }
+.dashboard-single {
+  margin-right: 0;
+}
+.health-status-section {
+  margin-top: 25px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.health-metrics {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.health-metric-card {
+  flex: 1;
+  margin: 0 10px;
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.health-metric-card:first-child {
+  margin-left: 0;
+}
+
+.health-metric-card:last-child {
+  margin-right: 0;
+}
+
+.metric-value {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.metric-label {
+  font-size: 14px;
+  color: #6c757d;
+}
+
+/* Critical Animals Table */
+.critical-animals {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.critical-animals h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #343a40;
+}
+
+.critical-animals-table {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+
+table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+
+table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.view-record-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.view-record-btn:hover {
+  background-color: #218838;
+}
+
+.view-all-btn-container {
+  margin-top: 15px;
+  text-align: right;
+}
+
+.view-all-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.view-all-btn:hover {
+  background-color: #0069d9;
+}
+
+/* Medical Schedule Section */
+.upcoming-procedures {
+  margin-top: 25px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.procedures-table {
+  overflow-x: auto;
+}
+
+.completed-status {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.pending-status {
+  color: #ffc107;
+  font-weight: 600;
+}
+
+/* Medical Alerts Section */
+.medical-alerts {
+  margin-top: 25px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 25px;
+}
+
+.alerts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  padding: 15px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.critical-alert {
+  background-color: #f8d7da;
+  border-left: 4px solid #dc3545;
+}
+
+.warning-alert {
+  background-color: #fff3cd;
+  border-left: 4px solid #ffc107;
+}
+
+.info-alert {
+  background-color: #d1ecf1;
+  border-left: 4px solid #17a2b8;
+}
+
+.alert-icon {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.alert-content {
+  flex: 1;
+}
+
+.alert-title {
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.alert-message {
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.alert-time {
+  font-size: 12px;
+  color: #6c757d;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
 
 .dashboard-card {
-  max-width: 80%;
+  max-width: 100%;
   width: 100%;
   height: auto;
   min-height: 700px;
@@ -82,4 +287,17 @@
 
 .dashboard-button:hover {
   background-color: #333333;
+}
+
+.short-cut-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.short-cut-grid button {
+  padding: 10px;
+  width: 100%;
 }

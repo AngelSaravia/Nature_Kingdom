@@ -26,7 +26,7 @@ function handleVisitorForm(req, res) {
                     res.end(JSON.stringify({ success: false, message: "All * fields are required" }));
                     return;
                 }
-                const sql = "INSERT INTO visitors (first_name, Minit_name, last_name, username, password, email, phone_number, date_of_birth, gender, street_address, city, state, zipcode, country, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                const sql = "INSERT INTO visitors (first_name, Minit_name, last_name, username, password, email, phone_number, date_of_birth, gender, street_address, city, state, zipcode, country, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 const values = [first_name, Minit_name, last_name, username, password, email, phone_number, date_of_birth, gender, street_address, city, state, zipcode, country, role];
 
                 db_connection.query(sql, values, (err, result) => {

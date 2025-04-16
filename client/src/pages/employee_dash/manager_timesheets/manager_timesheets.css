@@ -1,0 +1,111 @@
+.dashboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    background-color: #f5f5f5;
+  }
+  
+  .dashboard-card {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .dashboard-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .date-filter {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .date-input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 150px;
+  }
+  
+  .date-input:focus {
+    outline: none;
+    border-color: #4a90e2;
+  }
+  
+  .dashboard-group {
+    margin-bottom: 20px;
+  }
+  
+  .dashboard-box {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .dashboard-box:hover {
+    background-color: #e6f0ff;
+  }
+  
+  .dashboard-box h2 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+  }
+  
+  .dashboard-box p {
+    font-size: 16px;
+    color: #666;
+    margin: 5px 0;
+  }
+  
+  .dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .dashboard-table th, .dashboard-table td {
+    padding: 12px;
+    text-align: left;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .dashboard-table th {
+    background-color: #f1f1f1;
+    font-weight: bold;
+  }
+  
+  .dashboard-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .dashboard-table tr:hover {
+    background-color: #f0f8ff;
+  }
+  
+  .dashboard-table td {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .date-filter-text {
+    font-size: 20px;
+    color: #333;
+    padding: 10px;
+    /* margin-bottom: 10px; */
+  }

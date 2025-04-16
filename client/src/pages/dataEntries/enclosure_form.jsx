@@ -129,7 +129,7 @@ const EnclosureForm = () => {
         }
 
         try {
-            const response = await fetch("${API_BASE_URL}/enclosure_form", { //const response = await fetch("${API_BASE_URL}/enclosure_form", {
+            const response = await fetch(`${API_BASE_URL}/enclosure_form`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -200,7 +200,8 @@ const EnclosureForm = () => {
                 <div className={styles.formRow}>
                     <label htmlFor="statusDropdown" className={styles.label}>ENCLOSURE STATUS (choose one)</label>
                     <Dropdown
-                        label={formData.status || "Select enclosure status"}
+                        label="Select enclosure status"
+                        selectedLabel={formData.status || "Select enclosure status"}
                         onSelect={(value) => handleSelect("status", value)}
                         id="statusDropdown"
                         value={formData.status}

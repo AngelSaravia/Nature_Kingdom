@@ -5,17 +5,17 @@ import logoImage from "../../../zoo_pictures/Nature's_Kingdom.jpeg";
 import { useAuth } from "../../../context/Authcontext";
 import apiClient from "../../../services/api";
 import ClockInComponent from "../../ClockInComponent/ClockInComponent";
+import ManagerNotification from "../../../components/notification/ManagerNotification";
 
-function managerHeader() {
+function ManagerHeader() {
   const navigate = useNavigate();
-  const auth = useAuth();
+  const { user, logout } = useAuth();
 
-  const username =
-    auth?.user?.username || localStorage.getItem("username") || "User";
+  const username = user?.username || localStorage.getItem("username") || "User";
 
   const handleLogout = () => {
-    if (auth && auth.logout) {
-      auth.logout();
+    if (logout) {
+      logout("/employee_login");
     } else {
       localStorage.removeItem("token");
       localStorage.removeItem("username");
@@ -45,12 +45,11 @@ function managerHeader() {
 
       <nav className="nav-links">
         <Link to="/manager_dash">Dashboard</Link>
-        <Link to="/event_form">Events Form</Link>
-        <Link to="/enclosure_form">Enclosure Form</Link>
       </nav>
       <div className="user-menu">
         <ClockInComponent />
         <span className="username">Welcome, {username}</span>
+        <ManagerNotification />
         <button className="logout-btn" onClick={handleLogout}>
           Logout
         </button>
@@ -59,4 +58,4 @@ function managerHeader() {
   );
 }
 
-export default managerHeader;
+export default ManagerHeader;

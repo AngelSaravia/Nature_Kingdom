@@ -17,7 +17,18 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
     const email = localStorage.getItem("email");
+    const employeeId = localStorage.getItem("employeeId");
+    const managerId = localStorage.getItem("managerId");
     let role = localStorage.getItem("role");
+
+    console.log("refreshAuthState values:", {
+      token: !!token,
+      username,
+      email,
+      role,
+      employeeId,
+      managerId,
+    });
 
     // Add default role handling in the refresh function as well
     if (!role && token && username) {
@@ -26,7 +37,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     if (token && username) {
-      setUser({ username, email, role });
+      setUser({ username, email, role, employeeId, managerId });
       setIsAuthenticated(true);
     } else {
       setUser(null);
@@ -35,7 +46,6 @@ export const AuthProvider = ({ children }) => {
 
     setLoading(false);
   };
-
   // Use the refreshAuthState on component mount
   useEffect(() => {
     refreshAuthState();
@@ -151,24 +161,20 @@ export const AuthProvider = ({ children }) => {
 
       const authToken = token || result.token;
 
-      // Store all relevant user data
       localStorage.setItem("username", extractedUsername);
       localStorage.setItem("token", authToken);
       localStorage.setItem("role", userRole);
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${authToken}`;
 
-      // Update auth state
       setUser({ extractedUsername, role: userRole });
       setIsAuthenticated(true);
 
-      // Debug log
       console.log("Employee login successful:", {
         extractedUsername,
         role: userRole,
       });
 
-      // Redirect to dashboard after successful login
       navigate("/dashboard");
 
       return { success: true };
@@ -191,21 +197,20 @@ export const AuthProvider = ({ children }) => {
       const result = await employeeLoginService(email, password);
       console.log("Employee login response:", result);
 
-      // Check if the service returned an error
-      if (result.success === false) {
-        return result; // Return error from service
+      if (!result.success) {
+        return { success: false, message: "Login failed" };
       }
 
-      // Extract userData from the response
       const { userData, token } = result;
 
-      // If userData is present, use it, otherwise use top-level data
-      const username = userData?.username || result.username;
-      const userRole = userData?.role || result.role;
-      const userEmail = userData?.email || email;
+      console.log("Raw userData from API:", userData);
 
-      // Check if we have the necessary data
-      if (!token && !result.token) {
+      // Extract employee ID and manager ID, checking for both uppercase and lowercase variations
+      const employee_id = userData?.employee_id || userData?.Employee_id;
+      const manager_id = userData?.manager_id || userData?.Manager_id;
+      const { username, role, email: userEmail } = userData || {};
+
+      if (!token) {
         console.error("Employee login missing token:", result);
         return {
           success: false,
@@ -213,59 +218,84 @@ export const AuthProvider = ({ children }) => {
         };
       }
 
-      // Use token from the appropriate location
-      const authToken = token || result.token;
+      console.log("Extracted fields:", {
+        username,
+        role,
+        email: userEmail || email,
+        employeeId: employee_id,
+        managerId: manager_id,
+      });
 
-      // Store all relevant user data
-      localStorage.setItem("username", username);
-      localStorage.setItem("token", authToken);
-      localStorage.setItem("role", userRole);
-      localStorage.setItem("email", userEmail);
+      // Store all values in localStorage with proper error checking
+      if (username) localStorage.setItem("username", username);
+      if (token) localStorage.setItem("token", token);
+      if (role) localStorage.setItem("role", role);
+      localStorage.setItem("email", userEmail || email);
 
-      // Set axios default header
-      axios.defaults.headers.common["Authorization"] = `Bearer ${authToken}`;
+      // Only set these if they're not undefined/null
+      if (employee_id) localStorage.setItem("employeeId", employee_id);
+      if (manager_id) localStorage.setItem("managerId", manager_id);
 
-      // Update auth state
-      setUser({ username, role: userRole, email: userEmail });
+      // Log what's being stored
+      console.log("localStorage after login:", {
+        username: localStorage.getItem("username"),
+        token: localStorage.getItem("token") ? "exists" : "missing",
+        role: localStorage.getItem("role"),
+        email: localStorage.getItem("email"),
+        employeeId: localStorage.getItem("employeeId"),
+        managerId: localStorage.getItem("managerId"),
+      });
+
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+      setUser({
+        username,
+        role,
+        email: userEmail || email,
+        employeeId: employee_id,
+        managerId: manager_id,
+      });
+
       setIsAuthenticated(true);
 
-      // Debug log
-      console.log("Employee login successful:", { username, role: userRole });
+      console.log("Employee login successful:", {
+        username,
+        role,
+        employeeId: employee_id,
+        managerId: manager_id,
+      });
 
-      // Redirect to dashboard after successful login
       navigate("/dashboard");
 
-      return { success: true, role: userRole };
+      return { success: true, role };
     } catch (error) {
       console.error("Employee login error:", error);
       return {
         success: false,
         message:
-          error.response?.data?.error || error.message || "An error occurred",
+          error.response?.data?.error ||
+          error.message ||
+          "An error occurred during login",
       };
     }
   };
 
-  const logout = () => {
+  const logout = (redirectPath = "/login") => {
     console.log("Logout initiated");
 
-    // Clear all auth data
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("email");
     localStorage.removeItem("role");
 
-    // Clear axios headers
     delete axios.defaults.headers.common["Authorization"];
 
-    // Update state BEFORE navigation
     setUser(null);
     setIsAuthenticated(false);
 
-    // Force immediate state update to ensure logout is complete
     setTimeout(() => {
-      // Navigate to login
-      navigate("/login");
+      // Navigate to specified path
+      navigate(redirectPath);
       console.log("Logout completed, state cleared");
     }, 0);
   };

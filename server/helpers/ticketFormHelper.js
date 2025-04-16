@@ -22,7 +22,7 @@ function handleTicketForm(req, res) {
                     res.end(JSON.stringify({ success: false, message: "All * fields are required" }));
                     return;
                 }
-                const sql = "INSERT INTO tickets (visitor_id, start_date, end_date, price, ticket_type, purchase_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                const sql = "INSERT INTO tickets (visitor_id, start_date, end_date, price, ticket_type, purchase_date) VALUES (?, ?, ?, ?, ?, ?)";
                 const values = [visitor_id, start_date, end_date, price, ticket_type, purchase_date];
                 db_connection.query(sql, values, (err, result) => {
                     if (err) {

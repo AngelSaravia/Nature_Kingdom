@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import "./giftshop_dash.css";
-import { restockProduct, getProducts, getProductHistory } from '../../services/api';
-import { set } from "date-fns";
+import {
+  restockProduct,
+  getProducts,
+  getProductHistory,
+} from "../../services/api";
 
 const GiftDash = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [stockInputs, setStockInputs] = useState({});
   const [reload, setReload] = useState(false);
-
 
   // Fetch products and transform them to inventory structure
   useEffect(() => {
@@ -22,39 +24,45 @@ const GiftDash = () => {
   const fetchProductData = async () => {
     setIsLoading(true);
     try {
-      const fetchedProducts = await getProducts('', '');
-      const fetchedProductHistory = await getProductHistory('');
-  
-      const productHistoryMap = fetchedProductHistory.products.reduce((acc, productHistory) => {
-        const { name, last_stocked_on, total_sold } = productHistory;
-        acc[name] = { 
-          lastStocked: last_stocked_on ? last_stocked_on : "N/A",
-          totalPurchased: total_sold != null ? total_sold : 0
+      const fetchedProducts = await getProducts("", "");
+      const fetchedProductHistory = await getProductHistory("");
+
+      const productHistoryMap = fetchedProductHistory.products.reduce(
+        (acc, productHistory) => {
+          const { name, last_stocked_on, total_sold } = productHistory;
+          acc[name] = {
+            lastStocked: last_stocked_on ? last_stocked_on : "N/A",
+            totalPurchased: total_sold != null ? total_sold : 0,
+          };
+          return acc;
+        },
+        {}
+      );
+
+      const transformedInventory = fetchedProducts.map((product) => {
+        const history = productHistoryMap[product.name] || {
+          lastStocked: "N/A",
+          totalPurchased: 0,
         };
-        return acc;
-      }, {});
-  
-      const transformedInventory = fetchedProducts.map(product => {
-        const history = productHistoryMap[product.name] || { lastStocked: "N/A", totalPurchased: 0 };
         return {
           id: product.product_id,
           name: product.name,
           stock: parseInt(product.amount_stock),
           status: product.amount_stock < 5 ? "Low Stock" : "In Stock",
-          lastStocked: history.lastStocked,  
-          totalPurchased: history.totalPurchased 
+          lastStocked: history.lastStocked,
+          totalPurchased: history.totalPurchased,
         };
       });
       console.log("transformedInventory", transformedInventory);
       setProducts(transformedInventory);
     } catch (error) {
-      console.error('Error fetching initial products:', error);
+      console.error("Error fetching initial products:", error);
     }
     setIsLoading(false);
   };
 
   const handleStockChange = (productId, value) => {
-    setStockInputs(prev => ({ ...prev, [productId]: value }));
+    setStockInputs((prev) => ({ ...prev, [productId]: value }));
   };
 
   const handleRestock = async (itemId) => {
@@ -62,14 +70,19 @@ const GiftDash = () => {
     try {
       await restockProduct({ product_id: itemId, newStock: newStock });
       // Update local state
-      setProducts(prev =>
-        prev.map(item =>
+      setProducts((prev) =>
+        prev.map((item) =>
           item.id === itemId
-            ? { ...item, stock: newStock, status: "In Stock", lastStocked: new Date().toISOString().split("T")[0] }
+            ? {
+                ...item,
+                stock: newStock,
+                status: "In Stock",
+                lastStocked: new Date().toISOString().split("T")[0],
+              }
             : item
         )
       );
-      setReload(prev => !prev);
+      setReload((prev) => !prev);
     } catch (error) {
       console.error("Restock error:", error);
     }
@@ -82,7 +95,7 @@ const GiftDash = () => {
       return total + parseInt(product.totalPurchased, 10);
     }, 0);
   };
-  
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-card">
@@ -92,7 +105,14 @@ const GiftDash = () => {
           <div className="dashboard-box">
             <h2>Inventory</h2>
             <p>Total Items: {products.length}</p>
-            <p>Total Stocked Items: {products.filter(item => item.stock > 0).length}</p>
+            <p>
+              Total Stocked Items:{" "}
+              {products.filter((item) => item.stock > 0).length}
+            </p>
+            <p>
+              Total Low Stock Items:{" "}
+              {products.filter((item) => item.status === "Low Stock").length}
+            </p>
           </div>
           <div className="dashboard-box">
             <h2>Sales</h2>
@@ -114,15 +134,19 @@ const GiftDash = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map(item => (
+              {products.map((item) => (
                 <tr key={item.id}>
                   <td>{item.name}</td>
                   <td>{item.stock}</td>
-                  <td>{item.totalPurchased}</td> 
-                  <td>{item.lastStocked}</td>    
+                  <td>{item.totalPurchased}</td>
+                  <td>{item.lastStocked}</td>
                   <td>
                     <div className="status-container">
-                      <span className={item.status === "Low Stock" ? "low-stock" : ""}>
+                      <span
+                        className={
+                          item.status === "Low Stock" ? "low-stock" : ""
+                        }
+                      >
                         {item.status}
                       </span>
                     </div>
@@ -134,7 +158,9 @@ const GiftDash = () => {
                         type="number"
                         min="0"
                         value={stockInputs[item.id] ?? item.stock}
-                        onChange={(e) => handleStockChange(item.id, e.target.value)}
+                        onChange={(e) =>
+                          handleStockChange(item.id, e.target.value)
+                        }
                       />
                       <button
                         className="restock-button"
@@ -149,9 +175,9 @@ const GiftDash = () => {
             </tbody>
           </table>
 
-          <div className="dashboard-button-group">
+          {/* <div className="dashboard-button-group">
             <button className="dashboard-button">Export Inventory</button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

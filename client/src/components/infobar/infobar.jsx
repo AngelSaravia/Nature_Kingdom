@@ -17,12 +17,12 @@ const InfoBar = () => {
         <FaTicketAlt className="icon" />
       </a>
 
-      <a href="/events" className="info-link">
+      <a href="/calendar" className="info-link">
         <span>EVENTS</span>
         <FaMapMarkerAlt className="icon" />
       </a>
 
-      <a href="/map" className="info-link">
+      <a href="/exhibits" className="info-link">
         <span>ZOO MAP</span>
         <FaMap className="icon" />
       </a>

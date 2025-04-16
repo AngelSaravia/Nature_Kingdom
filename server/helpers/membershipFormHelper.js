@@ -20,7 +20,7 @@ function handleMembershipForm(req, res) {
                     res.end(JSON.stringify({ success: false, message: "All * fields are required" }));
                     return;
                 }
-                const sql = "INSERT INTO memberships (visitor_id, start_date, end_date, max_guests) VALUES (?, ?, ?, ?, ?)";
+                const sql = "INSERT INTO memberships (visitor_id, start_date, end_date, max_guests) VALUES (?, ?, ?, ?)";
                 const values = [visitor_id, start_date, end_date, max_guests];
                 db_connection.query(sql, values, (err, result) => {
                     if (err) {

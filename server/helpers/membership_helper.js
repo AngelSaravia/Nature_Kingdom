@@ -24,7 +24,7 @@ const checkExistingMembership = async (username) => {
   
     try {
       const [membership] = await db_connection.promise().query(query, [username]);
-      console.log('Membership check result:', membership);
+      // console.log('Membership check result:', membership);
       return membership;
     } catch (error) {
       console.error('Error checking membership status:', error);

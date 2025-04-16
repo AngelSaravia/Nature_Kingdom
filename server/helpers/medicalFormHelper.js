@@ -13,6 +13,10 @@ function handleMedicalForm(req, res) {
             console.log("Received formData:", formData);
             const { action, record_id, animal_id, employee_id, enclosure_id, location, record_type } = formData;
             const date = formData.date || null; // optional, can be null
+            const diagnosis = formData.diagnosis || null;
+            const treatment = formData.treatment || null;
+            const followup = formData.followup || null;
+            const additional = formData.additional || null;
 
             if (action === "add") {
                 if (!animal_id || !employee_id || !enclosure_id || !location || !record_type) {
@@ -21,8 +25,8 @@ function handleMedicalForm(req, res) {
                     return;
                 }
 
-                const sql = "INSERT INTO medical_records (animal_id, employee_id, enclosure_id, location, date, record_type) VALUES (?, ?, ?, ?, ?, ?)";
-                const values = [animal_id, employee_id, enclosure_id, location, date, record_type];
+                const sql = "INSERT INTO medical_records (animal_id, employee_id, enclosure_id, location, date, record_type, diagnosis, treatment, followup, additional) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                const values = [animal_id, employee_id, enclosure_id, location, date, record_type, diagnosis, treatment, followup, additional];
 
                 db_connection.query(sql, values, (err, result) => {
                     if (err) {
@@ -43,8 +47,8 @@ function handleMedicalForm(req, res) {
                     return;
                 }
 
-                const sql = "UPDATE medical_records SET animal_id = ?, employee_id = ?, enclosure_id = ?, location = ?, date = ?, record_type = ? WHERE record_id = ?";
-                const values = [animal_id, employee_id, enclosure_id, location, date, record_type, record_id];
+                const sql = "UPDATE medical_records SET animal_id = ?, employee_id = ?, enclosure_id = ?, location = ?, date = ?, record_type = ?, diagnosis = ?, treatment = ?, followup = ?, additional = ? WHERE record_id = ?";
+                const values = [animal_id, employee_id, enclosure_id, location, date, record_type, diagnosis, treatment, followup, additional, record_id];
 
                 db_connection.query(sql, values, (err, result) => {
                     if (err) {
