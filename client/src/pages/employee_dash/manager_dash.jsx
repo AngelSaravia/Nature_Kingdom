@@ -381,7 +381,7 @@ const ManagerDash = () => {
                   {/* Low Stock Items Table */}
                   {giftShopStats.lowStockItems > 0 && (
                     <div className="low-stock-section">
-                      <h3>Low Stock Items</h3>
+                      <h3 className="Low-stock">Low Stock Items</h3>
                       <table className="dashboard-table">
                         <thead>
                           <tr>
