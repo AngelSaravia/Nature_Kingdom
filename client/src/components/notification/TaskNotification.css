@@ -71,6 +71,9 @@
   justify-content: space-between;
   align-items: center;
 }
+.task-time {
+  color: black;
+}
 
 .popup-header h3 {
   margin: 0;
