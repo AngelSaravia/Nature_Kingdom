@@ -3,17 +3,20 @@
  function getEmployeeTimesheets(email, res) {
     const query = `
         SELECT
-            e.email AS employee_email,
-            DATE(r.clock_in) AS date,
-            SEC_TO_TIME(TIMESTAMPDIFF(SECOND, r.clock_in, r.clock_out)) AS hours,  -- Convert time to hh:mm:ss
-            TIMESTAMPDIFF(HOUR, r.clock_in, r.clock_out) AS hours_paid,  -- Keep hours_paid in hours
-            r.record_id AS id
-        FROM employees e
-        LEFT JOIN employee_shift_records r ON e.employee_id = r.employee_id
-        WHERE e.manager_id = (
-            SELECT employee_id FROM employees WHERE email = ?
-        )
-        ORDER BY date DESC;
+          e.email AS employee_email,
+          DATE(r.clock_in) AS date,
+          r.clock_in,  
+          r.clock_out, 
+          SEC_TO_TIME(TIMESTAMPDIFF(SECOND, r.clock_in, r.clock_out)) AS hours, 
+          TIMESTAMPDIFF(HOUR, r.clock_in, r.clock_out) AS hours_paid, 
+          r.record_id AS id
+      FROM employees e
+      LEFT JOIN employee_shift_records r ON e.employee_id = r.employee_id
+      WHERE e.manager_id = (
+          SELECT employee_id FROM employees WHERE email = ?
+      )
+      ORDER BY date DESC;
+
     `;
   
     db_connection.query(query, [email], (err, results) => {

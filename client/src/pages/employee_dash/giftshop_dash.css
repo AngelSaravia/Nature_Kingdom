@@ -156,3 +156,139 @@
 .restock-button:hover {
   background-color: #0e512a; /* Lighter green on hover */
 }
+
+
+/* Modal Styling */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  overflow: auto;
+  padding-top: 60px;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  color: #333;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+  max-width: 600px; /* Prevent too wide modals */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 5px 0;
+}
+
+.modal button {
+  padding: 12px;
+  background-color: #1e611f;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal button:hover {
+  background-color: rgb(20, 67, 21)
+}
+
+.modal .close {
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 25px;
+  text-decoration: none;
+}
+
+.modal .close:hover,
+.modal .close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Button Styling for Add/Update/Delete */
+.dashboard-button-group button {
+  padding: 10px 20px;
+  background-color: #276b3e;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dashboard-button-group button:hover {
+  background-color: #2a5438;
+}
+
+
+/* Optional for the modal overlay when active */
+.modal.active {
+  display: block;
+  background: rgba(0, 0, 0, 0.8);
+
+}
+
+/* Disable buttons and inputs on loading */
+.dashboard-button-group button:disabled,
+.modal button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+
+.modal select {
+  width: 100%;
+  padding: 10px;
+  margin: 12px 0 20px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease;
+}
+
+.modal select:focus {
+  outline: none;
+  border-color: #007bff;
+  background-color: #fff;
+}
+
+.modal label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 6px;
+  margin-top: 12px;
+}
