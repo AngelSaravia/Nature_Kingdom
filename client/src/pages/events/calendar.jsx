@@ -23,7 +23,7 @@ const localizer = dateFnsLocalizer({
 });
 
 // Custom Event Component
-const CustomEvent = ({ event, showTooltip = true }) => {
+const CustomEvent = ({ event }) => {
   const durationMs = event.end - event.start;
   const hours = Math.floor(durationMs / (1000 * 60 * 60));
   const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
@@ -41,7 +41,6 @@ const CustomEvent = ({ event, showTooltip = true }) => {
       onMouseMove={handleMouseMove}
     >
       <div className="event-title">{event.title}</div>
-      {showTooltip && (
       <div 
         className="event-tooltip" 
         style={{
@@ -57,13 +56,11 @@ const CustomEvent = ({ event, showTooltip = true }) => {
         <div><strong>Price:</strong> ${event.price || 'Free'}</div>
         <div><strong>Type:</strong> {event.type}</div>
       </div>
-      )}
     </div>
   );
 };
 
-//showOnlyCurrentMonth = false if doesnt work
-const MyCalendar = ({ showTooltip = true, showOnlyCurrentMonth = false }) => {
+const MyCalendar = () => {
   const [events, setEvents] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -142,31 +139,20 @@ const MyCalendar = ({ showTooltip = true, showOnlyCurrentMonth = false }) => {
     };
   };
 
-  const filteredEvents = showOnlyCurrentMonth 
-    ? events.filter(event => {
-        const eventMonth = event.start.getMonth();
-        const eventYear = event.start.getFullYear();
-        const currentMonth = currentDate.getMonth();
-        const currentYear = currentDate.getFullYear();
-        return eventMonth === currentMonth && eventYear === currentYear;
-      })
-    : events;
-
   return (
     <div className='calendar-container'>
       <Calendar
         localizer={localizer}
-        events={filteredEvents}
+        events={events}
         startAccessor="start"
         endAccessor="end"
         date={currentDate}
         onNavigate={handleNavigate}
         defaultView="month"
         components={{
-          event: (props) => <CustomEvent {...props} showTooltip={showTooltip} />,
+          event: CustomEvent,
         }}
         eventPropGetter={eventPropGetter}
-        toolbar={!showOnlyCurrentMonth}
       />
     </div>
   );

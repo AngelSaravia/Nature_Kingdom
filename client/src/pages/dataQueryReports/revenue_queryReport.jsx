@@ -13,30 +13,6 @@ const filterOptions = [
 
 const columnHeaders = ["tuple_id", "type_of_product", "price", "purchase_date"];
 
-const TotalSalesBox = ({ total }) => {
-    return (
-      <div className="total-sales-box">
-        <h3>Total Profit</h3>
-        <div className="total-amount">${total.toFixed(2)}</div>
-        <div className="filter-info">
-          {total === 0 ? "No data available" : "Showing filtered results"}
-        </div>
-      </div>
-    );
-};
-
-const TotalItemsBox = ({ count }) => {
-    return (
-      <div className="total-items-box">
-        <h3>Total Products Sold</h3>
-        <div className="total-count">{count}</div>
-        <div className="filter-info">
-          {count === 0 ? "No items found" : "Showing filtered results"}
-        </div>
-      </div>
-    );
-};
-
 const RevenueQueryReport = () => {
     const [filters, setFilters] = useState({
         product_types: [],
@@ -44,11 +20,6 @@ const RevenueQueryReport = () => {
         end_date: null
     });
     const [reportData, setReportData] = useState([]);
-    const [totalSales, setTotalSales] = useState(0);
-    const [totalItems, setTotalItems] = useState(0);
-    const calculateTotalSales = (data) => {
-        return data.reduce((sum, item) => sum + parseFloat(item.price), 0);
-    };
 
     useEffect(() => {
         fetchReport(false);
@@ -111,8 +82,6 @@ const RevenueQueryReport = () => {
             const data = await response.json();
             if (data.success) {
                 setReportData(data.data);
-                setTotalSales(calculateTotalSales(data.data));
-                setTotalItems(data.data.length);
             } else {
                 console.error("Error fetching report:", data.message);
             }
@@ -132,27 +101,12 @@ const RevenueQueryReport = () => {
 
     return (
         <div className="revenue-query-report">
-          <div className="report-header">
-            <h1>Revenue Report</h1>
-            <TotalItemsBox count={totalItems} />
-            <TotalSalesBox total={totalSales} />
-          </div>
-          
-          <div className="filter-sidebar-container">
-            <FilterSidebar 
-              filters={filters} 
-              onFilterChange={handleFilterChange} 
-              onRunReport={() => fetchReport(true)} 
-              onClearAll={onClearAll} 
-              filterOptions={filterOptions}
-            />
-          </div>
-          
-          <div className="report-table-wrapper">
-            <ReportTable data={reportData} columns={columnHeaders} />
-          </div>
+            <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={() => fetchReport(true)} onClearAll={onClearAll} filterOptions={filterOptions}/>
+            <div className="report-table-container">
+                <ReportTable data={reportData} columns={columnHeaders} />
+            </div>
         </div>
-      );
+    );
 };
 
 export default RevenueQueryReport;

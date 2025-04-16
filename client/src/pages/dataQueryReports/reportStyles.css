@@ -99,56 +99,6 @@
   white-space: nowrap; /* Prevent table cells from wrapping */
 }
 
-.total-items-box {
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  padding: 15px 25px;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.total-items-box h3 {
-  margin: 0 0 5px 0;
-  color: #495057;
-  font-size: 1rem;
-}
-
-.total-count {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #007bff; /* Different color to distinguish from profit */
-}
-
-/* Total sales box */
-.total-sales-box {
-  margin-top: 5px;
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  padding: 15px 25px;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.total-sales-box h3 {
-  margin: 0 0 5px 0;
-  color: #495057;
-  font-size: 1rem;
-}
-
-.total-amount {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #28a745;
-}
-
-.filter-info {
-  font-size: 0.8rem;
-  color: #6c757d;
-  font-style: italic;
-}
-
 .report-table table {
   width: max-content;/* Allow table to expand horizontally based on its content*/
   border-collapse: collapse;
