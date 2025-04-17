@@ -371,7 +371,6 @@ function AppContent() {
               <Route path="/login" element={<Login />} />
               <Route path="/employee_login" element={<EmployeeLogin />} />
               <Route path="/admin_dash" element={<AdminDash />} />
-              <Route path="/map" element={<Map />} />
 
               <Route path="/animal_form" element={<AnimalForm />} />
               <Route path="/event_form" element={<EventForm />} />

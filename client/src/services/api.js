@@ -206,6 +206,43 @@ export const getProducts = async (category = "", name = "") => {
   }
 };
 
+export const addProduct = async (productData) => {
+  try {
+    console.log("Sending POST request to= add product");
+    const response = await apiClient.post("/api/giftshop", productData);
+    return response.data; // Return the response data
+  } catch (error) {
+    console.error("Error adding product:", error);
+    return null; // Return null if error
+  }
+};
+
+// PUT: Update an existing product in the gift shop
+export const updateProduct = async (productData) => {
+  try {
+    console.log("Sending PUT request to update product");
+    const response = await apiClient.put("/api/giftshop", productData);
+    return response.data; // Return the response data
+  } catch (error) {
+    console.error("Error updating product:", error);
+    return null; // Return null if error
+  }
+};
+
+// DELETE: Remove a product from the gift shop
+export const deleteProduct = async (product_id) => {
+  try {
+    console.log("Sending DELETE request to remove product");
+    const response = await apiClient.delete(`/api/giftshop`, {
+      params: { product_id }
+    });
+    return response.data; // Return the response data
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    return null; // Return null if error
+  }
+};
+
 export const createGiftOrder = async (orderData) => {
   try {
     console.log(orderData);

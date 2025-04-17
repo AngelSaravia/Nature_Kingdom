@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
+// import "./revenue_queryReport.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -11,7 +12,7 @@ const filterOptions = [
     { label: "END DATE", type: "date", name: "end_date" },
 ];
 
-const columnHeaders = ["tuple_id", "type_of_product", "price", "purchase_date"];
+const columnHeaders = ["id", "product type", "price", "purchase_date"];
 
 const TotalSalesBox = ({ total }) => {
     return (
@@ -132,27 +133,31 @@ const RevenueQueryReport = () => {
 
     return (
         <div className="revenue-query-report">
-          <div className="report-header">
-            <h1>Revenue Report</h1>
-            <TotalItemsBox count={totalItems} />
-            <TotalSalesBox total={totalSales} />
-          </div>
-          
-          <div className="filter-sidebar-container">
-            <FilterSidebar 
-              filters={filters} 
-              onFilterChange={handleFilterChange} 
-              onRunReport={() => fetchReport(true)} 
-              onClearAll={onClearAll} 
-              filterOptions={filterOptions}
-            />
-          </div>
-          
-          <div className="report-table-wrapper">
-            <ReportTable data={reportData} columns={columnHeaders} />
-          </div>
+            <div className="report-table-wrapper">
+                <div className="filter-sidebar-container">
+                    <div className="report-header">
+                        <h1>Revenue Report</h1>
+                        <TotalItemsBox count={totalItems} />
+                        <TotalSalesBox total={totalSales} />
+                    </div>
+                    <FilterSidebar 
+                    filters={filters} 
+                    onFilterChange={handleFilterChange} 
+                    onRunReport={() => fetchReport(true)} 
+                    onClearAll={onClearAll} 
+                    filterOptions={filterOptions}
+                    />
+                </div>
+                
+                    <ReportTable data={reportData} columns={columnHeaders} />
+            </div>
+
+            {/* <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={() => fetchReport(true)} onClearAll={onClearAll} filterOptions={filterOptions}/>
+            <div className="report-table-container">
+                <ReportTable data={reportData} columns={columnHeaders} />
+            </div> */}
         </div>
-      );
+    );
 };
 
 export default RevenueQueryReport;

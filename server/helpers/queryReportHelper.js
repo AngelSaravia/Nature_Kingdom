@@ -316,11 +316,11 @@ function handleTicketFilters(key, value, conditions, values) {
 }
 function handleRevenueFilters(key, value, conditions, values) {
     console.log("Processing revenue filter:", key, value); // Debug line
-    if (key === "product_types") {
+    if (key === 'product type') {
         const allowedTypes = ["ticket", "membership", "gift"];
         const validTypes = Array.isArray(value) ? value.filter(type => allowedTypes.includes(type)) : [];
         if (validTypes.length > 0) {
-            conditions.push(`type_of_product IN (${validTypes.map(() => "?").join(", ")})`);
+            conditions.push(`'product type' IN (${validTypes.map(() => "?").join(", ")})`);
             values.push(...validTypes);
         }
     } else if (key === "start_date") {
@@ -340,22 +340,22 @@ function constructRevenueQuery(conditions) {
     let sql = `
         SELECT * FROM (
             SELECT 
-                ticket_id AS tuple_id, 
-                'ticket' AS type_of_product, 
+                ticket_id AS id, 
+                'ticket' AS 'product type', 
                 price, 
                 DATE(purchase_date) AS purchase_date 
             FROM tickets
             UNION ALL
             SELECT 
-                membership_id AS tuple_id, 
-                'membership' AS type_of_product, 
+                membership_id AS id, 
+                'membership' AS 'product type', 
                 79.99 AS price, 
                 DATE(start_date) AS purchase_date 
             FROM memberships
             UNION ALL
             SELECT 
-                order_id AS tuple_id, 
-                'gift' AS type_of_product, 
+                order_id AS id, 
+                'gift order' AS 'product type', 
                 total_amount AS price, 
                 DATE(order_date) AS purchase_date 
             FROM orders
@@ -368,13 +368,7 @@ function constructRevenueQuery(conditions) {
     }
 
     // Add ORDER BY clause for sorting
-    sql += ` ORDER BY 
-        CASE 
-            WHEN type_of_product = 'ticket' THEN 1
-            WHEN type_of_product = 'membership' THEN 2
-            WHEN type_of_product = 'gift' THEN 3
-        END, 
-        tuple_id`;
+    sql += ` ORDER BY purchase_date DESC`;
 
     console.log("Constructed Revenue Query:", sql); // Debugging line
     console.log("Conditions:", conditions); // Debugging line

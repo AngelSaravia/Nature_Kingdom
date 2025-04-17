@@ -1,77 +1,295 @@
 .dashboard-container {
-    min-height: 90vh;
-    /* background-color: #2C5530; */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-  }
-  
-  .dashboard-card {
-    max-width: 80%;
-    width: 100%;
-    height: auto;
-    min-height: 700px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    padding: 24px;
-    text-align: center;
-  }
-  
-  .dashboard-title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333333;
-    margin-bottom: 20px;
-  }
-  
-  .dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    margin-bottom: 20px;
-  }
-  
-  .dashboard-box {
-    background-color: #f7f7f7;
-    padding: 16px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: left;
-    height: 140px;
-    }
-  
-  .dashboard-box.single {
-    margin-bottom: 20px;
-    height: auto; 
-  }
+  min-height: 90vh;
+  /* background-color: #2C5530; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
 
-  .dashboard-heading {
-    font-size: 18px;
-    font-weight: 600;
-    color: #444444;
-    margin-bottom: 8px;
-  }
-  
-  .dashboard-text {
-    font-size: 14px;
-    color: #666666;
-  }
-  
-  .dashboard-button {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 12px;
-    font-size: 14px;
-    color: #ffffff;
-    background-color: #555555;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .dashboard-button:hover {
-    background-color: #333333;
-  }
+.dashboard-card {
+  max-width: 80%;
+  width: 100%;
+  height: auto;
+  min-height: 700px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+}
+label {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #555;
+}
+select {
+  height: 40px;
+}
+
+.dashboard-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 20px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.dashboard-box {
+  background-color: #f7f7f7;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  height: 140px;
+}
+
+.dashboard-box.single {
+  margin-bottom: 20px;
+  height: auto;
+}
+
+.dashboard-heading {
+  font-size: 18px;
+  font-weight: 600;
+  color: #444444;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard-text {
+  font-size: 14px;
+  color: #666666;
+}
+
+.dashboard-button {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #ffffff;
+  background-color: #555555;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dashboard-button:hover {
+  background-color: #333333;
+}
+
+.modify-button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.modify-button:hover {
+  background-color: #0069d9;
+}
+
+/* Popup Styles */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow: hidden; /* Prevent body scrolling when popup is open */
+}
+
+.popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh; /* Keep maximum height at 80% of viewport height */
+  overflow-y: auto; /* This should enable scrolling */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  padding-bottom: 10px;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 15px;
+}
+.popup-content form {
+  padding-bottom: 15px;
+  width: 100%;
+  overflow-y: visible; /* Ensure form content can be scrolled */
+}
+
+.popup-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #333;
+  font-weight: bold;
+}
+
+.close-popup {
+  cursor: pointer;
+  font-size: 24px;
+  color: #999;
+  transition: color 0.2s;
+}
+
+.close-popup:hover {
+  color: #555;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #555;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 15px;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Checkbox styles */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: auto;
+  margin-right: 10px;
+}
+
+.checkbox-group label {
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+/* Password requirements */
+.password-requirements {
+  background-color: #f8f9fa;
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: left;
+}
+
+.password-requirements p {
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.password-requirements ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.password-requirements li {
+  margin-bottom: 4px;
+}
+
+/* Error message */
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  border: 1px solid #f5c6cb;
+  text-align: left;
+}
+
+.button-group {
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.save-button {
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.save-button:hover {
+  background-color: #218838;
+}
+
+.cancel-button {
+  padding: 10px 20px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+.password-requirements {
+  color: black;
+}
+.cancel-button:hover {
+  background-color: #5a6268;
+}

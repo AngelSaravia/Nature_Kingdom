@@ -1,5 +1,5 @@
-.animal-query-report, 
-.enclosure-query-report, 
+.animal-query-report,
+.enclosure-query-report-main,
 .event-query-report,
 .employee-query-report,
 .ticket-query-report,
@@ -7,96 +7,151 @@
 .revenue-query-report,
 .EWH-query-report,
 .feedLogs-query-report,
-.medicalRecords-query-report,
-.feedLogs-query-report {
+.medicalRecords-query-report {
   display: flex;
-  gap: 20px;
-  padding: 20px;
-  align-items: stretch;
-  box-sizing: border-box; /* Include padding in height calculation */
-  overflow: hidden; /* Prevent overflow */
+  gap: 24px;
+  padding: 24px;
+  align-items: flex-start;
+  box-sizing: border-box;
+  background: #f9f9f9;
+  min-height: 100vh;
+}
+
+/* Sidebar Filters */
+
+.filter-sidebar-container {
+display: flex;
+flex-direction: column;
+gap: 20px;
 }
 
 .filter-sidebar {
-  width: 250px;
-  background: rgb(126, 136, 134);
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  width: 280px;
+  background: #1a2a1d;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  color: #f1f1f1;
+  font-family: "Segoe UI", sans-serif;
 }
 
 .filter-sidebar h3 {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
 }
 
 .filter-sidebar h4 {
-  margin: 10px 0 5px;
+  margin: 16px 0 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #cde0e6;
 }
 
+/* Input styles */
 .filter-sidebar input[type="text"],
-.filter-sidebar input[type="date"],
+.filter-sidebar input[type="datetime-local"],
+.filter-sidebar input[type="time"],
 .filter-sidebar input[type="number"] {
   width: 100%;
-  padding: 5px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: #f0f0f0;
+  font-size: 14px;
+  color: #333;
+}
+
+.filter-sidebar input[type="date"] {
+  width: 90%;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: #f0f0f0;
+  font-size: 14px;
+  color: #333;
+}
+
+.filter-sidebar input[type="checkbox"],
+.filter-sidebar input[type="radio"] {
+  margin-right: 6px;
+  transform: scale(1.1);
 }
 
 .filter-sidebar label {
   display: block;
-  margin: 5px 0;
+  margin: 6px 0;
+  font-size: 13px;
+  color: #cde0e6;
 }
 
+/* Buttons */
 .filter-sidebar > button {
   width: 100%;
-  padding: 8px;
-  margin-top: 10px;
+  padding: 10px;
+  margin-top: 14px;
   border: none;
-  background: #007bff;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
   color: white;
-  cursor: pointer;
-  border-radius: 4px;
 }
 
-.filter-sidebar > button:hover {
-  background: #0056b3;
+.filter-sidebar > button:first-of-type {
+  background: #0a7543;
 }
 
+.filter-sidebar > button:first-of-type:hover {
+  background: #0a5130;
+}
+
+.filter-sidebar > button:last-of-type {
+  background: #d9534f;
+  margin-top: 8px;
+}
+
+.filter-sidebar > button:last-of-type:hover {
+  background: #c9302c;
+}
+
+/* Dropdown button override */
 .dropdown-btn {
-  z-index: 1000;
-  width: 100%;
-  padding: 8px;
-  margin-top: 10px;
+  background: #ffffff;
+  color: #333;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: 500;
   border: none;
-  background: white;
-  color: black;
-  cursor: pointer;
-  border-radius: 4px;
+  margin-top: 10px;
 }
 
 .dropdown-content {
-  position: absolute;
   z-index: 9999;
 }
 
+
+/* Report Table Layout */
 .report-table-container {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  overflow-x: auto; /* Enable horizontal scrolling */
-  overflow-y: hidden; /* Prevent vertical scrolling in the container */
+  overflow-x: auto;
 }
 
-.report-table {
-  flex-grow: 1;
-  background: #256e5d;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-  overflow-x: auto; /* Enable horizontal scrolling for the table */
-  overflow-y: hidden; /* Prevent vertical scrolling in the table */
-  white-space: nowrap; /* Prevent table cells from wrapping */
+.report-table-wrapper{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 20px;
+}
+
+.report-header h1{
+  color: #333;
 }
 
 .total-items-box {
@@ -149,28 +204,54 @@
   font-style: italic;
 }
 
-.report-table table {
-  width: max-content;/* Allow table to expand horizontally based on its content*/
-  border-collapse: collapse;
-  background-color: rgb(126, 136, 134);;
+
+.revenue-query-report {
+  color: #333;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.report-table th, .report-table td {
-  border: 1px solid #9c9c9c;
-  padding: 8px;
+.report-table {
+  color: #333;
+  width: 97.5%;
+  height: 100%;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.report-table h3 {
+  margin-bottom: 16px;
+  color: #1d573a;
+}
+
+.report-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table th,
+.report-table td {
+  border: 1px solid #dcdcdc;
+  padding: 10px 14px;
   text-align: left;
+  font-size: 14px;
 }
 
 .report-table th {
-  background-color: rgb(67, 80, 77);
-  color: rgb(255, 255, 255);
+  background-color: #1d5739;
+  color: #ffffff;
+  font-weight: 600;
 }
 
 .report-table tr:nth-child(even) {
-  background-color: rgb(154, 161, 160);
+  background-color: #f1f1f1;
 }
 
-
+/* Action Buttons */
 .edit-employee-button-container,
 .edit-event-button-container,
 .edit-animal-button-container,
@@ -181,7 +262,7 @@
 .edit-feedLogs-button-container {
   display: flex;
   justify-content: flex-end;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 .edit-employee-button,
@@ -191,15 +272,24 @@
 .edit-ticket-button,
 .edit-visitor-button,
 .edit-medicalRecords-button,
-.edit-feedLogs-button {
-  padding: 10px 20px;
-  background-color: #007bff;
+.edit-feedLogs-button,
+.edit-tuple-button {
+  padding: 8px 16px;
+  background-color: #1a8547;
   color: white;
   text-decoration: none;
-  border-radius: 5px;
+  border-radius: 6px;
   font-size: 14px;
   font-weight: bold;
   transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.edit-tuple-button {
+  font-size: 12px;
+  padding: 6px 12px;
 }
 
 .edit-employee-button:hover,
@@ -209,23 +299,7 @@
 .edit-ticket-button:hover,
 .edit-visitor-button:hover,
 .edit-medicalRecords-button:hover,
-.edit-feedLogs-button:hover {
-  background-color: #0056b3;
-}
-
-.edit-tuple-button {
-  display: inline-block;
-  padding: 5px 10px;
-  background-color: #007bff;
-  color: white;
-  text-decoration: none;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: bold;
-  text-align: center;
-  transition: background-color 0.3s ease;
-}
-
+.edit-feedLogs-button:hover,
 .edit-tuple-button:hover {
-  background-color: #0056b3;
+  background-color: #0b5630;
 }
