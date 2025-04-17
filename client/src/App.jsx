@@ -54,6 +54,8 @@ import EnclosureByExhibit from "./pages/exhibits/EnclosuresByExhibit";
 import AnimalsByEnclosure from "./pages/exhibits/AnimalsByEnclosure";
 import GiftshopPurchases from "./pages/dashboard/giftshop-purchases/giftshop-purchases"
 import ManagerTimesheets from "./pages/employee_dash/manager_timesheets/manager_timesheets"
+import ManagerEmployeeQueryReport from "./pages/employee_dash/employeeByManager_queryReport";
+import GiftShopSales from "./pages/employee_dash/giftshopSales";
 
 
 function DebugNavigation() {
@@ -165,7 +167,7 @@ function AppContent() {
               <Route
                 path="/employee_form"
                 element={
-                  <RoleProtectedRoute allowedRoles={["admin"]}>
+                  <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
                     <EmployeeForm />
                   </RoleProtectedRoute>
                 }
@@ -173,7 +175,7 @@ function AppContent() {
               <Route
                 path="/query_report/employees"
                 element={
-                  <RoleProtectedRoute allowedRoles={["admin"]}>
+                  <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
                     <EmployeeQueryReport />
                   </RoleProtectedRoute>
                 }
@@ -206,6 +208,22 @@ function AppContent() {
                 element={
                   <RoleProtectedRoute allowedRoles={["manager"]}>
                     <ManagerDash />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/employeeByManager_queryReport"
+                element={
+                  <RoleProtectedRoute allowedRoles={["manager"]}>
+                    <ManagerEmployeeQueryReport />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/giftshopSales"
+                element={
+                  <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
+                    <GiftShopSales />
                   </RoleProtectedRoute>
                 }
               />

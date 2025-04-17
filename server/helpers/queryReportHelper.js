@@ -19,7 +19,13 @@ const handleQueryReport = (req, res) => {
             let sql;
             const conditions = [];
             const values = [];
-            if (table1 && table2 && join_condition) {
+            if (entity_type === "orders") {
+                sql = handleOrdersQuery(filters, conditions, values);
+                skipDefaultSelect = true; // Skip default SELECT for orders
+            } else if (entity_type === "order_items") {
+                sql = handleOrderItemsQuery(filters, conditions, values);
+                skipDefaultSelect = true; // Skip default SELECT for order_items
+            } else if (table1 && table2 && join_condition) {
                 // Handles join queries
                 sql = `
                     SELECT ${computed_fields || `${table1}.*, ${table2}.*`} 
@@ -47,6 +53,8 @@ const handleQueryReport = (req, res) => {
                     });
                     // Construct the revenue query with conditions
                     sql = constructRevenueQuery(conditions);
+                } else if (!skipDefaultSelect) {  // Only use default SELECT if not skipped
+                    sql = `SELECT * FROM ${entity_type}`;
                 } else {
                     sql = `SELECT * FROM ${entity_type}`;
                 }
@@ -97,11 +105,12 @@ const handleQueryReport = (req, res) => {
                 });
             }
             if (entity_type !== "revenue" && conditions.length > 0) {
-                sql += ` WHERE ${conditions.join(" AND ")}`;
+                if (!sql.includes("WHERE")) { //fix for giftshopsales filters
+                    sql += ` WHERE ${conditions.join(" AND ")}`;
+                } else {
+                    console.warn("Duplicate WHERE clause detected. Skipping additional WHERE clause.");
+                }
             }
-            console.log("Constructed SQL Query:", sql);
-            console.log("Conditions:", conditions); // Debug line
-            console.log("Values:", values);
             db_connection.query(sql, values, (err, results) => {
                 if (err) {
                     console.error("Database query error:", err);
@@ -109,6 +118,7 @@ const handleQueryReport = (req, res) => {
                     res.end(JSON.stringify({ success: false, message: "Database error" }));
                     return;
                 }
+                console.log("Query Results:", results); // Debugging log
                 res.writeHead(200, { "Content-Type": "application/json" });
                 res.end(JSON.stringify({ success: true, data: results }));
             });
@@ -118,6 +128,76 @@ const handleQueryReport = (req, res) => {
             res.end(JSON.stringify({ success: false, message: "Invalid JSON" }));
         }
     });
+};
+const handleOrdersQuery = (filters, conditions, values) => {
+    Object.keys(filters).forEach((key) => {
+        const value = filters[key];
+        if (value !== undefined && value !== null && value !== "") {
+            if (key === 'order_dateMin') {
+                conditions.push("DATE(order_date) >= ?");
+                values.push(value);
+            } else if (key === 'order_dateMax') {
+                conditions.push("DATE(order_date) <= ?");
+                values.push(value);
+            } else if (key === 'visitor_id') {
+                conditions.push("visitor_id = ?");
+                values.push(value);
+            } else {
+                // Handle other order fields if needed
+                console.warn(`Unexpected filter key: ${key}`); // Log unexpected keys for debugging
+                conditions.push(`${key} = ?`);
+                values.push(value);
+            }
+        }
+    });
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+    return `SELECT order_id, visitor_id, order_date, total_amount FROM orders ${whereClause}`;
+};
+
+const handleOrderItemsQuery = (filters, conditions, values) => {
+    Object.keys(filters).forEach((key) => {
+        const value = filters[key];
+        if (value !== undefined && value !== null && value !== "") {
+            if (key === 'order_dateMin') {
+                conditions.push("DATE(orders.order_date) >= ?");
+                values.push(value);
+            } else if (key === 'order_dateMax') {
+                conditions.push("DATE(orders.order_date) <= ?");
+                values.push(value);
+            } else if (key === 'product_name') {
+                conditions.push("products.name LIKE ?");
+                values.push(`%${value}%`);
+            } else if (key === 'quantityMin') {
+                conditions.push("order_items.quantity >= ?");
+                values.push(value);
+            } else if (key === 'quantityMax') {
+                conditions.push("order_items.quantity <= ?");
+                values.push(value);
+            } else {
+                console.warn(`Unexpected filter key: ${key}`); // Log unexpected keys for debugging
+                conditions.push(`order_items.${key} = ?`);
+                values.push(value);
+            }
+        }
+    });
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+
+    const sql = `
+        SELECT 
+            order_items.order_id, 
+            products.name AS product_name, 
+            order_items.quantity, 
+            order_items.total_amount
+        FROM order_items
+        INNER JOIN products ON order_items.product_id = products.product_id
+        INNER JOIN orders ON order_items.order_id = orders.order_id
+        ${whereClause}
+    `;
+    console.log("Constructed SQL Query from orderitems:", sql); // Debugging log
+    console.log("Conditions:", conditions); // Debugging log
+    console.log("Values:", values); // Debugging log
+    return sql;
+
 };
 // Helper functions for different table filters
 function handleEmployeeFilters(key, value, conditions, values) {

@@ -21,7 +21,7 @@ const ReportTable = ({ data, columns, renderActions, columnLabels }) => {
                 {columns.map((col) => (
                   <td key={col}>
                     {/* Format specific date-related columns */}
-                    {["date", "start_date", "end_date", "purchase_date", "eventDate", "date_of_birth", "followup"].includes(col) && row[col]
+                    {["date", "start_date", "end_date", "purchase_date", "eventDate", "date_of_birth", "followup", "order_date"].includes(col) && row[col]
                       ? new Date(row[col]).toISOString().split("T")[0] // Format to YYYY-MM-DD
                       : row[col]}
                   </td>

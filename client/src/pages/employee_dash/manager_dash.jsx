@@ -42,6 +42,18 @@ const ManagerDash = () => {
                 {" "}
                 View Veterinarian Portal
               </button>
+              {/*<button
+                onClick={() => navigate("/employeeByManager_queryReport")}
+                className="dashboard-button"
+              >
+                View Employees by Manager
+              </button>*/}
+              {/*<button
+                onClick={() => navigate("/")}
+                className="dashboard-button"
+              >
+                View GiftShop Sales Dashboard
+              </button>*/}
             </div>
           </div> 
         </div>

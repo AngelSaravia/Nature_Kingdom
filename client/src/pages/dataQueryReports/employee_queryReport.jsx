@@ -158,6 +158,7 @@ const EmployeeQueryReport = () => {
       };
 
       const renderEditButton = (tuple) => {
+        console.log("Employee Query Report - Tuple data:", tuple); // Debugging log
         return (
           <button 
             onClick={() => {
