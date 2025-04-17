@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "./forms.module.css";
 
-const InputFields = ({label, type="text", name, value, onChange, required=true, autoComplete}) => {
+const InputFields = ({label, type="text", name, value, onChange, required=true, readOnly = false, autoComplete}) => {
     return (
         <div className={styles.inputGroup}>
             <label htmlFor={name} className={styles.inputLabel}>{label}</label>
@@ -16,6 +16,7 @@ const InputFields = ({label, type="text", name, value, onChange, required=true, 
                 autoComplete={autoComplete}
                 placeholder={`Enter ${label.toLowerCase()}`}
                 className={styles.inputField}
+                readOnly={readOnly}
             />
         </div>
     );

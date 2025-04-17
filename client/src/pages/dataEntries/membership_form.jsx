@@ -16,6 +16,7 @@ const MembershipForm = () => {
 
     const [submissionStatus, setSubmissionStatus] = useState(null);
     const [memberships, setMemberships] = useState([]);
+    const [isEditMode, setIsEditMode] = useState(false); // New state to track if data is being passed
 
     useEffect(() => {
         fetch(`${API_BASE_URL}/get_memberships`)
@@ -61,6 +62,7 @@ const MembershipForm = () => {
             end_date: formattedDate || "",
             max_guests: membership.max_guests || "",
         });
+        setIsEditMode(true); // Set edit mode to true if data is passed
     };
 
     const handleSubmit = async (action) => {
@@ -157,9 +159,14 @@ const MembershipForm = () => {
                     <InputFields label="MAX GUESTS" name="max_guests" type="text" value={formData.max_guests} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autoComplete="off"/>
                 </div>
                 <div className={styles.buttonContainer}>
-                    <button type="button" onClick={() => handleSubmit("add")}>ADD</button>
-                    <button type="button" onClick={() => handleSubmit("update")}>MODIFY</button>
-                    <button type="button" onClick={() => handleSubmit("delete")}>DELETE</button>
+                    {isEditMode ? (
+                        <>
+                            <button type="button" onClick={() => handleSubmit("update")}>MODIFY</button>
+                            <button type="button" onClick={() => handleSubmit("delete")}>DELETE</button>
+                        </>
+                    ) : (
+                        <button type="button" onClick={() => handleSubmit("add")}>ADD</button>
+                    )}
                 </div>
                 {submissionStatus && <p className={styles.statusMessage}>{submissionStatus}</p>}
             </form>

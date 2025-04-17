@@ -3,7 +3,7 @@ import InputFields from "./inputs.jsx";
 import styles from "./forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const AnimalForm = () => {
@@ -21,6 +21,7 @@ const AnimalForm = () => {
 
     const [submissionStatus, setSubmissionStatus] = useState(null);
     const [animals, setAnimals] = useState([]);
+    const [isEditMode, setIsEditMode] = useState(false); // New state to track if data is being passed
 
     // Fetch all animals to populate dropdown
     useEffect(() => {
@@ -38,11 +39,13 @@ const AnimalForm = () => {
                 animal_type: tupleData.animal_type || "",
                 health_status: tupleData.health_status || "",
             });
+            setIsEditMode(true); // Set edit mode to true if data is passed
             
             // Clear the sessionStorage after use
             sessionStorage.removeItem('animalEditData');
         } else {
             console.log("No animal data found - creating new form");
+            setIsEditMode(false); // Set edit mode to false if no data is passed
         }
         fetch(`${API_BASE_URL}/get_animals`)
             .then(response => response.json())
@@ -115,6 +118,11 @@ const AnimalForm = () => {
 
     return (
         <div className={styles.formContainer}>
+            <div className={styles.queryReportLink}>
+                <Link to="/query_report/animals" className={styles.queryReportButton}>
+                    View Animal Query Report
+                </Link>
+            </div>
             <h2 className={styles.formTitle}>ANIMAL DATA ENTRY FORM</h2>
 
             <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
@@ -167,9 +175,14 @@ const AnimalForm = () => {
                 </div>
                 
                 <div className={styles.buttonContainer}>
-                    <button type="button" onClick={() => handleSubmit("add")}>ADD</button>
-                    <button type="button" onClick={() => handleSubmit("update")}>MODIFY</button>
-                    <button type="button" onClick={() => handleSubmit("delete")}>DELETE</button>
+                    {isEditMode ? (
+                        <>
+                            <button type="button" onClick={() => handleSubmit("update")}>MODIFY</button>
+                            <button type="button" onClick={() => handleSubmit("delete")}>DELETE</button>
+                        </>
+                    ) : (
+                        <button type="button" onClick={() => handleSubmit("add")}>ADD</button>
+                    )}
                 </div>
             </form>
             {submissionStatus && <p className={styles.statusMessage}>{submissionStatus}</p>}

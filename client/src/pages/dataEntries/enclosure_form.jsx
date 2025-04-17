@@ -3,7 +3,7 @@ import InputFields from "./inputs.jsx";
 import styles from "./forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const EnclosureForm = () => {
@@ -25,6 +25,7 @@ const EnclosureForm = () => {
 
     const [submissionStatus, setSubmissionStatus] = useState(null);
     const [enclosures, setEnclosures] = useState([]);
+    const [isEditMode, setIsEditMode] = useState(false); // New state to track if data is being passed
 
     useEffect(() => {
         console.log("Location object:", location);
@@ -46,11 +47,13 @@ const EnclosureForm = () => {
                 status: tupleData.status || "",
                 temp_control: tupleData.temp_control === 1 || tupleData.temp_control === "Yes",
             });
+            setIsEditMode(true); // Set edit mode to true if data is passed
             
             // Clear the sessionStorage after use
             sessionStorage.removeItem('enclosureEditData');
         } else {
             console.log("No enclosure data found - creating new form");
+            setIsEditMode(false); // Set edit mode to false if no data is passed
         }
     
         // Fetch enclosures data
@@ -172,6 +175,11 @@ const EnclosureForm = () => {
 
     return (
         <div className={styles.formContainer}>
+            <div className={styles.queryReportLink}>
+                <Link to="/query_report/enclosures" className={styles.queryReportButton}>
+                    View Enclosure Query Report
+                </Link>
+            </div>
             <h2 className={styles.formTitle}>ENCLOSURE DATA ENTRY FORM</h2>
             <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
                 <div className={styles.formRow}>
@@ -220,9 +228,14 @@ const EnclosureForm = () => {
                 </div>
 
                 <div className={styles.buttonContainer}>
-                    <button type="button" onClick={() => handleSubmit("add")}>ADD</button>
-                    <button type="button" onClick={() => handleSubmit("update")}>MODIFY</button>
-                    <button type="button" onClick={() => handleSubmit("delete")}>DELETE</button>
+                    {isEditMode ? (
+                        <>
+                            <button type="button" onClick={() => handleSubmit("update")}>MODIFY</button>
+                            <button type="button" onClick={() => handleSubmit("delete")}>DELETE</button>
+                        </>
+                    ) : (
+                        <button type="button" onClick={() => handleSubmit("add")}>ADD</button>
+                    )}
                 </div>
 
                 {submissionStatus && <p className={styles.statusMessage}>{submissionStatus}</p>}

@@ -33,7 +33,7 @@ const AnimalQueryReport = () => {
 
   const filterOptions = [
     { label: "ANIMAL NAME", type: "text", name: "animal_name" },
-    { label: "ENCLOSURE NAME", type: "checkbox", name: "enclosure_name", options: enclosureOptions }, // This will be populated with enclosure names
+    { label: "ENCLOSURE NAME", type: "checkbox", name: "enclosures.name", options: enclosureOptions }, // This will be populated with enclosure names
     { label: "BEGINNING BIRTH DATE", type: "date", name: "date_of_birthMin" },
     { label: "ENDING BIRTH DATE", type: "date", name: "date_of_birthMax" },
     { label: "ANIMAL TYPE", type: "checkbox", name: "animal_type", options: ["Mammal", "Bird", "Reptile", "Amphibian", "Fish", "Invertebrate"] },
@@ -41,7 +41,14 @@ const AnimalQueryReport = () => {
     { label: "HEALTH STATUS", type: "checkbox", name: "health_status", options: ["HEALTHY", "NEEDS CARE", "CRITICAL"] },
   ];
   
-  const columnHeaders = ["animal_name", "species", "animal_type", "health_status", "date_of_birth", "enclosure_name"];
+  const columnHeaders = {
+    animal_name: "Animal Name",
+    species: "Species",
+    animal_type: "Animal Type",
+    health_status: "Health Status",
+    date_of_birth: "Date of Birth",
+    enclosure_name: "Enclosure Name",
+  };
 
   const handleFilterChange = (eventOrUpdater) => {
     if (typeof eventOrUpdater === "function") {
@@ -76,7 +83,7 @@ const AnimalQueryReport = () => {
             }
             // Handle different filter types
             switch(key) {
-              case 'enclosure_name':
+              case 'enclosures.name':
                   prefixedFilters['enclosures.name'] = filters[key];
                   break;
               case 'date_of_birthMin':
@@ -95,7 +102,7 @@ const AnimalQueryReport = () => {
           });
         }
 
-        const queryParams = { table1: "animals", table2: "enclosures", join_condition: "animals.enclosure_id = enclosures.enclosure_id", computed_fields: "animals.*, enclosures.name as 'enclosure_name'", ...prefixedFilters };
+        const queryParams = { table1: "animals", table2: "enclosures", join_condition: "animals.enclosure_id = enclosures.enclosure_id", computed_fields: "animals.*, enclosures.name as 'enclosure_name'", entity_type: "animals", ...prefixedFilters };
 
         const response = await fetch(`${API_BASE_URL}/query_report/animals`, {
             method: "POST",
@@ -138,9 +145,9 @@ const AnimalQueryReport = () => {
     <div className="animal-query-report">
       <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
       <div className="report-table-container">
-        <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
+        <ReportTable data={reportData} columns={Object.keys(columnHeaders)} renderActions={(tuple) => renderEditButton(tuple)} columnLabels={columnHeaders}/>
         <div className="edit-animal-button-container">
-          <a href="/animal_form" target="_blank" rel="noopener noreferrer" className="edit-animal-button">Edit Animal</a>
+          <a href="/animal_form" className="edit-animal-button">Add Animal</a>
 
         </div>
       </div>

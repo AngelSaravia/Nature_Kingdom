@@ -31,17 +31,17 @@ const filterOptions = [
   { label: "MANAGER EMAIL", type: "text", name: "manager_email" },
 ];
 
-const columnHeaders = [
-  "eventName",
-  "description",
-  "eventDate",
-  "duration",
-  "location",
-  "eventType",
-  "capacity",
-  "price",
-  "manager_email",
-];
+const columnHeaders = {
+  eventName: "Event Name",
+  description: "Description",
+  eventDate: "Event Date",
+  duration: "Duration",
+  location: "Location",
+  eventType: "Event Type",
+  capacity: "Capacity",
+  price: "Price",
+  manager_email: "Manager Email",
+};
 
 const EventQueryReport = () => {
   const [filters, setFilters] = useState({});
@@ -177,20 +177,9 @@ const EventQueryReport = () => {
         filterOptions={filterOptions}
       />
       <div className="report-table-container">
-        <ReportTable
-          data={reportData}
-          columns={columnHeaders}
-          renderActions={(tuple) => renderEditButton(tuple)}
-        />
+        <ReportTable data={reportData} columns={Object.keys(columnHeaders)} renderActions={(tuple) => renderEditButton(tuple)} columnLabels={columnHeaders}/>
         <div className="edit-event-button-container">
-          <a
-            href="/event_form"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="edit-event-button"
-          >
-            Edit Event
-          </a>
+          <a href="/event_form" className="edit-event-button">Edit Event</a>
         </div>
       </div>
     </div>
