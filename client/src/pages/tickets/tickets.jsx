@@ -1,10 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import "./tickets.css";
-import BabyKoala from "../../zoo_pictures/koala_baby_photo.jpg";
-import Babycougar from "../../zoo_pictures/baby_cougar.jpg";
-import Lion from "../../zoo_pictures/zoo_lion.jpg";
-import CoupleBirds from "../../zoo_pictures/couple_birds_2.jpg";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './tickets.css';
 
 const Tickets = () => {
   const [isMemberView, setIsMemberView] = useState(false);
@@ -12,13 +8,13 @@ const Tickets = () => {
   const [memberTicketsThisMonth, setMemberTicketsThisMonth] = useState(0);
   const [lastRedemptionDate, setLastRedemptionDate] = useState(null);
   const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [tickets, setTickets] = useState({
     adult: 0,
     child: 0,
     senior: 0,
-    member: 0,
+    member: 0
   });
 
   const [total, setTotal] = useState(0);
@@ -27,33 +23,30 @@ const Tickets = () => {
     adult: 24.99,
     child: 14.99,
     senior: 19.99,
-    member: 0,
+    member: 0
   };
 
-  const handleCheckout = () => {
-    const totalTickets = Object.values(tickets).reduce(
-      (sum, count) => sum + count,
-      0
-    );
 
+
+  const handleCheckout = () => {
+    const totalTickets = Object.values(tickets).reduce((sum, count) => sum + count, 0);
+    
     if (totalTickets === 0) {
-      setErrorMessage(
-        "Please select at least one ticket before proceeding to checkout"
-      );
+      setErrorMessage('Please select at least one ticket before proceeding to checkout');
       return;
     }
-
+  
     if (!isLoggedIn) {
       setShowLoginPopup(true);
       return;
     }
-
-    navigate(`/tickets/checkout`, {
-      state: {
+  
+    navigate(`/tickets/checkout`, { 
+      state: { 
         tickets: tickets,
         total: total,
-        type: "tickets",
-      },
+        type: 'tickets'
+      } 
     });
   };
 
@@ -82,38 +75,38 @@ const Tickets = () => {
       adult: 0,
       child: 0,
       senior: 0,
-      member: 0,
+      member: 0
     });
     setTotal(0);
   };
 
   const handleIncrement = (type) => {
-    if (type === "member") {
+    if (type === 'member') {
       if (!checkMonthlyLimit()) {
         alert("Monthly free ticket limit reached");
         return;
       }
-      setMemberTicketsThisMonth((prev) => prev + 1);
+      setMemberTicketsThisMonth(prev => prev + 1);
       setLastRedemptionDate(new Date().toISOString());
     }
-
-    setTickets((prev) => ({
+    
+    setTickets(prev => ({
       ...prev,
-      [type]: prev[type] + 1,
+      [type]: prev[type] + 1
     }));
-    setTotal((prev) => prev + prices[type]);
+    setTotal(prev => prev + prices[type]);
   };
 
   const handleDecrement = (type) => {
     if (tickets[type] > 0) {
-      if (type === "member") {
-        setMemberTicketsThisMonth((prev) => prev - 1);
+      if (type === 'member') {
+        setMemberTicketsThisMonth(prev => prev - 1);
       }
-      setTickets((prev) => ({
+      setTickets(prev => ({
         ...prev,
-        [type]: prev[type] - 1,
+        [type]: prev[type] - 1
       }));
-      setTotal((prev) => prev - prices[type]);
+      setTotal(prev => prev - prices[type]);
     }
   };
 
@@ -122,16 +115,16 @@ const Tickets = () => {
       <div className="tickets-hero">
         <h1>Purchase Your Tickets</h1>
         <p>Experience the wonders of nature at Nature Kingdom Zoo</p>
-
+        
         <div className="member-toggle">
-          <button
-            className={`toggle-button ${!isMemberView ? "active" : ""}`}
+          <button 
+            className={`toggle-button ${!isMemberView ? 'active' : ''}`}
             onClick={() => setIsMemberView(false)}
           >
             Regular Tickets
           </button>
-          <button
-            className={`toggle-button ${isMemberView ? "active" : ""}`}
+          <button 
+            className={`toggle-button ${isMemberView ? 'active' : ''}`}
             onClick={handleMemberToggle}
           >
             Member Benefits
@@ -142,56 +135,52 @@ const Tickets = () => {
       {!isMemberView ? (
         <div className="ticket-types">
           <div className="ticket-card">
-            <img src={Lion} alt="Adult Ticket" className="ticket-image" />
+            <img src="src\zoo_pictures\zoo_lion.jpg" alt="Adult Ticket" className="ticket-image" />
             <h2>Adult Ticket</h2>
             <p className="price">${prices.adult}</p>
             <p className="description">Ages 13-64</p>
             <div className="ticket-counter">
-              <button onClick={() => handleDecrement("adult")}>-</button>
+              <button onClick={() => handleDecrement('adult')}>-</button>
               <span>{tickets.adult}</span>
-              <button onClick={() => handleIncrement("adult")}>+</button>
+              <button onClick={() => handleIncrement('adult')}>+</button>
             </div>
           </div>
 
           <div className="ticket-card">
-            <img src={Babycougar} alt="Child Ticket" className="ticket-image" />
+            <img src="src\zoo_pictures\baby_cougar.jpg" alt="Child Ticket" className="ticket-image" />
             <h2>Child Ticket</h2>
             <p className="price">${prices.child}</p>
             <p className="description">Ages 3-12</p>
             <div className="ticket-counter">
-              <button onClick={() => handleDecrement("child")}>-</button>
+              <button onClick={() => handleDecrement('child')}>-</button>
               <span>{tickets.child}</span>
-              <button onClick={() => handleIncrement("child")}>+</button>
+              <button onClick={() => handleIncrement('child')}>+</button>
             </div>
           </div>
 
           <div className="ticket-card">
-            <img src={BabyKoala} alt="Senior Ticket" className="ticket-image" />
+            <img src="src\zoo_pictures\koala_baby_photo.jpg" alt="Senior Ticket" className="ticket-image" />
             <h2>Senior Ticket</h2>
             <p className="price">${prices.senior}</p>
             <p className="description">Ages 65+</p>
             <div className="ticket-counter">
-              <button onClick={() => handleDecrement("senior")}>-</button>
+              <button onClick={() => handleDecrement('senior')}>-</button>
               <span>{tickets.senior}</span>
-              <button onClick={() => handleIncrement("senior")}>+</button>
+              <button onClick={() => handleIncrement('senior')}>+</button>
             </div>
           </div>
         </div>
       ) : (
         <div className="member-tickets-section">
           <div className="ticket-card member-card">
-            <img
-              src={CoupleBirds}
-              alt="Member Ticket"
-              className="ticket-image"
-            />
+            <img src="src\zoo_pictures\couple_birds_2.jpg" alt="Member Ticket" className="ticket-image" />
             <h2>Member Free Admission</h2>
             <p className="price">FREE</p>
             <p className="description">Maximum 4 tickets per month</p>
             <div className="ticket-counter">
-              <button onClick={() => handleDecrement("member")}>-</button>
+              <button onClick={() => handleDecrement('member')}>-</button>
               <span>{tickets.member}</span>
-              <button onClick={() => handleIncrement("member")}>+</button>
+              <button onClick={() => handleIncrement('member')}>+</button>
             </div>
             <div className="member-info">
               <p className="tickets-remaining">
@@ -199,8 +188,7 @@ const Tickets = () => {
               </p>
               {lastRedemptionDate && (
                 <p className="last-redemption">
-                  Last redeemed:{" "}
-                  {new Date(lastRedemptionDate).toLocaleDateString()}
+                  Last redeemed: {new Date(lastRedemptionDate).toLocaleDateString()}
                 </p>
               )}
             </div>
@@ -208,19 +196,22 @@ const Tickets = () => {
         </div>
       )}
 
+      
       <div className="checkout-section">
-        {errorMessage && <div className="error-message">{errorMessage}</div>}
+      {errorMessage && (
+        <div className="error-message">
+            {errorMessage}
+        </div>
+      )}
         <div className="total-amount">
           <h2>Total: ${total.toFixed(2)}</h2>
         </div>
-
-        <button
+        
+        <button 
           className="checkout-button"
-          onClick={() => {
-            handleCheckout();
-          }}
+          onClick={() => {handleCheckout()}}
         >
-          {isMemberView ? "Redeem Free Tickets" : "Proceed to Checkout"}
+          {isMemberView ? 'Redeem Free Tickets' : 'Proceed to Checkout'}
         </button>
       </div>
 
@@ -243,24 +234,21 @@ const Tickets = () => {
       </div>
       {showLoginPopup && (
         <>
-          <div
-            className="overlay"
-            onClick={() => setShowLoginPopup(false)}
-          ></div>
+          <div className="overlay" onClick={() => setShowLoginPopup(false)}></div>
           <div className="login-popup">
             <h3>Login Required</h3>
             <p>Please log in to proceed with your ticket purchase.</p>
             <div className="popup-buttons">
-              <button
+              <button 
                 onClick={() => {
                   setShowLoginPopup(false);
-                  navigate("/login");
+                  navigate('/login');
                 }}
                 className="login-button"
               >
                 Go to Login
               </button>
-              <button
+              <button 
                 onClick={() => setShowLoginPopup(false)}
                 className="cancel-button"
               >

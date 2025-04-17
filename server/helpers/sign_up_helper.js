@@ -1,7 +1,7 @@
 require("dotenv").config();
 const getParseData = require("../utils/getParseData");
 const db_connection = require("../database");
-const bcrypt = require("bcrypt"); // Import bcrypt for password hashing
+const bcrypt = require("bcryptjs"); // Import bcrypt for password hashing
 
 const handleSignUp = (req, res) => {
   getParseData(req) // Use getParseData to parse the request body

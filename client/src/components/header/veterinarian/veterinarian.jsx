@@ -15,7 +15,7 @@ function veterinarianHeader() {
 
   const handleLogout = () => {
     if (auth && auth.logout) {
-      auth.logout("/employee_login");
+      auth.logout();
     } else {
       localStorage.removeItem("token");
       localStorage.removeItem("username");

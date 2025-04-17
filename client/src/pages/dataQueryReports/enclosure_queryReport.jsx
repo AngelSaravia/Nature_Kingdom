@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const filterOptions = [
@@ -15,7 +15,7 @@ const filterOptions = [
   { label: "LOCATION", type: "text", name: "location" },
   { label: "TEMPERATURE CONTROL", type: "radio", name: "temp_control", options: ["Yes", "No"] },
   { label: "MANAGER NAME", type: "text", name: "manager_name" },
-  { label: "EXHIBIT NAME", type: "checkbox", name: "exhibit_name", options: ['Feather Fiesta','Creepy Crawlies','Tundra Treasures','Sunlit Savanna','Rainforest Rumble','Willowing Wetlands','Desert Mirage','Underwater Utopia'] },
+  { label: "EXHIBIT NAME", type: "checkbox", name: "exhibit_name", options: ['Feather Fiesta', 'Creepy Crawlies', 'Tundra Treasures', 'Sunlit Savanna', 'Rainforest Rumble', 'Willowing Wetlands', 'Desert Mirage', 'Underwater Utopia'] },
 ];
 
 const columnHeaders = ["name", "current_capacity", "capacity", "location", "opens_at", "closes_at", "status", "temp_control", "manager_name", "exhibit_name"];
@@ -53,7 +53,6 @@ const EnclosureQueryReport = () => {
 
   const fetchReport = async (applyFilters = true) => {
     try {
-        // Add a helper function to convert time to military format
         const convertToMilitaryTime = (time) => {
           const [hours, minutes] = time.split(':');
           const period = time.toLowerCase().includes('pm') ? 'PM' : 'AM';
@@ -63,15 +62,12 @@ const EnclosureQueryReport = () => {
           return `${String(militaryHours).padStart(2, '0')}:${minutes}:00`;
         };
 
-        // Create prefixed filters object
         const prefixedFilters = {};
         if (applyFilters && Object.keys(filters).length > 0) {
           Object.keys(filters).forEach((key) => {
               if (key === 'manager_name') {
-                  // Handle manager name search using CONCAT in WHERE clause
                   prefixedFilters['CONCAT(employees.first_name, " ", employees.last_name)'] = filters[key];
               } else if (key === 'exhibit_name') {
-                // Handle exhibit name search using the actual column name
                 if (Array.isArray(filters[key]) && filters[key].length > 0) {
                   prefixedFilters['exhibits.name'] = filters[key];
                 }
@@ -89,7 +85,7 @@ const EnclosureQueryReport = () => {
           table1: "enclosures",
           table2: "employees",
           join_condition: "enclosures.Manager_id = employees.employee_id",
-          additional_joins: [{table: "exhibits", join_condition: "enclosures.exhibit_id = exhibits.exhibit_id"}],
+          additional_joins: [{ table: "exhibits", join_condition: "enclosures.exhibit_id = exhibits.exhibit_id" }],
           computed_fields: `
             enclosures.*, 
             CONCAT(employees.first_name, ' ', employees.last_name) AS manager_name,
@@ -126,7 +122,6 @@ const EnclosureQueryReport = () => {
     return (
       <button 
         onClick={() => {
-          // Store in sessionStorage as fallback
           sessionStorage.setItem('enclosureEditData', JSON.stringify(tuple));
           navigate('/enclosure_form', { state: { tuple } });
         }}
@@ -136,8 +131,9 @@ const EnclosureQueryReport = () => {
       </button>
     );
   };
+
   return (
-    <div className="enclosure-query-report">
+    <div className="enclosure-query-report-main">
       <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
       <div className="report-table-container">
         <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
@@ -145,7 +141,7 @@ const EnclosureQueryReport = () => {
           <a href="/enclosure_form" target="_blank" rel="noopener noreferrer" className="edit-enclosure-button">Edit Enclosure</a>
         </div>
       </div>
-      </div>
+    </div>
   );
 };
 
