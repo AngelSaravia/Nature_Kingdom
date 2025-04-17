@@ -48,6 +48,8 @@ const handleQueryReport = (req, res) => {
                         if (value !== undefined && value !== null && value !== "") {
                             if (key.startsWith("revenue.")) {
                                 handleRevenueFilters(key.replace("revenue.", ""), value, conditions, values);
+                            } else if (key === "product type") { // Ensure product type is handled
+                                handleRevenueFilters(key, value, conditions, values);
                             }
                         }
                     });
@@ -415,7 +417,7 @@ function handleRevenueFilters(key, value, conditions, values) {
         const allowedTypes = ["ticket", "membership", "gift"];
         const validTypes = Array.isArray(value) ? value.filter(type => allowedTypes.includes(type)) : [];
         if (validTypes.length > 0) {
-            conditions.push(`'product type' IN (${validTypes.map(() => "?").join(", ")})`);
+            conditions.push(`type_of_product IN (${validTypes.map(() => "?").join(", ")})`);
             values.push(...validTypes);
         }
     } else if (key === "start_date") {
@@ -435,22 +437,22 @@ function constructRevenueQuery(conditions) {
     let sql = `
         SELECT * FROM (
             SELECT 
-                ticket_id AS id, 
-                'ticket' AS 'product type', 
+                ticket_id AS tuple_id, 
+                'ticket' AS type_of_product, 
                 price, 
                 DATE(purchase_date) AS purchase_date 
             FROM tickets
             UNION ALL
             SELECT 
-                membership_id AS id, 
-                'membership' AS 'product type', 
+                membership_id AS tuple_id, 
+                'membership' AS type_of_product, 
                 79.99 AS price, 
                 DATE(start_date) AS purchase_date 
             FROM memberships
             UNION ALL
             SELECT 
-                order_id AS id, 
-                'gift order' AS 'product type', 
+                order_id AS tuple_id, 
+                'gift' AS type_of_product, 
                 total_amount AS price, 
                 DATE(order_date) AS purchase_date 
             FROM orders

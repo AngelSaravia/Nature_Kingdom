@@ -94,7 +94,7 @@ const RevenueQueryReport = () => {
         const formattedFilters = {};
         
         if (filters.product_types && filters.product_types.length > 0) {
-            formattedFilters["revenue.product_types"] = filters.product_types;
+            formattedFilters["product type"] = filters.product_types;
         }
         
         if (filters.start_date) {
@@ -188,7 +188,7 @@ const RevenueQueryReport = () => {
                     />
                 </div>
                 
-                    <ReportTable data={reportData} columns={columnHeaders} />
+                <ReportTable data={reportData} columns={Object.keys(columnHeaders)} columnLabels={columnHeaders} />
             </div>
 
             {/* <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={() => fetchReport(true)} onClearAll={onClearAll} filterOptions={filterOptions}/>
