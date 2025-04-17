@@ -24,7 +24,7 @@ const getUserGiftShopPurchases = async (username) => {
   try {
     console.log('Fetching gift shop purchases for user:', username);
     const [purchases] = await db_connection.promise().query(getGiftShopPurchasesQuery, [username]);
-    console.log('Found purchases:', purchases);
+    // console.log('Found purchases:', purchases);
 
     return {
       success: true,

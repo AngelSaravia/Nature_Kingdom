@@ -15,7 +15,7 @@ function ManagerHeader() {
 
   const handleLogout = () => {
     if (logout) {
-      logout();
+      logout("/employee_login");
     } else {
       localStorage.removeItem("token");
       localStorage.removeItem("username");
@@ -45,13 +45,11 @@ function ManagerHeader() {
 
       <nav className="nav-links">
         <Link to="/manager_dash">Dashboard</Link>
-        <Link to="/event_form">Events Form</Link>
-        <Link to="/enclosure_form">Enclosure Form</Link>
-        <ManagerNotification />
       </nav>
       <div className="user-menu">
         <ClockInComponent />
         <span className="username">Welcome, {username}</span>
+        <ManagerNotification />
         <button className="logout-btn" onClick={handleLogout}>
           Logout
         </button>

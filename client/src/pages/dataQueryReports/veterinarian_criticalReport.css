@@ -287,6 +287,153 @@
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   font-size: 1.1rem;
 }
+.medical-history-container {
+  padding: 20px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.medical-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.medical-record-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.record-date {
+  font-weight: bold;
+  color: #2c5e4e;
+}
+
+.record-type {
+  background-color: #2c5e4e;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.record-id {
+  color: #777;
+  font-size: 0.8rem;
+}
+
+.record-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.record-field {
+  line-height: 1.5;
+}
+
+.record-field strong {
+  color: #444;
+}
+
+.record-footer {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.edit-record-btn {
+  background-color: #2c5e4e;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit-record-btn:hover {
+  background-color: #214639;
+}
+
+.popup-footer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.close-btn,
+.new-record-btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.close-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.new-record-btn {
+  background-color: #2c5e4e;
+  color: white;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content-medical-history {
+  background-color: white;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.popup-header {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.popup-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #555;
+}
+
+.popup-body {
+  padding: 0;
+}
 
 .arrow {
   margin: 0 20px;

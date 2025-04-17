@@ -15,7 +15,7 @@ function zookeeperHeader() {
 
   const handleLogout = () => {
     if (auth && auth.logout) {
-      auth.logout();
+      auth.logout("/employee_login");
     } else {
       localStorage.removeItem("token");
       localStorage.removeItem("username");

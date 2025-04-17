@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
@@ -11,20 +11,42 @@ const filterOptions = [
   { label: "MIN DURATION (HH:MM)", type: "text", name: "durationMin" },
   { label: "MAX DURATION (HH:MM)", type: "text", name: "durationMax" },
   { label: "LOCATION", type: "text", name: "location" },
-  { label: "TYPE", type: "checkbox", name: "eventType", options: ["Educational", "Entertainment", "Seasonal", "Workshops", "Fundraising", "Animal Interaction", "Corporate"] },
+  {
+    label: "TYPE",
+    type: "checkbox",
+    name: "eventType",
+    options: [
+      "Educational",
+      "Entertainment",
+      "Seasonal",
+      "Workshops",
+      "Fundraising",
+      "Animal Interaction",
+      "Corporate",
+    ],
+  },
   { label: "CAPACITY", type: "number", name: "capacity" },
   { label: "PRICE (Min)", type: "number", name: "priceMin" },
   { label: "PRICE (Max)", type: "number", name: "priceMax" },
   { label: "MANAGER EMAIL", type: "text", name: "manager_email" },
 ];
 
-const columnHeaders = ["eventName", "description", "eventDate", "duration", "location", "eventType", "capacity", "price", "manager_email"];
+const columnHeaders = [
+  "eventName",
+  "description",
+  "eventDate",
+  "duration",
+  "location",
+  "eventType",
+  "capacity",
+  "price",
+  "manager_email",
+];
 
 const EventQueryReport = () => {
   const [filters, setFilters] = useState({});
   const [reportData, setReportData] = useState([]);
   const navigate = useNavigate();
-  
 
   useEffect(() => {
     fetchReport(false);
@@ -35,7 +57,7 @@ const EventQueryReport = () => {
       setFilters((prevFilters) => eventOrUpdater(prevFilters));
     } else {
       const { name, value, type, checked } = eventOrUpdater.target;
-    
+
       setFilters((prevFilters) => {
         if (type === "checkbox") {
           const updatedValues = prevFilters[name] ? [...prevFilters[name]] : [];
@@ -54,60 +76,75 @@ const EventQueryReport = () => {
 
   const fetchReport = async (applyFilters = true) => {
     try {
-        // Validate HH:MM format for durationMin and durationMax
-      if (filters.durationMin && !/^([0-9]|[0-9][0-9]):[0-5][0-9]$/.test(filters.durationMin)) {
+      // Validate HH:MM format for durationMin and durationMax
+      if (
+        filters.durationMin &&
+        !/^([0-9]|[0-9][0-9]):[0-5][0-9]$/.test(filters.durationMin)
+      ) {
         console.error("Invalid durationMin format. Please use HH:MM.");
         return;
       }
-      if (filters.durationMax && !/^([0-9]|[0-9][0-9]):[0-5][0-9]$/.test(filters.durationMax)) {
+      if (
+        filters.durationMax &&
+        !/^([0-9]|[0-9][0-9]):[0-5][0-9]$/.test(filters.durationMax)
+      ) {
         console.error("Invalid durationMax format. Please use HH:MM.");
         return;
       }
 
-        // Create prefixed filters
-        const prefixedFilters = {};
-        if (applyFilters && Object.keys(filters).length > 0) {
-          Object.keys(filters).forEach((key) => {
-              if (['eventName', 'eventDate', 'duration', 'location', 
-                  'eventType', 'capacity', 'price'].includes(key)) {
-                  prefixedFilters[`events.${key}`] = filters[key];
-              } else if (key.endsWith('Min') || key.endsWith('Max')) {
-                  // Handle range filters
-                  const baseKey = key.replace('Min', '').replace('Max', '');
-                  prefixedFilters[`events.${key}`] = filters[key];
-              } else if (key === "manager_email") {
-                prefixedFilters["manager.email"] = filters[key];
-              } else {
-                  prefixedFilters[key] = filters[key];
-              }
-          });
-        }
-        const queryParams = {
-          table1: "events",
-          table2: "employees AS manager",
-          join_condition: "events.managerID = manager.Employee_id",
-          computed_fields: `
+      // Create prefixed filters
+      const prefixedFilters = {};
+      if (applyFilters && Object.keys(filters).length > 0) {
+        Object.keys(filters).forEach((key) => {
+          if (
+            [
+              "eventName",
+              "eventDate",
+              "duration",
+              "location",
+              "eventType",
+              "capacity",
+              "price",
+            ].includes(key)
+          ) {
+            prefixedFilters[`events.${key}`] = filters[key];
+          } else if (key.endsWith("Min") || key.endsWith("Max")) {
+            // Handle range filters
+            const baseKey = key.replace("Min", "").replace("Max", "");
+            prefixedFilters[`events.${key}`] = filters[key];
+          } else if (key === "manager_email") {
+            prefixedFilters["manager.email"] = filters[key];
+          } else {
+            prefixedFilters[key] = filters[key];
+          }
+        });
+      }
+      const queryParams = {
+        table1: "events",
+        table2: "employees AS manager",
+        join_condition: "events.managerID = manager.Employee_id",
+        computed_fields: `
               events.*, 
               manager.email AS manager_email
           `,
-          ...prefixedFilters,
-        };
+        ...prefixedFilters,
+      };
 
-        const response = await fetch(`${API_BASE_URL}/query_report/events`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(queryParams),
-        });
+      const response = await fetch(`${API_BASE_URL}/query_report/events`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(queryParams),
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (data.success) {
-            setReportData(data.data);
-        } else {
-            console.error("Error fetching report:", data.message);
-        }
+      if (data.success) {
+        setReportData(data.data);
+      } else {
+        console.error("Error fetching report:", data.message);
+      }
     } catch (error) {
-        console.error("Error fetching report:", error);
+      console.error("Error fetching report:", error);
     }
   };
 
@@ -118,11 +155,11 @@ const EventQueryReport = () => {
 
   const renderEditButton = (tuple) => {
     return (
-      <button 
+      <button
         onClick={() => {
           // Store in sessionStorage as fallback
-          sessionStorage.setItem('eventEditData', JSON.stringify(tuple));
-          navigate('/event_form', { state: { tuple } });
+          sessionStorage.setItem("eventEditData", JSON.stringify(tuple));
+          navigate("/event_form", { state: { tuple, noadd: true } });
         }}
         className="edit-tuple-button"
       >
@@ -132,14 +169,31 @@ const EventQueryReport = () => {
   };
   return (
     <div className="event-query-report">
-      <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
+      <FilterSidebar
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        onRunReport={fetchReport}
+        onClearAll={onClearAll}
+        filterOptions={filterOptions}
+      />
       <div className="report-table-container">
-        <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
+        <ReportTable
+          data={reportData}
+          columns={columnHeaders}
+          renderActions={(tuple) => renderEditButton(tuple)}
+        />
         <div className="edit-event-button-container">
-          <a href="/event_form" target="_blank" rel="noopener noreferrer" className="edit-event-button">Edit Event</a>
+          <a
+            href="/event_form"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="edit-event-button"
+          >
+            Edit Event
+          </a>
         </div>
       </div>
-      </div>
+    </div>
   );
 };
 

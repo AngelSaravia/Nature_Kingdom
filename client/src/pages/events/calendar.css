@@ -1,11 +1,11 @@
-.calendar-container{
+.calendar-container {
   display: flex;
   align-items: center;
-  height: 80%;
-  width: 70%;
+  height: 95%;
+  width: 95%;
 }
 
-.calendar-page{
+.calendar-page {
   height: 70vh;
   width: auto;
   display: flex;
@@ -15,7 +15,7 @@
   padding-bottom: 50px;
 }
 
-.calendar-title{
+.calendar-title {
   margin: 0px;
 }
 
@@ -36,7 +36,20 @@
   color: white;
   position: relative;
   overflow: visible !important;
-  z-index: 5;
+  z-index: 0;
+  cursor: pointer; /* Add pointer cursor to indicate clickability */
+}
+
+/* Additional style to enforce solid background on any tooltip */
+.event-tooltip::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  z-index: -1;
 }
 
 /* Ensure parent containers allow overflow */
@@ -48,13 +61,15 @@
 .rbc-day-bg,
 .rbc-date-cell {
   overflow: visible !important;
-} 
+}
 
 .rbc-today {
   background-color: #93cefa;
 }
 
-.rbc-toolbar-label, .rbc-header, .rbc-button-link{
+.rbc-toolbar-label,
+.rbc-header,
+.rbc-button-link {
   color: black;
 }
 
@@ -74,48 +89,78 @@
   text-overflow: ellipsis;
 }
 
-/* First, update your current tooltip styles */
+/* Updated tooltip styles for click functionality */
 .event-tooltip {
-  position: fixed; /* Changed from absolute to fixed */
+  position: fixed;
   z-index: 2000;
-  background: white;
+  background-color: white; /* Solid white background */
   border: 1px solid #ddd;
   border-radius: 4px;
   padding: 10px;
   min-width: 200px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   font-size: 14px;
   color: #333;
   visibility: hidden;
   opacity: 0;
-  transition: opacity 0.2s ease;
-  pointer-events: none;
-  /* Position near the cursor */
-  transform: translate(-50%, 10px);
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  pointer-events: auto; /* Allow interaction with tooltip */
 }
 
-/* Make the tooltip visible with stronger rules */
+/* Show tooltip when event has active class */
+.custom-event.active .event-tooltip {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  background-color: white !important;
+}
+
+/* Keep the hover effect as fallback */
 .custom-event:hover .event-tooltip {
   visibility: visible !important;
   opacity: 1 !important;
   display: block !important;
+  background-color: white !important;
 }
 
-.event-tooltip.visible{
+.event-tooltip.visible {
   visibility: visible !important;
   opacity: 1 !important;
+  background-color: white !important;
+}
+
+/* Add click-outside area to close tooltip */
+.tooltip-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1999; /* Below tooltip but above everything else */
+  display: none;
+}
+
+.tooltip-backdrop.active {
+  display: block;
 }
 
 .rbc-event-content {
   position: relative;
 }
+.rbc-date-cell {
+  padding: 8px 10px; /* Increased padding */
+  font-weight: 500;
+  color: #666;
+  text-align: right;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .calendar-container {
     width: 90%;
     height: 90%;
   }
-  
+
   .event-tooltip {
     min-width: 150px;
     font-size: 12px;

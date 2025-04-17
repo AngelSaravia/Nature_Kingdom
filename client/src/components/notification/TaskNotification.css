@@ -44,7 +44,7 @@
   position: absolute;
   top: 50px;
   right: 0;
-  width: 320px;
+  width: 500px;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -70,6 +70,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.task-time {
+  color: black;
 }
 
 .popup-header h3 {

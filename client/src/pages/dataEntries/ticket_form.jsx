@@ -131,7 +131,7 @@ const TicketForm = () => {
                 if (action === "delete") {
                     const freshResponse = await fetch (`${API_BASE_URL}/get_tickets`);
                     const freshData = await freshResponse.json();
-                    if (freshData.success) setVisitors(freshData.data);
+                    if (freshData.success) setTickets(freshData.data);
                 }
                 if (action !== "delete") {
                     setFormData({
