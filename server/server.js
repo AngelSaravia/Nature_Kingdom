@@ -16,7 +16,7 @@ const getParseData = require("./utils/getParseData");
 const membershipHelper = require("./helpers/membership_helper");
 const handleEnclosureForm = require("./helpers/enclosureFormHelper");
 const handleAnimalForm = require("./helpers/animalFormHelper");
-const handleEmployeeForm = require("./helpers/employeeFormHelper");
+const { handleEmployeeForm, getEmployeeById } = require("./helpers/employeeFormHelper");
 const handleEventForm = require("./helpers/eventFormHelper");
 const handleTicketForm = require("./helpers/ticketFormHelper");
 const handleVisitorForm = require("./helpers/visitorFormHelper");
@@ -142,6 +142,10 @@ const server = http.createServer(async (req, res) => {
   } else if (path === "/query_report/events" && req.method === "POST") {
     handleQueryReport(req, res);
   } else if (path === "/query_report/employees" && req.method === "POST") {
+    handleQueryReport(req, res);
+  } else if (path === "/query_report/orders" && req.method === "POST") {
+    handleQueryReport(req, res);
+  } else if (path === "/query_report/order_items" && req.method === "POST") {
     handleQueryReport(req, res);
   } else if (
     path === "/api/veterinarian/resolve-alert" &&
@@ -448,6 +452,11 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true, data: results }));
     });*/
+  } else if (path.match(/^\/get_employees\/\d+$/) && req.method === "GET") {
+    console.log("GET /get_employees route matched");
+    const id = path.split("/").pop(); // Extract the employee ID from the URL
+    console.log("Employee ID:", id);
+    getEmployeeById(id, res); // Call the helper function
   } else if (path === "/employee_form" && req.method === "POST") {
     handleEmployeeForm(req, res);
   } else if (path === "/get_employees" && req.method === "GET") {

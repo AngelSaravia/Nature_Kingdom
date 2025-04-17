@@ -17,7 +17,21 @@ const filterOptions = [
     { label: "ENDING DATE OF RECORD" , type: "date", name: "dateMax"},
 ];
 
-const columnHeaders = ["animal_id", "animal_name", "employee_email", "enclosure_name", "location", "health_status", "date", "species", "record_type", "diagnosis", "treatment", "followup", "additional"];
+const columnHeaders = {
+    animal_id: "Animal ID",
+    animal_name: "Animal Name",
+    employee_email: "Employee Email",
+    enclosure_name: "Enclosure Name",
+    location: "Location",
+    health_status: "Health Status",
+    date: "Medical Record Date",
+    species: "Species",
+    record_type: "Record Type",
+    diagnosis: "Diagnosis",
+    treatment: "Treatment",
+    followup: "Follow-Up Date",
+    additional: "Additional Notes",
+};
 
 const MedicalRecordsQueryReport = () => {
     const [filters, setFilters] = useState({});
@@ -178,7 +192,7 @@ const MedicalRecordsQueryReport = () => {
         <div className="medicalRecords-query-report">
           <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} dropdownData={dropdownData} resetDropdowns={resetDropdowns}/>
           <div className="report-table-container">
-          <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
+          <ReportTable data={reportData} columns={Object.keys(columnHeaders)} renderActions={(tuple) => renderEditButton(tuple)} columnLabels={columnHeaders}/>
           <div className="edit-medicalRecords-button-container">
             <Link to="/medical_form" className="edit-medicalRecords-button">Add Medical Record</Link>
           </div>

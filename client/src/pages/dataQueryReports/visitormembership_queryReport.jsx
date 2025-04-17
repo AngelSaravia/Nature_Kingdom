@@ -23,13 +23,25 @@ const filterOptions = [
     { label: "MEMBERSHIP STATUS", type: "checkbox", name: "membership_status", options: ["active", "inactive"] },
 ];
 
-const columnHeaders = [
-    "first_name", "last_name", "username", "email",
-    "phone_number", "date_of_birth", "gender", "street_address", 
-    "city", "state", "zipcode", "country",
-    "membership_status", "end_date", "first_login", "last_login"
 
-];
+const columnHeaders = {
+    first_name: "First Name",
+    last_name: "Last Name",
+    username: "Username",
+    email: "Email",
+    phone_number: "Phone Number",
+    date_of_birth: "Date of Birth",
+    gender: "Gender",
+    street_address: "Street Address",
+    city: "City",
+    state: "State",
+    zipcode: "Zip Code",
+    country: "Country",
+    membership_status: "Membership Status",
+    end_date: "Membership End Date",
+    first_login: "First Login",
+    last_login: "Last Login",
+};
 
 const VisitorMembershipQueryReport = () => {
     const [filters, setFilters] = useState({});
@@ -140,10 +152,10 @@ const VisitorMembershipQueryReport = () => {
         <div className="visitor-query-report"> 
           <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
           <div className="report-table-container">
-          <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
+          <ReportTable data={reportData} columns={Object.keys(columnHeaders)} renderActions={(tuple) => renderEditButton(tuple)} columnLabels={columnHeaders}/>
           <div className="edit-visitor-button-container">
 
-            <a href="/visitor_form" target="_blank" rel="noopener noreferrer" className="edit-visitor-button">Edit Visitor</a>
+            <a href="/visitor_form" className="edit-visitor-button">Edit Visitor</a>
 
           </div>
         </div>

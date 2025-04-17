@@ -14,7 +14,13 @@ const filterOptions = [
     { label: "ENDING PURCHASE DATE", type: "date", name: "purchase_dateMax" },
 ];
 
-const columnHeaders = ["visitor_name", "start_date", "end_date", "ticket_type", "purchase_date"];
+const columnHeaders = {
+    visitor_name: "Visitor Name",
+    start_date: "Start Date",
+    end_date: "End Date",
+    ticket_type: "Ticket Type",
+    purchase_date: "Purchase Date",
+};
 
 const TicketQueryReport = () => {
     const [filters, setFilters] = useState({});
@@ -127,9 +133,9 @@ const TicketQueryReport = () => {
         <div className="ticket-query-report">
             <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
             <div className="report-table-container">
-                <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)}/>
+                <ReportTable data={reportData} columns={Object.keys(columnHeaders)} renderActions={(tuple) => renderEditButton(tuple)} columnLabels={columnHeaders}/>
                 <div className="edit-ticket-button-container">
-                    <a href="/ticket_form" target="_blank" rel="noopener noreferrer" className="edit-ticket-button">Edit Ticket</a>
+                    <a href="/ticket_form" className="edit-ticket-button">Add Ticket</a>
                 </div>
             </div>
         </div>

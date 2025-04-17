@@ -12,7 +12,12 @@ const filterOptions = [
     { label: "END DATE", type: "date", name: "end_date" },
 ];
 
-const columnHeaders = ["id", "product type", "price", "purchase_date"];
+const columnHeaders = {
+    tuple_id: "Product ID",
+    type_of_product: "Type of Product",
+    price: "Price",
+    purchase_date: "Purchase Date",
+};
 
 const TotalSalesBox = ({ total }) => {
     return (
@@ -50,7 +55,15 @@ const RevenueQueryReport = () => {
     const calculateTotalSales = (data) => {
         return data.reduce((sum, item) => sum + parseFloat(item.price), 0);
     };
-
+    const [totals, setTotals] = useState({
+        totalTickets: 0,
+        totalTicketEarnings: 0,
+        totalGifts: 0,
+        totalGiftEarnings: 0,
+        totalMemberships: 0,
+        totalMembershipEarnings: 0,
+    });
+    
     useEffect(() => {
         fetchReport(false);
     }, []);
@@ -81,7 +94,7 @@ const RevenueQueryReport = () => {
         const formattedFilters = {};
         
         if (filters.product_types && filters.product_types.length > 0) {
-            formattedFilters["revenue.product_types"] = filters.product_types;
+            formattedFilters["product type"] = filters.product_types;
         }
         
         if (filters.start_date) {
@@ -122,6 +135,32 @@ const RevenueQueryReport = () => {
         }
     };
 
+    const calculateTotals = (data) => {
+        const totals = {
+            totalTickets: 0,
+            totalTicketEarnings: 0,
+            totalGifts: 0,
+            totalGiftEarnings: 0,
+            totalMemberships: 0,
+            totalMembershipEarnings: 0,
+        };
+
+        data.forEach((item) => {
+            if (item.type_of_product === "ticket") {
+                totals.totalTickets += 1;
+                totals.totalTicketEarnings += parseFloat(item.price);
+            } else if (item.type_of_product === "gift") {
+                totals.totalGifts += 1;
+                totals.totalGiftEarnings += parseFloat(item.price);
+            } else if (item.type_of_product === "membership") {
+                totals.totalMemberships += 1;
+                totals.totalMembershipEarnings += parseFloat(item.price);
+            }
+        });
+
+        setTotals(totals);
+    };
+
     const onClearAll = () => {
         setFilters({
             product_types: [],
@@ -149,13 +188,32 @@ const RevenueQueryReport = () => {
                     />
                 </div>
                 
-                    <ReportTable data={reportData} columns={columnHeaders} />
+                <ReportTable data={reportData} columns={Object.keys(columnHeaders)} columnLabels={columnHeaders} />
             </div>
 
             {/* <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={() => fetchReport(true)} onClearAll={onClearAll} filterOptions={filterOptions}/>
-            <div className="report-table-container">
-                <ReportTable data={reportData} columns={columnHeaders} />
-            </div> */}
+                <div className="report-content">
+                    <div className="report-table-container">
+                        <ReportTable data={reportData} columns={Object.keys(columnHeaders)} columnLabels={columnHeaders}/>
+                    </div>
+                    <div className="totals-container">
+                        <div className="totals-block">
+                            <h4>Tickets</h4>
+                            <p>Total Tickets Purchased: <span>{totals.totalTickets}</span></p>
+                            <p>Total Ticket Earnings: <span>${totals.totalTicketEarnings.toFixed(2)}</span></p>
+                        </div>
+                        <div className="totals-block">
+                            <h4>Gifts</h4>
+                            <p>Total Gifts Purchased: <span>{totals.totalGifts}</span></p>
+                            <p>Total Giftshop Earnings: <span>${totals.totalGiftEarnings.toFixed(2)}</span></p>
+                        </div>
+                        <div className="totals-block">
+                            <h4>Memberships</h4>
+                            <p>Total Memberships Purchased: <span>{totals.totalMemberships}</span></p>
+                            <p>Total Membership Earnings: <span>${totals.totalMembershipEarnings.toFixed(2)}</span></p>
+                        </div>
+                    </div>
+                </div> */}
         </div>
     );
 };
