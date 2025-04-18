@@ -134,6 +134,12 @@ const server = http.createServer(async (req, res) => {
         JSON.stringify({ success: true, data: results.map((row) => row.name) })
       ); // Return only the names
     });
+  } else if ( //placed above broader condition for correct route matching.
+    path === "/medical_records/distinct_values" &&
+    req.method === "GET"
+  ) {
+    //for medical Qreport dropdowns
+    handleDistinctValuesForMedicalRecords(req, res);
   } else if (
     path.startsWith("/medical_records") ||
     path === "/get_medical_records"
@@ -368,12 +374,6 @@ const server = http.createServer(async (req, res) => {
     handleQueryReport(req, res);
   } else if (path === "/query_report/medicalRecords" && req.method === "POST") {
     handleQueryReport(req, res);
-  } else if (
-    path === "/medical_records/distinct_values" &&
-    req.method === "GET"
-  ) {
-    //for medical Qreport dropdowns
-    handleDistinctValuesForMedicalRecords(req, res);
   } else if (path === "/query_report/visitors" && req.method === "POST") {
     handleQueryReport(req, res);
     // Data Entry Forms

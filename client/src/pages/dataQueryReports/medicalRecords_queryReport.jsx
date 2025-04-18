@@ -69,11 +69,17 @@ const MedicalRecordsQueryReport = () => {
 
     const handleFilterChange = (eventOrUpdater) => {
         if (typeof eventOrUpdater === "function") {
-            setFilters((prevFilters) => eventOrUpdater(prevFilters));
+            setFilters((prevFilters) => {
+                const updatedFilters = eventOrUpdater(prevFilters);
+                fetchDropdownData();
+                return updatedFilters;
+            });
         } else {
             const { name, value, type, checked } = eventOrUpdater.target;
 
             setFilters((prevFilters) => {
+                const updatedFilters = { ...prevFilters };
+
                 if (type === "checkbox") {
                     const updatedValues = prevFilters[name] ? [...prevFilters[name]] : [];
                     if (checked) {
@@ -82,13 +88,13 @@ const MedicalRecordsQueryReport = () => {
                         const index = updatedValues.indexOf(value);
                         if (index > -1) updatedValues.splice(index, 1);
                     }
-                    return { ...prevFilters, [name]: updatedValues };
+                    updatedFilters[name] = updatedValues;
+                } else {
+                    updatedFilters[name] = value;
                 }
 
-                if (type === "date" || type === "dropdown") {
-                    return { ...prevFilters, [name]: value };
-                }
-                return { ...prevFilters, [name]: value };
+                fetchDropdownData();
+                return updatedFilters;
             });
         }
     };
@@ -121,6 +127,7 @@ const MedicalRecordsQueryReport = () => {
             }
 
             const queryParams = {
+                entity_type: "medical_records",
                 table1: "medical_records",
                 table2: "animals",
                 join_condition: "medical_records.animal_id = animals.animal_id",
