@@ -250,6 +250,34 @@ gap: 20px;
   background-color: #f1f1f1;
 }
 
+.revenue-query-report .total-items-box .breakdown,
+.revenue-query-report .total-sales-box .breakdown {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  text-align: left;
+  color: rgba(5, 70, 0, 0.708);
+  text-align: center;
+}
+.revenue-query-report .total-items-box .breakdown p,
+.revenue-query-report .total-sales-box .breakdown p {
+  font-size: 0.8rem;
+  margin: 8px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  gap: 8px;
+}
+.revenue-query-report .total-items-box .breakdown span,
+.revenue-query-report .total-sales-box .breakdown span {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #007bff;
+}
+.revenue-query-report .total-sales-box .breakdown span {
+  color: #00a80b;
+}
+
+
 /* Action Buttons */
 .edit-employee-button-container,
 .edit-event-button-container,

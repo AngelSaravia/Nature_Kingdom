@@ -20,6 +20,7 @@ const columnHeaders = {
     end_date: "End Date",
     ticket_type: "Ticket Type",
     purchase_date: "Purchase Date",
+    price: "Price",
 };
 
 const TicketQueryReport = () => {
@@ -64,6 +65,8 @@ const TicketQueryReport = () => {
                     } else if (key === 'start_date' || key === 'end_date' || key === 'purchase_dateMin' || key === 'purchase_dateMax') {
                         prefixedFilters[`tickets.${key}`] = filters[key];
                     } else if (key === 'ticket_type') {
+                        prefixedFilters[`tickets.${key}`] = filters[key];
+                    } else if (key === 'price') {
                         prefixedFilters[`tickets.${key}`] = filters[key];
                     }
                 });

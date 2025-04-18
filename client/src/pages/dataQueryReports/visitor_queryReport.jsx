@@ -43,7 +43,7 @@ const columnHeaders = {
     last_login: "Last Login",
 };
 
-const VisitorMembershipQueryReport = () => {
+const VisitorQueryReport = () => {
     const [filters, setFilters] = useState({});
     const [reportData, setReportData] = useState([]);
     const navigate = useNavigate();
@@ -155,11 +155,11 @@ const VisitorMembershipQueryReport = () => {
           <ReportTable data={reportData} columns={Object.keys(columnHeaders)} renderActions={(tuple) => renderEditButton(tuple)} columnLabels={columnHeaders}/>
           <div className="edit-visitor-button-container">
 
-            <a href="/visitor_form" className="edit-visitor-button">Edit Visitor</a>
+            <a href="/visitor_form" className="edit-visitor-button">Add Visitor</a>
 
           </div>
         </div>
         </div>
     );
 };
-export default VisitorMembershipQueryReport;
+export default VisitorQueryReport;
