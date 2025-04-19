@@ -4,6 +4,7 @@ import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/Authcontext";
+import backgroundImage from "../../zoo_pictures/zebra.jpg";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -50,56 +51,67 @@ function Login() {
   };
 
   return (
-    <div className="login">
-      <div className="wrapper">
-        <form onSubmit={handleLogin}>
-          <h1>Login</h1>
-          <div className="input_container">
-            <div className="input-box">
-              <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-              <FaUserAlt />
-            </div>
-            <div className="input-box">
-              <input
-                type={visible ? "text" : "password"}
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <div className="p-2" onClick={() => setVisible(!visible)}>
-                {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+    <div
+      className="dashboard-container"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
+      <div className="login">
+        <div className="wrapper">
+          <form onSubmit={handleLogin}>
+            <h1>Login</h1>
+            <div className="input_container">
+              <div className="input-box">
+                <input
+                  type="text"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
+                <FaUserAlt />
               </div>
-              <FaLock />
+              <div className="input-box">
+                <input
+                  type={visible ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <div className="p-2" onClick={() => setVisible(!visible)}>
+                  {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                </div>
+                <FaLock />
+              </div>
             </div>
-          </div>
-          <div className="remember-forgot">
-            <label>
-              <input type="checkbox" />
-              Remember me
-            </label>
-            <a className="forgot_password" href="#">
-              Forgot password?
-            </a>
-          </div>
-          <div className="login_button">
-            <button type="submit" disabled={isLoading}>
-              {isLoading ? "Logging in..." : "Login"}
-            </button>
-          </div>
-          {message && <p style={{ color: "red" }}>{message}</p>}
-          <div className="register-link">
-            <p>
-              Don't have an account? <a href="/signup">Register</a>
-            </p>
-          </div>
-        </form>
+            <div className="remember-forgot">
+              <label>
+                <input type="checkbox" />
+                Remember me
+              </label>
+              <a className="forgot_password" href="#">
+                Forgot password?
+              </a>
+            </div>
+            <div className="login_button">
+              <button type="submit" disabled={isLoading}>
+                {isLoading ? "Logging in..." : "Login"}
+              </button>
+            </div>
+            {message && <p style={{ color: "red" }}>{message}</p>}
+            <div className="register-link">
+              <p>
+                Don't have an account? <a href="/signup">Register</a>
+              </p>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
