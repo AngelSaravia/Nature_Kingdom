@@ -1,17 +1,27 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import "./veterinarian.css";
 import logoImage from "../../../zoo_pictures/Nature's_Kingdom.jpeg";
 import { useAuth } from "../../../context/Authcontext";
 import apiClient from "../../../services/api";
 import ClockInComponent from "../../ClockInComponent/ClockInComponent";
+import VeterinarianNotification from "../../notification/TaskNotification";
 
-function veterinarianHeader() {
+function VeterinarianHeader() {
   const navigate = useNavigate();
   const auth = useAuth();
+  const { user } = useAuth();
+  const [employeeId, setEmployeeId] = useState(null);
 
   const username =
     auth?.user?.username || localStorage.getItem("username") || "User";
+
+  useEffect(() => {
+    const storedEmployeeId = localStorage.getItem("employeeId");
+    setEmployeeId(storedEmployeeId);
+    console.log("employeeId from localStorage:", storedEmployeeId);
+  }, [user]);
 
   const handleLogout = () => {
     if (auth && auth.logout) {
@@ -49,6 +59,7 @@ function veterinarianHeader() {
       <div className="user-menu">
         <ClockInComponent />
         <span className="username">Welcome, {username}</span>
+        {employeeId && <VeterinarianNotification managerId={employeeId} />}
         <button className="logout-btn" onClick={handleLogout}>
           Logout
         </button>
@@ -57,4 +68,4 @@ function veterinarianHeader() {
   );
 }
 
-export default veterinarianHeader;
+export default VeterinarianHeader;

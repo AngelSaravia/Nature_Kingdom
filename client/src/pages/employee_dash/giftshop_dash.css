@@ -85,7 +85,6 @@
   background-color: #333333;
 }
 
-
 .dashboard-table {
   width: 100%;
   border-collapse: collapse;
@@ -103,7 +102,6 @@
 .dashboard-table th {
   background-color: #eee;
   color: #333;
-  
 }
 
 .low-stock {
@@ -117,7 +115,7 @@
 }
 
 .stock-input {
-  width: 20px;
+  width: 30px;
   margin-right: 10px;
 }
 
@@ -137,7 +135,7 @@
 
 /* Styling for low-stock status */
 .low-stock {
-  color: #c0392b;  /* Red color for low stock */
+  color: #c0392b; /* Red color for low stock */
   font-weight: bold;
 }
 
@@ -156,7 +154,6 @@
 .restock-button:hover {
   background-color: #0e512a; /* Lighter green on hover */
 }
-
 
 /* Modal Styling */
 .modal {
@@ -217,7 +214,7 @@
 }
 
 .modal button:hover {
-  background-color: rgb(20, 67, 21)
+  background-color: rgb(20, 67, 21);
 }
 
 .modal .close {
@@ -253,12 +250,10 @@
   background-color: #2a5438;
 }
 
-
 /* Optional for the modal overlay when active */
 .modal.active {
   display: block;
   background: rgba(0, 0, 0, 0.8);
-
 }
 
 /* Disable buttons and inputs on loading */
@@ -267,7 +262,6 @@
   background-color: #ccc;
   cursor: not-allowed;
 }
-
 
 .modal select {
   width: 100%;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./TaskNotification.css";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
+import { IoMdCheckboxOutline } from "react-icons/io";
 
 const VeterinarianNotification = ({ managerId }) => {
   const [alerts, setAlerts] = useState([]);
@@ -151,7 +152,7 @@ const VeterinarianNotification = ({ managerId }) => {
                       onClick={() => resolveAlert(alert.id)}
                       title="Mark as Resolved"
                     >
-                      ✓
+                      <IoMdCheckboxOutline />
                     </button>
                   </li>
                 ))}

@@ -250,8 +250,11 @@ select {
   border: 1px solid #f5c6cb;
   text-align: left;
 }
+.edit-account {
+  color: white;
+}
 
-.button-group {
+.button-group-login {
   position: sticky;
   bottom: 0;
   background-color: white;
