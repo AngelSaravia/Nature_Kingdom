@@ -42,6 +42,7 @@ function AuthHeader() {
         <Link to="/tickets">Tickets</Link>
         <Link to="/membership">Membership</Link>
         <Link to="/giftshop">Gift Shop</Link>
+        <Link to="/calendar">Events</Link>
         <Link to="/exhibits">Exhibits</Link>
       </nav>
       <div className="user-menu">
