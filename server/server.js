@@ -16,7 +16,10 @@ const getParseData = require("./utils/getParseData");
 const membershipHelper = require("./helpers/membership_helper");
 const handleEnclosureForm = require("./helpers/enclosureFormHelper");
 const handleAnimalForm = require("./helpers/animalFormHelper");
-const { handleEmployeeForm, getEmployeeById } = require("./helpers/employeeFormHelper");
+const {
+  handleEmployeeForm,
+  getEmployeeById,
+} = require("./helpers/employeeFormHelper");
 const handleEventForm = require("./helpers/eventFormHelper");
 const handleTicketForm = require("./helpers/ticketFormHelper");
 const handleVisitorForm = require("./helpers/visitorFormHelper");
@@ -41,6 +44,7 @@ const managerAlertsHelper = require("./helpers/managerNotificationHelper");
 const getManagerType = require("./helpers/managerTypeHelper");
 const handleMedicalRecords = require("./helpers/medicalRecordsHelper");
 const handleProfileUpdate = require("./helpers/visitorModifyHelper");
+const { handleDeleteAccount } = require("./helpers/deleteUseraccount");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -90,33 +94,34 @@ const server = http.createServer(async (req, res) => {
   } else if (path === "/api/giftshop/history" && req.method === "GET") {
     handleGiftShopHistory(req, res);
   } else if (path === "/api/giftshop" && req.method === "POST") {
-    let body = '';
-    req.on('data', chunk => {
-        body += chunk;
+    let body = "";
+    req.on("data", (chunk) => {
+      body += chunk;
     });
-    req.on('end', () => {
-        const parsedBody = JSON.parse(body); 
-        giftShopHelper.addProduct(req, res, parsedBody);  
+    req.on("end", () => {
+      const parsedBody = JSON.parse(body);
+      giftShopHelper.addProduct(req, res, parsedBody);
     });
   } else if (path === "/api/giftshop" && req.method === "PUT") {
-    let body = '';
-    req.on('data', chunk => {
-        body += chunk;
+    let body = "";
+    req.on("data", (chunk) => {
+      body += chunk;
     });
-    req.on('end', () => {
-        const parsedBody = JSON.parse(body);  
-        giftShopHelper.updateProduct(req, res, parsedBody);  
+    req.on("end", () => {
+      const parsedBody = JSON.parse(body);
+      giftShopHelper.updateProduct(req, res, parsedBody);
     });
   } else if (path === "/api/giftshop" && req.method === "DELETE") {
-    const productId = parsedUrl.query.product_id;  
-    giftShopHelper.deleteProduct(req, res, productId);  
-
+    const productId = parsedUrl.query.product_id;
+    giftShopHelper.deleteProduct(req, res, productId);
   } else if (path === "/api/restock" && req.method === "POST") {
     handleGiftShopRestock.restockProduct(req, res);
   } else if (path === "/employee_login" && req.method === "POST") {
     handleEmployeeLogin(req, res);
 
     // Query Reports
+  } else if (path === "/delete-account" && req.method === "DELETE") {
+    handleDeleteAccount(req, res);
   } else if (path === "/query_report/animals" && req.method === "POST") {
     handleQueryReport(req, res);
   } // Added route to fetch all enclosure names for animal query report
@@ -134,7 +139,8 @@ const server = http.createServer(async (req, res) => {
         JSON.stringify({ success: true, data: results.map((row) => row.name) })
       ); // Return only the names
     });
-  } else if ( //placed above broader condition for correct route matching.
+  } else if (
+    //placed above broader condition for correct route matching.
     path === "/medical_records/distinct_values" &&
     req.method === "GET"
   ) {
