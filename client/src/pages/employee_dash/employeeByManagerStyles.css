@@ -1,0 +1,180 @@
+/* Styles specific to the Employee By Manager Query Report */
+.manager-employee-query-report {
+    background-color: #0050048b;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a softer look */
+  }
+  
+  .manager-employee-query-report .report-header {
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #272727; /* Dark gray text */
+  }
+  
+  .manager-employee-query-report .report-for-employeesByManager-container {
+    display: flex;
+    gap: 30px; /* Add more spacing between filters and the table */
+    padding: 20px;
+    align-items: flex-start;
+    box-sizing: border-box;
+  }
+  
+  .manager-employee-query-report .filter-sidebar {
+    width: 300px; /* Slightly wider for better usability */
+    background: #569443d1; /* White background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  .manager-employee-query-report .filter-sidebar h3 {
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    color: white;
+  }
+  
+  .manager-employee-query-report .filter-sidebar input[type="text"],
+  .manager-employee-query-report .filter-sidebar input[type="date"],
+  .manager-employee-query-report .filter-sidebar input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .manager-employee-query-report .filter-sidebar label {
+    display: block;
+    margin: 10px 0 5px;
+    font-size: 14px;
+    color: #555555;
+  }
+  
+  .manager-employee-query-report .filter-sidebar > button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    border: none;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .manager-employee-query-report .filter-sidebar > button:hover {
+    background: #0056b3;
+  }
+  
+  .manager-employee-query-report .report-table-container {
+    flex-grow: 1;
+    background: #155b00d1;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  .manager-employee-query-report .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #155b00d1;
+  }
+  
+  .manager-employee-query-report .report-table th {
+    background-color: #03390c; /* Light gray header */
+    color: #fffdfd; /* Dark gray text */
+    padding: 10px;
+    text-align: left;
+    font-size: 14px;
+  }
+  
+  .manager-employee-query-report .report-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    color: #ffffff;
+  }
+  
+  .manager-employee-query-report .report-table tr:nth-child(even) {
+    background-color: #454545;
+  }
+  
+  .manager-employee-query-report .report-table tr:hover {
+    background-color: #7a7a7a;
+  }
+  
+  .manager-employee-query-report .edit-tuple-button {
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .manager-employee-query-report .edit-tuple-button:hover {
+    background-color: #0056b3;
+  }
+  .manager-employee-query-report .report-for-employeesByManager-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    align-items: stretch;
+    box-sizing: border-box; /* Include padding in height calculation */
+    overflow: hidden; /* Prevent overflow */
+  }
+  .manager-employee-query-report {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .popupContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .popup {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    position: relative;
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: rgb(53, 0, 0);
+    border: none;
+    font-size: 40px;
+    cursor: pointer;
+    border-radius: 20%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  input[readonly] {
+    background-color: #f5f5f5; /* Light gray background */
+    cursor: not-allowed; /* Show "not allowed" cursor */
+    color: #333; /* Darker text for better readability */
+    border: 1px solid #ccc; /* Optional: Add a border to match other inputs */
+  }

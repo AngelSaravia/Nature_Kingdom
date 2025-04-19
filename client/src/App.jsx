@@ -42,7 +42,7 @@ import EventQueryReport from "./pages/dataQueryReports/event_queryReport";
 import EnclosureQueryReport from "./pages/dataQueryReports/enclosure_queryReport";
 import EmployeeQueryReport from "./pages/dataQueryReports/employee_queryReport";
 import TicketQueryReport from "./pages/dataQueryReports/ticket_queryReport";
-import VisitorMembershipQueryReport from "./pages/dataQueryReports/visitormembership_queryReport";
+import VisitorQueryReport from "./pages/dataQueryReports/visitor_queryReport";
 import RevenueQueryReport from "./pages/dataQueryReports/revenue_queryReport";
 import FeedLogsQueryReport from "./pages/dataQueryReports/feedLogs_queryReport";
 import MedicalRecordsQueryReport from "./pages/dataQueryReports/medicalRecords_queryReport";
@@ -54,6 +54,8 @@ import EnclosureByExhibit from "./pages/exhibits/EnclosuresByExhibit";
 import AnimalsByEnclosure from "./pages/exhibits/AnimalsByEnclosure";
 import GiftshopPurchases from "./pages/dashboard/giftshop-purchases/giftshop-purchases"
 import ManagerTimesheets from "./pages/employee_dash/manager_timesheets/manager_timesheets"
+import ManagerEmployeeQueryReport from "./pages/employee_dash/employeeByManager_queryReport";
+import GiftShopSales from "./pages/employee_dash/giftshopSales";
 
 
 function DebugNavigation() {
@@ -165,7 +167,7 @@ function AppContent() {
               <Route
                 path="/employee_form"
                 element={
-                  <RoleProtectedRoute allowedRoles={["admin"]}>
+                  <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
                     <EmployeeForm />
                   </RoleProtectedRoute>
                 }
@@ -173,7 +175,7 @@ function AppContent() {
               <Route
                 path="/query_report/employees"
                 element={
-                  <RoleProtectedRoute allowedRoles={["admin"]}>
+                  <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
                     <EmployeeQueryReport />
                   </RoleProtectedRoute>
                 }
@@ -206,6 +208,22 @@ function AppContent() {
                 element={
                   <RoleProtectedRoute allowedRoles={["manager"]}>
                     <ManagerDash />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/employeeByManager_queryReport"
+                element={
+                  <RoleProtectedRoute allowedRoles={["manager"]}>
+                    <ManagerEmployeeQueryReport />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/giftshopSales"
+                element={
+                  <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
+                    <GiftShopSales />
                   </RoleProtectedRoute>
                 }
               />
@@ -388,7 +406,7 @@ function AppContent() {
               <Route path="/query_report/enclosures" element={<EnclosureQueryReport />} />
               <Route path="/query_report/employees" element={<EmployeeQueryReport />} />
               <Route path="/query_report/tickets" element={<TicketQueryReport />} />
-              <Route path="/query_report/visitors" element={<VisitorMembershipQueryReport />} />
+              <Route path="/query_report/visitors" element={<VisitorQueryReport />} />
                 
               <Route path="/query_report/revenue" element={<RevenueQueryReport />} />
               <Route path="/query_report/feedLogs" element={<FeedLogsQueryReport />} />

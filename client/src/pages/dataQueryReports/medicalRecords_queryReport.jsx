@@ -17,7 +17,21 @@ const filterOptions = [
     { label: "ENDING DATE OF RECORD" , type: "date", name: "dateMax"},
 ];
 
-const columnHeaders = ["animal_id", "animal_name", "employee_email", "enclosure_name", "location", "health_status", "date", "species", "record_type", "diagnosis", "treatment", "followup", "additional"];
+const columnHeaders = {
+    animal_id: "Animal ID",
+    animal_name: "Animal Name",
+    employee_email: "Employee Email",
+    enclosure_name: "Enclosure Name",
+    location: "Location",
+    health_status: "Health Status",
+    date: "Medical Record Date",
+    species: "Species",
+    record_type: "Record Type",
+    diagnosis: "Diagnosis",
+    treatment: "Treatment",
+    followup: "Follow-Up Date",
+    additional: "Additional Notes",
+};
 
 const MedicalRecordsQueryReport = () => {
     const [filters, setFilters] = useState({});
@@ -55,11 +69,17 @@ const MedicalRecordsQueryReport = () => {
 
     const handleFilterChange = (eventOrUpdater) => {
         if (typeof eventOrUpdater === "function") {
-            setFilters((prevFilters) => eventOrUpdater(prevFilters));
+            setFilters((prevFilters) => {
+                const updatedFilters = eventOrUpdater(prevFilters);
+                fetchDropdownData();
+                return updatedFilters;
+            });
         } else {
             const { name, value, type, checked } = eventOrUpdater.target;
 
             setFilters((prevFilters) => {
+                const updatedFilters = { ...prevFilters };
+
                 if (type === "checkbox") {
                     const updatedValues = prevFilters[name] ? [...prevFilters[name]] : [];
                     if (checked) {
@@ -68,13 +88,13 @@ const MedicalRecordsQueryReport = () => {
                         const index = updatedValues.indexOf(value);
                         if (index > -1) updatedValues.splice(index, 1);
                     }
-                    return { ...prevFilters, [name]: updatedValues };
+                    updatedFilters[name] = updatedValues;
+                } else {
+                    updatedFilters[name] = value;
                 }
 
-                if (type === "date" || type === "dropdown") {
-                    return { ...prevFilters, [name]: value };
-                }
-                return { ...prevFilters, [name]: value };
+                fetchDropdownData();
+                return updatedFilters;
             });
         }
     };
@@ -107,6 +127,7 @@ const MedicalRecordsQueryReport = () => {
             }
 
             const queryParams = {
+                entity_type: "medical_records",
                 table1: "medical_records",
                 table2: "animals",
                 join_condition: "medical_records.animal_id = animals.animal_id",
@@ -178,7 +199,7 @@ const MedicalRecordsQueryReport = () => {
         <div className="medicalRecords-query-report">
           <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} dropdownData={dropdownData} resetDropdowns={resetDropdowns}/>
           <div className="report-table-container">
-          <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
+          <ReportTable data={reportData} columns={Object.keys(columnHeaders)} renderActions={(tuple) => renderEditButton(tuple)} columnLabels={columnHeaders}/>
           <div className="edit-medicalRecords-button-container">
             <Link to="/medical_form" className="edit-medicalRecords-button">Add Medical Record</Link>
           </div>

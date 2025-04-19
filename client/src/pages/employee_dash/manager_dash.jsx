@@ -443,7 +443,19 @@ const ManagerDash = () => {
                         >
                           View Veterinarian Portal
                         </button>
-                      </div>
+                        {/*<button
+                onClick={() => navigate("/employeeByManager_queryReport")}
+                className="dashboard-button"
+              >
+                View Employees by Manager
+              </button>*/}
+              {/*<button
+                onClick={() => navigate("/")}
+                className="dashboard-button"
+              >
+                View GiftShop Sales Dashboard
+              </button>*/}
+            </div>
 
                       {/* Animal Health Status Section */}
                       <StatusMetricsPanel

@@ -95,4 +95,25 @@ function handleEmployeeForm(req, res) {
         }
   });
 }
-module.exports = handleEmployeeForm;
+// New function to fetch employee by ID
+const getEmployeeById = (id, res) => {
+  console.log("Fetching employee with ID:", id);
+  const sql = "SELECT * FROM employees WHERE Employee_id = ?";
+  db_connection.query(sql, [id], (err, results) => {
+      if (err) {
+          console.error("Error fetching employee:", err);
+          res.writeHead(500, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ success: false, message: "Database error" }));
+          return;
+      }
+      console.log("Query results:", results);
+      if (results.length === 0) {
+          res.writeHead(404, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ success: false, message: "Employee not found" }));
+          return;
+      }
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: results[0] }));
+  });
+};
+module.exports = { handleEmployeeForm, getEmployeeById };

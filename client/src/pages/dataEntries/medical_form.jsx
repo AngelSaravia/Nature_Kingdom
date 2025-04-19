@@ -3,7 +3,7 @@ import InputFields from "./inputs.jsx";
 import styles from "./forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const MedicalForm = () => {
@@ -25,6 +25,7 @@ const MedicalForm = () => {
 
   const [submissionStatus, setSubmissionStatus] = useState(null);
   const [records, setRecords] = useState([]);
+  const [isEditMode, setIsEditMode] = useState(false); // New state to track if data is being passed
 
   useEffect(() => {
     console.log("Location object:", location);
@@ -47,11 +48,13 @@ const MedicalForm = () => {
         followup: tupleData.followup ? tupleData.followup.slice(0, 10) : "",
         additional: tupleData.additional || "",
       });
+      setIsEditMode(true); // Set edit mode to true if data is passed
 
       // Clear the sessionStorage after use
       sessionStorage.removeItem("medicalRecordEditData");
     } else {
       console.log("No medical record data found - creating new form");
+      setIsEditMode(false); // Set edit mode to false if no data is passed
     }
     fetch(`${API_BASE_URL}/get_medical_records`)
       .then((response) => response.json())
@@ -158,6 +161,11 @@ const MedicalForm = () => {
 
   return (
     <div className={styles.formContainer}>
+      <div className={styles.queryReportLink}>
+          <Link to="/query_report/medicalRecords" className={styles.queryReportButton}>
+              View Medical Records Query Report
+          </Link>
+      </div>
       <h2 className={styles.formTitle}>MEDICAL RECORD DATA ENTRY FORM</h2>
       <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
         <div className={styles.formRow}>
@@ -301,15 +309,14 @@ const MedicalForm = () => {
           </div>
         </div>
         <div className={styles.buttonContainer}>
-          <button type="add-button" onClick={() => handleSubmit("add")}>
-            ADD
-          </button>
-          <button type="modify-button" onClick={() => handleSubmit("update")}>
-            MODIFY
-          </button>
-          <button type="delete-button" onClick={() => handleSubmit("delete")}>
-            DELETE
-          </button>
+          {isEditMode ? (
+              <>
+                  <button type="button" onClick={() => handleSubmit("update")}>MODIFY</button>
+                  <button type="button" onClick={() => handleSubmit("delete")}>DELETE</button>
+              </>
+          ) : (
+              <button type="button" onClick={() => handleSubmit("add")}>ADD</button>
+          )}
         </div>
       </form>
       {submissionStatus && (

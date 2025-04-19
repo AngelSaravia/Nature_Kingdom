@@ -17,14 +17,31 @@ const filterOptions = [
     { label: "STATE", type: "text", name: "state"},
     { label: "ZIP CODE", type: "number", name: "zip_code"},
     { label: "COUNTRY", type: "text", name: "country"},
-    { label: "SALARY", type: "number", name: "salary"},
+    { label: "MIN SALARY", type: "number", name: "salaryMin"},
+    { label: "MAX SALARY", type: "number", name: "salaryMax"},
     { label: "GENDER", type: "checkbox", name: "gender", options: ["Male", "Female", "Other", "Prefer not to say"] },
     { label: "EMAIL", type: "text", name: "email"},
     { label: "PHONE", type: "text", name: "phone"},
     { label: "MANAGER EMAIL", type: "text", name: "manager_email"},
 ];
 
-const columnHeaders = ["first_name", "last_name", "user_name", "department_name", "date_of_birth", "street_address", "city", "state", "zip_code", "country", "salary", "gender", "email", "phone", "manager_email"];
+const columnHeaders = {
+  first_name: "First Name",
+  last_name: "Last Name",
+  user_name: "User Name",
+  department_name: "Department Name",
+  date_of_birth: "Date of Birth",
+  street_address: "Street Address",
+  city: "City",
+  state: "State",
+  zip_code: "Zip Code",
+  country: "Country",
+  salary: "Salary",
+  gender: "Gender",
+  email: "Email",
+  phone: "Phone Number",
+  manager_email: "Manager Email",
+};
 
 const EmployeeQueryReport = () => {
     const [filters, setFilters] = useState({});
@@ -81,6 +98,8 @@ const EmployeeQueryReport = () => {
                 } else if (key === "date_of_birthMin" || key === "date_of_birthMax") {
                       // Keep the Min/Max suffix for date range filters
                       prefixedFilters[`employees.${key}`] = filters[key];
+                  } else if (key === "salaryMin" || key === "salaryMax") {
+                    prefixedFilters[`employees.${key}`] = filters[key];
                   } else if (employeeFields.includes(key)) {
                       prefixedFilters[`employees.${key}`] = filters[key];
                   } else if (key === "manager_email") {
@@ -142,6 +161,7 @@ const EmployeeQueryReport = () => {
       };
 
       const renderEditButton = (tuple) => {
+        console.log("Employee Query Report - Tuple data:", tuple); // Debugging log
         return (
           <button 
             onClick={() => {
@@ -159,10 +179,10 @@ const EmployeeQueryReport = () => {
         <div className="employee-query-report">
           <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={fetchReport} onClearAll={onClearAll} filterOptions={filterOptions} />
           <div className="report-table-container">
-          <ReportTable data={reportData} columns={columnHeaders} renderActions={(tuple) => renderEditButton(tuple)} />
+          <ReportTable data={reportData} columns={Object.keys(columnHeaders)} renderActions={(tuple) => renderEditButton(tuple)} columnLabels={columnHeaders}/>
           <div className="edit-employee-button-container">
 
-            <a href="/employee_form" target="_blank" rel="noopener noreferrer" className="edit-employee-button">Edit Employee</a>
+            <a href="/employee_form" className="edit-employee-button">Add Employee</a>
 
           </div>
         </div>
