@@ -84,7 +84,7 @@ const EnclosureQueryReport = () => {
       };
 
       if (role === "zookeeper" && managerId) {
-        queryParams["enclosures.Manager_id"] = managerId;
+        queryParams["Manager_id"] = managerId;
 
         console.log("Applying zookeeper filter:", queryParams.where_condition);
       }

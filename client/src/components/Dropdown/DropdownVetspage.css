@@ -1,0 +1,66 @@
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 9999;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  clear: both;
+  font-weight: 400;
+  text-align: left;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #f5f5f5;
+}
+
+/* Health status specific styling */
+.dropdown-item[data-value="HEALTHY"]:hover {
+  background-color: #5cb85c;
+  color: white;
+}
+
+.dropdown-item[data-value="NEEDS CARE"]:hover {
+  background-color: #ffc107;
+  color: white;
+}
+
+.dropdown-item[data-value="CRITICAL"]:hover {
+  background-color: #d9534f;
+  color: white;
+}
+
+/* Vets page specific styling */
+.status-dropdown-container {
+  display: inline-block;
+  margin-left: 0;
+}

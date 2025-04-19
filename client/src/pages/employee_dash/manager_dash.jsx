@@ -329,224 +329,235 @@ const ManagerDash = () => {
 
   return (
     <div className="dashboard-container">
-    <div className="dashboard-card">
-      <h1 className="dashboard-title">Manager Dashboard</h1>
+      <div className="dashboard-card">
+        <h1 className="dashboard-title">Manager Dashboard</h1>
 
-      {/* Dashboard Buttons */}
-      <div className="dashboard-single">
-        <div className="dashboard-box">
-          <h2 className="dashboard-heading shortcuts-heading">
-            Manager Shortcuts
-          </h2>
-          <div>
-            {(() => {
-              switch (managerType?.toLowerCase()) {
-                case "giftshop":
-                  return (
-                    <>
-                      <div className="short-cut-grid">
-                        <button
-                          onClick={() => navigate("/manager_timesheets")}
-                          className="dashboard-button"
-                        >
-                          View Timesheets
-                        </button>
-                        <button
-                          onClick={() => navigate("/giftshop_dash")}
-                          className="dashboard-button"
-                        >
-                          View Gift Shop Portal
-                        </button>
-                      </div>
-
-                      {/* Gift Shop Status Metrics */}
-                      <div className="dashboard-metrics-container">
-                        <StatusMetricsPanel
-                          title="Inventory Overview"
-                          metrics={inventoryMetrics}
-                          isLoading={isLoading}
-                          onViewAllClick={() => navigate("/giftshop_dash")}
-                          viewAllButtonText="View Inventory"
-                        />
-
-                        <StatusMetricsPanel
-                          title="Sales Overview"
-                          metrics={salesMetrics}
-                          isLoading={isLoading}
-                          onViewAllClick={() => navigate("/query_report/giftshop")}
-                          viewAllButtonText="View Sales Data"
-                        />
-                      </div>
-
-                      {/* Low Stock Items Table */}
-                      {giftShopStats.lowStockItems > 0 && (
-                        <div className="low-stock-section">
-                          <h3 className="Low-stock">Low Stock Items</h3>
-                          <table className="dashboard-table">
-                            <thead>
-                              <tr>
-                                <th>Item</th>
-                                <th>Current Stock</th>
-                                <th>Last Stocked On</th>
-                                <th>Status</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {giftShopStats.products
-                                .filter((item) => item.status === "Low Stock")
-                                .map((item) => (
-                                  <tr key={item.id}>
-                                    <td>{item.name}</td>
-                                    <td>{item.stock}</td>
-                                    <td>{item.lastStocked}</td>
-                                    <td>
-                                      <div className="status-container">
-                                        <span className="low-stock">
-                                          {item.status}
-                                        </span>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                ))}
-                            </tbody>
-                          </table>
+        {/* Dashboard Buttons */}
+        <div className="dashboard-single">
+          <div className="dashboard-box">
+            <h2 className="dashboard-heading shortcuts-heading">
+              Manager Shortcuts
+            </h2>
+            <div>
+              {(() => {
+                switch (managerType?.toLowerCase()) {
+                  case "giftshop":
+                    return (
+                      <>
+                        <div className="short-cut-grid">
+                          <button
+                            onClick={() => navigate("/manager_timesheets")}
+                            className="dashboard-button"
+                          >
+                            View Timesheets
+                          </button>
+                          <button
+                            onClick={() => navigate("/giftshop_dash")}
+                            className="dashboard-button"
+                          >
+                            View Gift Shop Portal
+                          </button>
                         </div>
-                      )}
-                    </>
-                  );
 
-                case "veterinarian":
-                  return (
-                    <>
-                      <div className="short-cut-grid">
-                        <button
-                          onClick={() => navigate("/manager_timesheets")}
-                          className="dashboard-button"
-                        >
-                          View Timesheets
-                        </button>
-                        <button
-                          onClick={() => navigate("/query_report/medicalRecords")}
-                          className="dashboard-button"
-                        >
-                          Animal Medical History
-                        </button>
-                        <button
-                          onClick={() => navigate("/zookeeper_dash")}
-                          className="dashboard-button"
-                        >
-                          View Zoo Keeper Portal
-                        </button>
-                        <button
-                          onClick={() => navigate("/veterinarian_dash")}
-                          className="dashboard-button"
-                        >
-                          View Veterinarian Portal
-                        </button>
-                        {/*<button
+                        {/* Gift Shop Status Metrics */}
+                        <div className="dashboard-metrics-container">
+                          <StatusMetricsPanel
+                            title="Inventory Overview"
+                            metrics={inventoryMetrics}
+                            isLoading={isLoading}
+                            onViewAllClick={() => navigate("/giftshop_dash")}
+                            viewAllButtonText="View Inventory"
+                          />
+
+                          <StatusMetricsPanel
+                            title="Sales Overview"
+                            metrics={salesMetrics}
+                            isLoading={isLoading}
+                            onViewAllClick={() =>
+                              navigate("/query_report/revenue")
+                            }
+                            viewAllButtonText="View Sales Data"
+                          />
+                        </div>
+
+                        {/* Low Stock Items Table */}
+                        {giftShopStats.lowStockItems > 0 && (
+                          <div className="low-stock-section">
+                            <h3 className="Low-stock">Low Stock Items</h3>
+                            <table className="dashboard-table">
+                              <thead>
+                                <tr>
+                                  <th>Item</th>
+                                  <th>Current Stock</th>
+                                  <th>Last Stocked On</th>
+                                  <th>Status</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {giftShopStats.products
+                                  .filter((item) => item.status === "Low Stock")
+                                  .map((item) => (
+                                    <tr key={item.id}>
+                                      <td>{item.name}</td>
+                                      <td>{item.stock}</td>
+                                      <td>{item.lastStocked}</td>
+                                      <td>
+                                        <div className="status-container">
+                                          <span className="low-stock">
+                                            {item.status}
+                                          </span>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
+                      </>
+                    );
+
+                  case "veterinarian":
+                    return (
+                      <>
+                        <div className="short-cut-grid">
+                          <button
+                            onClick={() => navigate("/manager_timesheets")}
+                            className="dashboard-button"
+                          >
+                            View Timesheets
+                          </button>
+                          <button
+                            onClick={() =>
+                              navigate("/query_report/medicalRecords")
+                            }
+                            className="dashboard-button"
+                          >
+                            Animal Medical History
+                          </button>
+                          <button
+                            onClick={() => navigate("/zookeeper_dash")}
+                            className="dashboard-button"
+                          >
+                            View Zoo Keeper Portal
+                          </button>
+                          <button
+                            onClick={() => navigate("/veterinarian_dash")}
+                            className="dashboard-button"
+                          >
+                            View Veterinarian Portal
+                          </button>
+                          {/*<button
                 onClick={() => navigate("/employeeByManager_queryReport")}
                 className="dashboard-button"
               >
                 View Employees by Manager
               </button>*/}
-              {/*<button
+                          {/*<button
                 onClick={() => navigate("/")}
                 className="dashboard-button"
               >
                 View GiftShop Sales Dashboard
               </button>*/}
-            </div>
+                        </div>
 
-                      {/* Animal Health Status Section */}
-                      <StatusMetricsPanel
-                        title="Animal Health Overview"
-                        metrics={animalHealthMetrics}
-                        isLoading={isLoading}
-                        onViewAllClick={() => navigate("/query_report/medicalRecords")}
-                        viewAllButtonText="View All Animal Health Records"
-                      >
-                        {animalHealth.criticalAnimals?.length > 0 && (
-                          <div className="critical-animals">
-                            <h3>Critical Cases</h3>
-                            <div className="critical-animals-table">
-                              <table className="dashboard-table">
-                                <thead>
-                                  <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Species</th>
-                                    <th>Enclosure</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {animalHealth.criticalAnimals.map((animal) => (
-                                    <tr key={animal.id}>
-                                      <td>{animal.id}</td>
-                                      <td>{animal.name}</td>
-                                      <td>{animal.species}</td>
-                                      <td>{animal.enclosure}</td>
-                                      <td style={{ color: getStatusColor(animal.status) }}>
-                                        {animal.status}
-                                      </td>
-                                      <td>
-                                        <button
-                                          className="view-record-btn"
-                                          onClick={() =>
-                                            navigate(`/animal/${animal.id}`)
-                                          }
-                                        >
-                                          View Record
-                                        </button>
-                                      </td>
+                        {/* Animal Health Status Section */}
+                        <StatusMetricsPanel
+                          title="Animal Health Overview"
+                          metrics={animalHealthMetrics}
+                          isLoading={isLoading}
+                          onViewAllClick={() =>
+                            navigate("/query_report/medicalRecords")
+                          }
+                          viewAllButtonText="View All Animal Health Records"
+                        >
+                          {animalHealth.criticalAnimals?.length > 0 && (
+                            <div className="critical-animals">
+                              <h3>Critical Cases</h3>
+                              <div className="critical-animals-table">
+                                <table className="dashboard-table">
+                                  <thead>
+                                    <tr>
+                                      <th>ID</th>
+                                      <th>Name</th>
+                                      <th>Species</th>
+                                      <th>Enclosure</th>
+                                      <th>Status</th>
+                                      <th>Actions</th>
                                     </tr>
-                                  ))}
-                                </tbody>
-                              </table>
+                                  </thead>
+                                  <tbody>
+                                    {animalHealth.criticalAnimals.map(
+                                      (animal) => (
+                                        <tr key={animal.id}>
+                                          <td>{animal.id}</td>
+                                          <td>{animal.name}</td>
+                                          <td>{animal.species}</td>
+                                          <td>{animal.enclosure}</td>
+                                          <td
+                                            style={{
+                                              color: getStatusColor(
+                                                animal.status
+                                              ),
+                                            }}
+                                          >
+                                            {animal.status}
+                                          </td>
+                                          <td>
+                                            <button
+                                              className="view-record-btn"
+                                              onClick={() =>
+                                                navigate(`/animal/${animal.id}`)
+                                              }
+                                            >
+                                              View Record
+                                            </button>
+                                          </td>
+                                        </tr>
+                                      )
+                                    )}
+                                  </tbody>
+                                </table>
+                              </div>
                             </div>
-                          </div>
-                        )}
-                      </StatusMetricsPanel>
-                    </>
-                  );
+                          )}
+                        </StatusMetricsPanel>
+                      </>
+                    );
 
-                case "general":
-                  return (
-                    <div className="short-cut-grid">
-                      <button
-                        onClick={() => navigate("/manager_timesheets")}
-                        className="dashboard-button"
-                      >
-                        View Timesheets
-                      </button>
-                      <button
-                        onClick={() => navigate("/query_report/revenue")}
-                        className="dashboard-button"
-                      >
-                        View Revenue Reports
-                      </button>
-                      {/* <button
+                  case "general":
+                    return (
+                      <div className="short-cut-grid">
+                        <button
+                          onClick={() => navigate("/manager_timesheets")}
+                          className="dashboard-button"
+                        >
+                          View Timesheets
+                        </button>
+                        <button
+                          onClick={() => navigate("/query_report/revenue")}
+                          className="dashboard-button"
+                        >
+                          View Revenue Reports
+                        </button>
+                        {/* <button
                         onClick={() => navigate("/general_reports")}
                         className="dashboard-button"
                       >
                         View Reports
                       </button> */}
-                    </div>
+                      </div>
+                    );
 
-                    
-                  );
-
-                default:
-                  return <p>No dashboard available for this manager type.</p>;
-              }
-            })()}
+                  default:
+                    return <p>No dashboard available for this manager type.</p>;
+                }
+              })()}
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-
   );
 };
 

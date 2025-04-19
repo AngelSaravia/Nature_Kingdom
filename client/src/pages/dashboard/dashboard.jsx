@@ -440,7 +440,7 @@ const Dashboard = () => {
           <div className="popup-overlay">
             <div className="popup-content">
               <div className="popup-header">
-                <h3>Edit Account Information</h3>
+                <h3 className="edit-account">Edit Account Information</h3>
                 <span className="close-popup" onClick={togglePopup}>
                   &times;
                 </span>
@@ -602,27 +602,6 @@ const Dashboard = () => {
                       Change my password
                     </label>
                   </div>
-
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <input
-                      type="checkbox"
-                      id="change_password_2"
-                      checked={showPasswordFields2}
-                      onChange={() => {
-                        // If showPasswordFields2 is being enabled, disable showPasswordFields
-                        if (!showPasswordFields2 && showPasswordFields) {
-                          setShowPasswordFields(false);
-                        }
-                        setShowPasswordFields2(!showPasswordFields2);
-                      }}
-                    />
-                    <label
-                      htmlFor="change_password_2"
-                      style={{ marginLeft: "5px" }}
-                    >
-                      Reset my Password
-                    </label>
-                  </div>
                 </div>
 
                 {showPasswordFields && (
@@ -668,7 +647,7 @@ const Dashboard = () => {
                   <div className="error-message">{passwordError}</div>
                 )}
 
-                <div className="button-group">
+                <div className="button-group-login">
                   <button
                     type="button"
                     className="delete-button"

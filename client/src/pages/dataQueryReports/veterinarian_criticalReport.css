@@ -5,6 +5,85 @@
   margin: 0 auto;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
+.button-group-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.status-dropdown-container {
+  position: relative;
+  display: inline-block;
+  margin-left: 8px;
+}
+.no-data-message {
+  color: black;
+}
+.update-title {
+  color: white;
+}
+
+/* Make sure dropdown items are visible and styled properly */
+.dropdown-menu {
+  position: absolute;
+  z-index: 1000;
+  display: none;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  clear: both;
+  font-weight: 400;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+/* Health status specific styling */
+.dropdown-item[data-value="HEALTHY"]:hover {
+  background-color: #5cb85c;
+  color: white;
+}
+
+.dropdown-item[data-value="NEEDS CARE"]:hover {
+  background-color: #ffc107;
+  color: white;
+}
+
+.dropdown-item[data-value="CRITICAL"]:hover {
+  background-color: #d9534f;
+  color: white;
+}
+
+/* Button styling */
+.status-dropdown {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.status-dropdown::after {
+  content: "▼";
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 10px;
+}
 
 .report-table-container {
   display: flex;
@@ -53,7 +132,6 @@
 .enclosure-table th,
 .enclosure-table td {
   border: 1px solid #2a3240;
-  padding: 12px 16px;
   text-align: left;
   color: #e6e6e6;
 }
@@ -61,7 +139,6 @@
 .enclosure-table th {
   background-color: #1b4a42;
   color: #ffffff;
-  padding: 14px 16px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -376,7 +453,6 @@
 
 .close-btn,
 .new-record-btn {
-  padding: 8px 16px;
   border-radius: 4px;
   border: none;
   cursor: pointer;
