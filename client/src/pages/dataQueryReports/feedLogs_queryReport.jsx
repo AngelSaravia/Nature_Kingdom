@@ -80,6 +80,7 @@ const FeedLogsQueryReport = () => {
             }
 
             const queryParams = {
+                entity_type: "feed_schedules",
                 table1: "feed_schedules",
                 table2: "animals",
                 join_condition: "feed_schedules.animal_id = animals.animal_id",

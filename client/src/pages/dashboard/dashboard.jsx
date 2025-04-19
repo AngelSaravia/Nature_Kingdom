@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { checkMembershipStatus, getDashboardData } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import "./dashboard.css";
+import backgroundImage from "../../zoo_pictures/jungle.jpg";
+
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const Dashboard = () => {
@@ -12,7 +14,7 @@ const Dashboard = () => {
   const [showPasswordFields2, setShowPasswordFields2] = useState(false);
 
   const resetPasswordCheckbox2 = () => {
-    setShowPasswordFields2(false); // Sets the checkbox to unchecked
+    setShowPasswordFields2(false);
   };
 
   const togglePopup = () => {
@@ -167,6 +169,7 @@ const Dashboard = () => {
 
     return true;
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -176,11 +179,8 @@ const Dashboard = () => {
     }
 
     try {
-      // Debug: Log the user object to see its structure
       console.log("User data being sent:", dashboardData.user);
 
-      // Find the correct ID field from your user object
-      // It might be visitor_id, id, user_id, etc.
       const userId = dashboardData.user.visitor_id;
 
       if (!userId) {
@@ -189,7 +189,6 @@ const Dashboard = () => {
         return;
       }
 
-      // Prepare data to send to the backend
       const dataToSend = {
         visitor_id: userId,
         first_name: formData.first_name,
@@ -213,7 +212,6 @@ const Dashboard = () => {
         new_password: dataToSend.new_password ? "[REDACTED]" : null,
       });
 
-      // Send the update request to your backend
       const response = await fetch(`${API_BASE_URL}/update-profile`, {
         method: "PUT",
         headers: {
@@ -234,7 +232,6 @@ const Dashboard = () => {
         throw new Error(result.message || "Failed to update profile");
       }
 
-      // Update local state with the new data
       setDashboardData((prev) => ({
         ...prev,
         user: {
@@ -252,11 +249,11 @@ const Dashboard = () => {
         },
       }));
 
-      // Close the popup
       togglePopup();
 
-      // Show success message
       alert("Profile updated successfully!");
+
+      window.location.reload();
     } catch (error) {
       setPasswordError(
         error.message ||
@@ -270,23 +267,96 @@ const Dashboard = () => {
   console.log("orders ", dashboardData.orders);
 
   const capitalizeFirstLetter = (str) => {
-    if (!str) return str; // Handle empty string or null
+    if (!str) return str;
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
   const formatPhoneNumber = (phoneNumber) => {
-    const cleaned = ("" + phoneNumber).replace(/\D/g, ""); // Remove non-numeric characters
-    const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/); // Match the phone number
+    const cleaned = ("" + phoneNumber).replace(/\D/g, "");
+    const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
 
     if (match) {
       return `(${match[1]}) ${match[2]}-${match[3]}`;
     }
 
-    return null; // Return null if the phone number is invalid
+    return null;
+  };
+
+  const handleDeleteUser = async () => {
+    if (!formData.current_password) {
+      setPasswordError("Current password is required to delete your account");
+      return;
+    }
+
+    // Get confirmation from user, but don't validate it on frontend
+    const confirmText = prompt(
+      "To confirm deletion, please type 'Delete account'"
+    );
+
+    // Always proceed with the request, letting the backend validate the confirmation
+    if (
+      window.confirm(
+        "Are you sure you want to delete your account? This action cannot be undone."
+      )
+    ) {
+      try {
+        const userId = dashboardData.user.visitor_id;
+
+        if (!userId) {
+          console.error("No user ID found in user data");
+          setPasswordError("User ID not found. Please try logging in again.");
+          return;
+        }
+
+        // Send the confirmation text to the backend for validation
+        const response = await fetch(`${API_BASE_URL}/delete-account`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            visitor_id: userId,
+            current_password: formData.current_password,
+            confirmation_text: confirmText, // Send user's confirmation text to backend
+          }),
+        });
+
+        const responseText = await response.text();
+        console.log("Raw server response:", responseText);
+
+        let result;
+        try {
+          result = JSON.parse(responseText);
+        } catch (e) {
+          console.error("Failed to parse response as JSON");
+          throw new Error("Server returned an invalid response");
+        }
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || "Failed to delete account");
+        }
+
+        alert("Your account has been successfully deleted.");
+        localStorage.removeItem("token");
+        navigate("/login");
+      } catch (error) {
+        console.error("Error during account deletion:", error);
+        setPasswordError(error.message || "Failed to delete account");
+      }
+    }
   };
 
   return (
-    <div className="dashboard-container">
+    <div
+      className="dashboard-container"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
       <div className="dashboard-card">
         <h1 className="dashboard-title">Your Dashboard</h1>
 
@@ -344,7 +414,7 @@ const Dashboard = () => {
           </div>
           <div className="dashboard-box">
             <h2 className="dashboard-heading">Giftshop Purchases</h2>
-            {/* <p className="dashboard-text">{dashboardData.membership.length ? "Active membership" : "No active membership"}</p> */}
+
             <button
               onClick={() =>
                 navigate("/giftshop-purchases", { state: { dashboardData } })
@@ -365,28 +435,12 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Additional Features */}
-
-        <div className="dashboard-box single">
-          <h2 className="dashboard-heading">Upcoming Events</h2>
-          <p className="dashboard-text">
-            Stay updated on zoo events and activities.
-          </p>
-        </div>
-
-        <div className="dashboard-box single">
-          <h2 className="dashboard-heading">Animal Spotlights</h2>
-          <p className="dashboard-text">
-            Discover featured animals and fun facts.
-          </p>
-        </div>
-
         {/* Popup for editing account information */}
         {isPopupOpen && (
           <div className="popup-overlay">
             <div className="popup-content">
               <div className="popup-header">
-                <h3>Edit Account Information</h3>
+                <h3 className="edit-account">Edit Account Information</h3>
                 <span className="close-popup" onClick={togglePopup}>
                   &times;
                 </span>
@@ -548,23 +602,6 @@ const Dashboard = () => {
                       Change my password
                     </label>
                   </div>
-
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <input
-                      type="checkbox"
-                      id="change_password_2"
-                      checked={showPasswordFields2}
-                      onChange={() =>
-                        setShowPasswordFields2(!showPasswordFields2)
-                      }
-                    />
-                    <label
-                      htmlFor="change_password_2"
-                      style={{ marginLeft: "5px" }}
-                    >
-                      Reset my Password
-                    </label>
-                  </div>
                 </div>
 
                 {showPasswordFields && (
@@ -597,21 +634,39 @@ const Dashboard = () => {
                   </>
                 )}
 
+                {/* Add actual implementation for password reset option */}
+                {showPasswordFields2 && (
+                  <div className="form-group">
+                    <p>
+                      A password reset link will be sent to your email address.
+                    </p>
+                  </div>
+                )}
+
                 {passwordError && (
                   <div className="error-message">{passwordError}</div>
                 )}
 
-                <div className="button-group">
-                  <button type="submit" className="save-button">
-                    Save Changes
-                  </button>
+                <div className="button-group-login">
                   <button
                     type="button"
-                    className="cancel-button"
-                    onClick={togglePopup}
+                    className="delete-button"
+                    onClick={handleDeleteUser}
                   >
-                    Cancel
+                    Delete
                   </button>
+                  <div className="right-buttons">
+                    <button type="submit" className="save-button">
+                      Save Changes
+                    </button>
+                    <button
+                      type="button"
+                      className="cancel-button"
+                      onClick={togglePopup}
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </div>
               </form>
             </div>

@@ -17,7 +17,8 @@ const filterOptions = [
     { label: "STATE", type: "text", name: "state"},
     { label: "ZIP CODE", type: "number", name: "zip_code"},
     { label: "COUNTRY", type: "text", name: "country"},
-    { label: "SALARY", type: "number", name: "salary"},
+    { label: "MIN SALARY", type: "number", name: "salaryMin"},
+    { label: "MAX SALARY", type: "number", name: "salaryMax"},
     { label: "GENDER", type: "checkbox", name: "gender", options: ["Male", "Female", "Other", "Prefer not to say"] },
     { label: "EMAIL", type: "text", name: "email"},
     { label: "PHONE", type: "text", name: "phone"},
@@ -97,6 +98,8 @@ const EmployeeQueryReport = () => {
                 } else if (key === "date_of_birthMin" || key === "date_of_birthMax") {
                       // Keep the Min/Max suffix for date range filters
                       prefixedFilters[`employees.${key}`] = filters[key];
+                  } else if (key === "salaryMin" || key === "salaryMax") {
+                    prefixedFilters[`employees.${key}`] = filters[key];
                   } else if (employeeFields.includes(key)) {
                       prefixedFilters[`employees.${key}`] = filters[key];
                   } else if (key === "manager_email") {

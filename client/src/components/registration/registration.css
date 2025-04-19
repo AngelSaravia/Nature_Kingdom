@@ -1,102 +1,315 @@
-.signup-container {
+/* Compact registration.css with safari/savanna theme elements */
+
+.registration-container {
   width: 100%;
+  max-width: 650px; /* Reduced from original width */
+  margin: 0 auto;
 }
 
-.signup-container h2 {
-  margin-bottom: 20px;
-  color: #333;
-  text-align: center;
+/* Add these styles to your existing registration.css */
+
+.redirect-countdown {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.redirect-now-button {
+  background-color: #155724;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  margin-left: 10px;
+}
+
+.redirect-now-button:hover {
+  background-color: #0d3c16;
+}
+
+/* Enhance the success message styling */
+.status-message.success {
+  background-color: rgba(40, 167, 69, 0.15);
+  color: #155724;
+  border-left: 4px solid #28a745;
+  padding: 12px 15px;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Optional: Add a checkmark icon to the success message */
+.status-message.success::before {
+  content: "✓";
+  display: inline-block;
+  margin-right: 8px;
+  font-weight: bold;
 }
 
 .form-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 12px; /* Reduced gap */
+  margin-bottom: 4px; /* Reduced margin */
 }
 
 .form-group {
   flex: 1;
-  min-width: 200px;
-  margin-bottom: 15px;
+  min-width: 180px; /* Reduced minimum width */
+  margin-bottom: 15px; /* Reduced bottom margin */
+  position: relative;
+}
+
+.form-group.full-width {
+  flex-basis: 100%;
 }
 
 .form-group.full-width textarea {
   box-sizing: border-box;
   width: 100%;
+  resize: vertical;
 }
 
-.full-width {
-  flex-basis: 100%;
-}
-
+/* Compact labels */
 label {
   display: block;
-  margin-bottom: 5px;
-  font-weight: 500;
-  color: #555;
+  margin-bottom: 5px; /* Reduced margin */
+  font-weight: 600;
+  color: #5a3d20;
+  letter-spacing: 0.3px;
+  font-size: 0.85rem; /* Smaller font size */
+  position: relative;
+  padding-left: 2px;
 }
 
+/* Optional: Add a subtle dot before required fields */
+label::after {
+  content: attr(data-required);
+  color: #c76e24;
+  margin-left: 4px;
+  font-weight: bold;
+}
+
+/* Compact input fields */
 input[type="text"],
 input[type="email"],
-input[type="number"],
-input[type="tel"] {
+input[type="tel"],
+input[type="date"],
+input[type="password"],
+select,
+textarea {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
+  padding: 8px 12px;
+  border: 1px solid rgba(90, 61, 32, 0.2);
+  border-radius: 6px;
+  font-size: 14px;
   box-sizing: border-box;
+  background-color: rgba(255, 255, 255, 0.92);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-input.error {
-  border-color: #ff3333;
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #c76e24;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(199, 110, 36, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.registration-text {
+  color: black;
+}
+
+input.error,
+select.error,
+textarea.error {
+  border-color: #e74c3c;
+  background-color: rgba(255, 245, 245, 0.9);
 }
 
 .error-text {
-  color: #ff3333;
-  font-size: 0.8rem;
-  margin-top: 5px;
+  color: #e74c3c;
+  font-size: 0.75rem; /* Smaller error text */
+  margin-top: 4px; /* Reduced margin */
   display: block;
+  font-weight: 500;
+  padding-left: 2px;
 }
 
+/* Compact status messages */
+.status-message {
+  padding: 10px; /* Reduced padding */
+  border-radius: 6px;
+  margin-bottom: 15px; /* Reduced margin */
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.9rem; /* Smaller font */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.status-message.success {
+  background-color: rgba(40, 167, 69, 0.15);
+  color: #155724;
+  border-left: 4px solid #28a745;
+}
+
+.status-message.error {
+  background-color: rgba(231, 76, 60, 0.15);
+  color: #721c24;
+  border-left: 4px solid #e74c3c;
+}
+
+/* Compact form actions */
 .form-actions {
   display: flex;
   justify-content: center;
   gap: 15px;
-  margin-top: 20px;
+  margin-top: 20px; /* Reduced margin */
 }
 
 .form-actions button {
-  padding: 10px 20px;
+  padding: 8px 20px; /* Reduced padding */
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 14px; /* Smaller font */
+  font-weight: 600;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .form-actions button[type="button"] {
-  background-color: #f5f5f5;
-  color: #333;
+  background-color: rgba(245, 245, 245, 0.9);
+  color: #555;
   border: 1px solid #ddd;
 }
 
 .form-actions button[type="submit"] {
-  background-color: #2a8774;
+  background-color: #e67e22;
   color: white;
 }
 
 .form-actions button:hover {
-  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.form-actions button[type="button"]:hover {
+  background-color: #f8f8f8;
+}
+
+.form-actions button[type="submit"]:hover {
+  background-color: #d35400;
+}
+
+.form-actions button:active {
+  transform: translateY(1px);
 }
 
 .form-actions button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
+/* Compact dropdown styling */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23555%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 10px;
+  padding-right: 30px;
+}
+
+/* Compact date input styling */
+input[type="date"] {
+  padding-right: 10px;
+}
+
+/* Compact textarea styling */
+textarea {
+  min-height: 80px; /* Reduced height */
+  line-height: 1.4;
+}
+
+/* Required field indicator */
+.required-field::after {
+  content: "*";
+  color: #e67e22;
+  margin-left: 4px;
+}
+
+/* Compact section dividers */
+.form-section {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(90, 61, 32, 0.1);
+}
+
+.form-section:last-child {
+  border-bottom: none;
+}
+
+.section-heading {
+  color: #5a3d20;
+  font-size: 0.95rem;
+  margin-bottom: 15px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid rgba(231, 126, 34, 0.3);
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .form-group {
     flex-basis: 100%;
+    margin-bottom: 12px;
+  }
+
+  .form-row {
+    gap: 8px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+
+  label {
+    font-size: 0.85rem;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="date"],
+  input[type="password"],
+  select,
+  textarea {
+    padding: 8px 10px;
   }
 }

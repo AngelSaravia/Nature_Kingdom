@@ -74,8 +74,8 @@ function Header() {
         <Link to="/membership" className="nav-item">
           Membership
         </Link>
-        <Link to="/contact" className="nav-item">
-          Contact
+        <Link to="/calendar" className="nav-item">
+          Events
         </Link>
         <Link to="/exhibits">Exhibits</Link>
 

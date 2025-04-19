@@ -26,7 +26,7 @@ const ReportTable = ({ data, columns, renderActions, columnLabels }) => {
                       : row[col]}
                   </td>
                 ))}
-                {renderActions && (<td> {console.log("Rendering actions for row:", row)} {/* Debugging */} {renderActions(row)}</td>)}
+                {renderActions && (<td>{renderActions(row)}</td>)}
               </tr>
             ))}
           </tbody>

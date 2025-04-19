@@ -68,7 +68,6 @@ const handleQueryReport = (req, res) => {
             if (entity_type !== "revenue") {
                 Object.keys(filters).forEach((key) => {
                     const value = filters[key];
-                    console.log("Processing filter:", key, "Value:", value); // Debugging line
 
                     if (value !== undefined && value !== null && value !== "") {
                         // Handle specific table prefixes
@@ -79,8 +78,12 @@ const handleQueryReport = (req, res) => {
                         } else if (key.startsWith('visitors.') || key === 'membership_status') {           
                             handleVisitorFilters(key, value, conditions, values);
                         } else if (key.startsWith('enclosures.')) {
-                            if (entity_type === 'animals') {
-                                handleAnimalEnclosureFilters(key, value, conditions, values); // New handler for animals
+                            if (entity_type === 'medical_records') {
+                                handleMedicalRecordsFilters(key, value, conditions, values);
+                            } else if (entity_type === 'feed_schedules') {
+                                handleFeedLogsFilters(key, value, conditions, values);
+                            } else if (entity_type === 'animals') {
+                                handleAnimalEnclosureFilters(key, value, conditions, values);
                             } else if (entity_type === 'enclosures') {
                                 handleEnclosureFilters(key, value, conditions, values, entity_type);
                             }
@@ -113,6 +116,8 @@ const handleQueryReport = (req, res) => {
                     console.warn("Duplicate WHERE clause detected. Skipping additional WHERE clause.");
                 }
             }
+            console.log("Final SQL Query:", sql);
+            console.log("Query Values:", values);
             db_connection.query(sql, values, (err, results) => {
                 if (err) {
                     console.error("Database query error:", err);
@@ -120,7 +125,6 @@ const handleQueryReport = (req, res) => {
                     res.end(JSON.stringify({ success: false, message: "Database error" }));
                     return;
                 }
-                console.log("Query Results:", results); // Debugging log
                 res.writeHead(200, { "Content-Type": "application/json" });
                 res.end(JSON.stringify({ success: true, data: results }));
             });
@@ -216,7 +220,7 @@ function handleEmployeeFilters(key, value, conditions, values) {
         const valueArray = Array.isArray(value) ? value : value.split(',');
         conditions.push(`employees.gender IN (${valueArray.map(() => '?').join(', ')})`);
         values.push(...valueArray);
-    } else if (['salary', 'zip_code'].includes(fieldName)) {
+    } else if (['zip_code'].includes(fieldName)) {
         conditions.push(`${key} = ?`);
         values.push(value);
     } else {
@@ -314,19 +318,12 @@ function handleVisitorFilters(key, value, conditions, values) {
 }
 function handleEnclosureFilters(key, value, conditions, values, entity_type) {
     const fieldName = key.replace('enclosures.', '');
-    if (key === 'name') {
-        if (entity_type === 'animals') {
-            // Use IN for animals query report
-            const valueArray = Array.isArray(value) ? value : value.split(',');
-            if (valueArray.length > 0) {
-                conditions.push(`enclosures.name IN (${valueArray.map(() => '?').join(', ')})`);
-                values.push(...valueArray);
-            }
-        } else {
-            // Use LIKE for this report
+    if (key === 'enclosures.name') {
+        const valueArray = Array.isArray(value) ? value : [value];
+        valueArray.forEach((val) => {
             conditions.push(`enclosures.name LIKE ?`);
-            values.push(`%${value}%`);
-        } 
+            values.push(`%${val}%`);
+        });
     } else if (key === 'exhibits.name') {
         const valueArray = Array.isArray(value) ? value : value.toString().split(',');
         if (valueArray.length > 0) {
@@ -335,8 +332,13 @@ function handleEnclosureFilters(key, value, conditions, values, entity_type) {
         }
     } else if (['status', 'temp_control'].includes(fieldName)) {
         const valueArray = Array.isArray(value) ? value : [value];
-        conditions.push(`enclosures.${fieldName} IN (${valueArray.map(() => '?').join(', ')})`);
-        values.push(...valueArray);
+        if (valueArray.length > 0) {
+            conditions.push(`enclosures.${fieldName} IN (${valueArray.map(() => '?').join(', ')})`);
+            values.push(...valueArray);
+        }
+    } else if (fieldName === 'opens_at' || fieldName === 'closes_at') {
+        conditions.push(`enclosures.${fieldName} = ?`);
+        values.push(value);
     } else if (fieldName === 'location') {
         conditions.push(`enclosures.${fieldName} LIKE ?`);
         values.push(`%${value}%`);
@@ -344,7 +346,7 @@ function handleEnclosureFilters(key, value, conditions, values, entity_type) {
         conditions.push(`${key} = ?`);
         values.push(value);
     } else {
-        conditions.push(`${key} LIKE ?`);
+        conditions.push(`enclosures.${fieldName} LIKE ?`);
         values.push(`%${value}%`);
     }
 }
@@ -461,14 +463,20 @@ function constructRevenueQuery(conditions) {
 
     // Add WHERE clause only if there are conditions
     if (conditions.length > 0) {
-        sql += ` WHERE ${conditions.join(" AND ")}`; // Ensure only one WHERE clause
+        sql += ` WHERE ${conditions.join(" AND ")}`;
     }
 
     // Add ORDER BY clause for sorting
-    sql += ` ORDER BY purchase_date DESC`;
-
-    console.log("Constructed Revenue Query:", sql); // Debugging line
-    console.log("Conditions:", conditions); // Debugging line
+    sql += `
+        ORDER BY 
+            CASE 
+                WHEN type_of_product = 'ticket' THEN 1
+                WHEN type_of_product = 'membership' THEN 2
+                WHEN type_of_product = 'gift' THEN 3
+                ELSE 4
+            END,
+            purchase_date DESC
+    `;
 
     return sql;
 }
@@ -497,6 +505,8 @@ function handleFeedLogsFilters(key, value, conditions, values) {
     }
 }
 function handleMedicalRecordsFilters(key, value, conditions, values) {
+    console.log("Processing filter in handleMedicalRecordsFilters:", key, "Value:", value); // Debugging
+
     if (key === "medical_records.dateMin") {
         // Handle starting date of record
         conditions.push(`DATE(medical_records.date) >= ?`);
@@ -573,8 +583,14 @@ const handleDistinctValuesForMedicalRecords = (req, res) => { //for dropdowns in
         return;
     }
 
-    const sql = `SELECT DISTINCT ${field} FROM ${table}`;
-    db_connection.query(sql, (err, results) => {
+    const sql = `
+        SELECT DISTINCT ${table}.${field} 
+        FROM medical_records
+        LEFT JOIN animals ON medical_records.animal_id = animals.animal_id
+        LEFT JOIN employees ON medical_records.employee_id = employees.Employee_id
+        LEFT JOIN enclosures ON medical_records.enclosure_id = enclosures.enclosure_id
+    `;
+    db_connection.query(sql, [], (err, results) => {
         if (err) {
             console.error("Database query error:", err);
             res.writeHead(500, { "Content-Type": "application/json" });

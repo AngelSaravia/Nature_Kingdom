@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./registration.css"; // Make sure to create this CSS file
+import "./registration.css";
+import { useNavigate } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 function Registration() {
+  const navigate = useNavigate();
+
   // Form state management
   const [formData, setFormData] = useState({
     first_name: "",
@@ -26,6 +29,7 @@ function Registration() {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState({ message: "", type: "" });
+  const [redirectCountdown, setRedirectCountdown] = useState(null);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -190,9 +194,33 @@ function Registration() {
       street_address: "",
       city: "",
       phone_number: "",
+      gender: "",
     });
     setFormErrors({});
     setSubmitStatus({ message: "", type: "" });
+    setRedirectCountdown(null);
+  };
+
+  // Handle redirection to login
+  const redirectToLogin = () => {
+    navigate("/login");
+  };
+
+  // Start countdown for automatic redirect
+  const startRedirectCountdown = () => {
+    const countdownSeconds = 5;
+    setRedirectCountdown(countdownSeconds);
+
+    const countdownInterval = setInterval(() => {
+      setRedirectCountdown((prevCount) => {
+        if (prevCount <= 1) {
+          clearInterval(countdownInterval);
+          redirectToLogin();
+          return 0;
+        }
+        return prevCount - 1;
+      });
+    }, 1000);
   };
 
   // Handle form submission
@@ -213,19 +241,18 @@ function Registration() {
       };
 
       try {
-        // You can change the endpoint URL as needed
-
-        console.log(correctedFormData);
-        console.log(formData);
         const response = await axios.post(
           `${API_BASE_URL}/signup`,
           correctedFormData
         );
+
         setSubmitStatus({
-          message: "Registration successful!",
+          message: "Registration successful! Redirecting to login page...",
           type: "success",
         });
-        resetForm();
+
+        // Start redirect countdown
+        startRedirectCountdown();
       } catch (error) {
         console.error("Registration failed:", error);
 
@@ -257,11 +284,19 @@ function Registration() {
 
   return (
     <div className="registration-container">
-      <h2>Registration Form</h2>
+      <h2 className="registration-text">Registration Form</h2>
 
       {submitStatus.message && (
         <div className={`status-message ${submitStatus.type}`}>
           {submitStatus.message}
+          {redirectCountdown !== null && (
+            <div className="redirect-countdown">
+              Redirecting in {redirectCountdown} seconds...
+              <button className="redirect-now-button" onClick={redirectToLogin}>
+                Go to Login Now
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -283,7 +318,7 @@ function Registration() {
         <div className="form-group">
           <label>Password *</label>
           <input
-            type="text"
+            type="password"
             name="password"
             value={formData.password}
             onChange={handleChange}

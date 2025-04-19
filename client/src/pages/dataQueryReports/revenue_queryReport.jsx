@@ -19,11 +19,18 @@ const columnHeaders = {
     purchase_date: "Purchase Date",
 };
 
-const TotalSalesBox = ({ total }) => {
+const TotalSalesBox = ({ total, totals }) => {
     return (
       <div className="total-sales-box">
         <h3>Total Profit</h3>
         <div className="total-amount">${total.toFixed(2)}</div>
+        {total > 0 && (
+            <div className="breakdown">
+                <p>Tickets: <span>${totals.totalTicketEarnings.toFixed(2)}</span></p>
+                <p>Gifts: <span>${totals.totalGiftEarnings.toFixed(2)}</span></p>
+                <p>Memberships: <span>${totals.totalMembershipEarnings.toFixed(2)}</span></p>
+            </div>
+        )}
         <div className="filter-info">
           {total === 0 ? "No data available" : "Showing filtered results"}
         </div>
@@ -31,11 +38,18 @@ const TotalSalesBox = ({ total }) => {
     );
 };
 
-const TotalItemsBox = ({ count }) => {
+const TotalItemsBox = ({ count, totals }) => {
     return (
       <div className="total-items-box">
         <h3>Total Products Sold</h3>
         <div className="total-count">{count}</div>
+        {count > 0 && (
+            <div className="breakdown">
+                <p>Tickets: <span>{totals.totalTickets}</span></p>
+                <p>Gifts: <span>{totals.totalGifts}</span></p>
+                <p>Memberships: <span>{totals.totalMemberships}</span></p>
+            </div>
+        )}
         <div className="filter-info">
           {count === 0 ? "No items found" : "Showing filtered results"}
         </div>
@@ -127,6 +141,7 @@ const RevenueQueryReport = () => {
                 setReportData(data.data);
                 setTotalSales(calculateTotalSales(data.data));
                 setTotalItems(data.data.length);
+                calculateTotals(data.data);
             } else {
                 console.error("Error fetching report:", data.message);
             }
@@ -176,8 +191,8 @@ const RevenueQueryReport = () => {
                 <div className="filter-sidebar-container">
                     <div className="report-header">
                         <h1>Revenue Report</h1>
-                        <TotalItemsBox count={totalItems} />
-                        <TotalSalesBox total={totalSales} />
+                        <TotalItemsBox count={totalItems} totals={totals}/>
+                        <TotalSalesBox total={totalSales} totals={totals}/>
                     </div>
                     <FilterSidebar 
                     filters={filters} 
@@ -190,30 +205,6 @@ const RevenueQueryReport = () => {
                 
                 <ReportTable data={reportData} columns={Object.keys(columnHeaders)} columnLabels={columnHeaders} />
             </div>
-
-            {/* <FilterSidebar filters={filters} onFilterChange={handleFilterChange} onRunReport={() => fetchReport(true)} onClearAll={onClearAll} filterOptions={filterOptions}/>
-                <div className="report-content">
-                    <div className="report-table-container">
-                        <ReportTable data={reportData} columns={Object.keys(columnHeaders)} columnLabels={columnHeaders}/>
-                    </div>
-                    <div className="totals-container">
-                        <div className="totals-block">
-                            <h4>Tickets</h4>
-                            <p>Total Tickets Purchased: <span>{totals.totalTickets}</span></p>
-                            <p>Total Ticket Earnings: <span>${totals.totalTicketEarnings.toFixed(2)}</span></p>
-                        </div>
-                        <div className="totals-block">
-                            <h4>Gifts</h4>
-                            <p>Total Gifts Purchased: <span>{totals.totalGifts}</span></p>
-                            <p>Total Giftshop Earnings: <span>${totals.totalGiftEarnings.toFixed(2)}</span></p>
-                        </div>
-                        <div className="totals-block">
-                            <h4>Memberships</h4>
-                            <p>Total Memberships Purchased: <span>{totals.totalMemberships}</span></p>
-                            <p>Total Membership Earnings: <span>${totals.totalMembershipEarnings.toFixed(2)}</span></p>
-                        </div>
-                    </div>
-                </div> */}
         </div>
     );
 };

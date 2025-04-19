@@ -11,7 +11,7 @@ const filterOptions = [
   { label: "MAXIMUM CAPACITY", type: "number", name: "capacity" },
   { label: "OPENING TIME", type: "time", name: "opens_at" },
   { label: "CLOSING TIME", type: "time", name: "closes_at" },
-  { label: "STATUS", type: "checkbox", name: "status", options: ["active", "inactive", "under maintenance"] },
+  { label: "STATUS", type: "checkbox", name: "status", options: ["active", "inactive", "under_maintenance"] },
   { label: "LOCATION", type: "text", name: "location" },
   { label: "TEMPERATURE CONTROL", type: "radio", name: "temp_control", options: ["Yes", "No"] },
   { label: "MANAGER NAME", type: "text", name: "manager_name" },
@@ -93,6 +93,7 @@ const EnclosureQueryReport = () => {
         }
 
         const queryParams = {
+          entity_type: "enclosures",
           table1: "enclosures",
           table2: "employees",
           join_condition: "enclosures.Manager_id = employees.employee_id",

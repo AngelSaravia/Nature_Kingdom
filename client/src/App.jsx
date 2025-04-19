@@ -42,7 +42,7 @@ import EventQueryReport from "./pages/dataQueryReports/event_queryReport";
 import EnclosureQueryReport from "./pages/dataQueryReports/enclosure_queryReport";
 import EmployeeQueryReport from "./pages/dataQueryReports/employee_queryReport";
 import TicketQueryReport from "./pages/dataQueryReports/ticket_queryReport";
-import VisitorMembershipQueryReport from "./pages/dataQueryReports/visitormembership_queryReport";
+import VisitorQueryReport from "./pages/dataQueryReports/visitor_queryReport";
 import RevenueQueryReport from "./pages/dataQueryReports/revenue_queryReport";
 import FeedLogsQueryReport from "./pages/dataQueryReports/feedLogs_queryReport";
 import MedicalRecordsQueryReport from "./pages/dataQueryReports/medicalRecords_queryReport";
@@ -406,7 +406,7 @@ function AppContent() {
               <Route path="/query_report/enclosures" element={<EnclosureQueryReport />} />
               <Route path="/query_report/employees" element={<EmployeeQueryReport />} />
               <Route path="/query_report/tickets" element={<TicketQueryReport />} />
-              <Route path="/query_report/visitors" element={<VisitorMembershipQueryReport />} />
+              <Route path="/query_report/visitors" element={<VisitorQueryReport />} />
                 
               <Route path="/query_report/revenue" element={<RevenueQueryReport />} />
               <Route path="/query_report/feedLogs" element={<FeedLogsQueryReport />} />

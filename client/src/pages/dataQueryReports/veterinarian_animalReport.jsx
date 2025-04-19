@@ -3,6 +3,7 @@ import "./veterinarian_criticalReport.css";
 import styles from "../dataEntries/forms.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import DropdownItem from "../../components/DropdownItem/DropdownItem";
+
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const animalColumnHeaders = [
@@ -13,6 +14,9 @@ const animalColumnHeaders = [
   "date_of_birth",
   "enclosure_name", // Added to show which enclosure the animal belongs to
 ];
+
+// Define available health status options
+const HEALTH_STATUS_OPTIONS = ["HEALTHY", "NEEDS CARE", "CRITICAL"];
 
 const CriticalAnimalsReport = () => {
   const [criticalAnimals, setCriticalAnimals] = useState([]);
@@ -115,29 +119,14 @@ const CriticalAnimalsReport = () => {
     }
   };
 
-  const getButtonTextByStatus = (currentStatus) => {
-    switch (currentStatus) {
-      case "HEALTHY":
-        return "Mark as Needs Care";
-      case "NEEDS CARE":
-        return "Mark as Critical";
-      case "CRITICAL":
-        return "Mark as Healthy";
-      default:
-        return "Update Health Status";
-    }
-  };
-
-  const getNextHealthStatusValue = (currentStatus) => {
-    switch (currentStatus) {
-      case "HEALTHY":
-        return "NEEDS CARE";
-      case "NEEDS CARE":
-        return "CRITICAL";
-      case "CRITICAL":
-        return "HEALTHY";
-      default:
-        return "HEALTHY";
+  // Function to handle health status selection from dropdown
+  const handleHealthStatusSelect = (animal, newStatus) => {
+    if (newStatus !== animal.health_status) {
+      setPopupState({
+        isOpen: true,
+        animal: animal,
+        nextStatus: newStatus,
+      });
     }
   };
 
@@ -153,19 +142,9 @@ const CriticalAnimalsReport = () => {
     }
   };
 
-  const initiateHealthStatusChange = (animal) => {
-    const nextStatus = getNextHealthStatusValue(animal.health_status);
-
-    setPopupState({
-      isOpen: true,
-      animal: animal,
-      nextStatus: nextStatus,
-    });
-  };
-
   const confirmHealthStatusChange = () => {
     if (popupState.animal) {
-      handleHealthStatusProgression(popupState.animal);
+      handleHealthStatusUpdate(popupState.animal, popupState.nextStatus);
 
       window.location.reload();
     }
@@ -199,25 +178,9 @@ const CriticalAnimalsReport = () => {
     }
   };
 
-  const getButtonStyleByStatus = (currentStatus) => {
-    const baseStyle = {
-      color: "white",
-      border: "none",
-      padding: "6px 12px",
-      borderRadius: "4px",
-      fontSize: "0.9rem",
-    };
-
-    return {
-      ...baseStyle,
-      backgroundColor: getButtonColorByStatus(currentStatus),
-      cursor: "pointer",
-    };
-  };
-
-  const handleHealthStatusProgression = async (animal) => {
+  // Updated function to handle direct status updates
+  const handleHealthStatusUpdate = async (animal, newStatus) => {
     setUpdateLoading(true);
-    const nextStatus = getNextHealthStatusValue(animal.health_status);
 
     try {
       const response = await fetch(
@@ -227,7 +190,7 @@ const CriticalAnimalsReport = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ healthStatus: nextStatus }),
+          body: JSON.stringify({ healthStatus: newStatus }),
         }
       );
 
@@ -238,12 +201,12 @@ const CriticalAnimalsReport = () => {
         setCriticalAnimals((prevAnimals) =>
           prevAnimals.map((a) =>
             a.animal_id === animal.animal_id
-              ? { ...a, health_status: nextStatus }
+              ? { ...a, health_status: newStatus }
               : a
           )
         );
 
-        console.log(`Health status updated to ${nextStatus}`);
+        console.log(`Health status updated to ${newStatus}`);
       } else {
         console.error("Failed to update health status:", data.message);
         alert("Failed to update health status: " + data.message);
@@ -296,6 +259,7 @@ const CriticalAnimalsReport = () => {
     return date.toISOString().split("T")[0]; // Returns YYYY-MM-DD format
   };
 
+  // Replace the entire MedicalFormContent component with this version
   const MedicalFormContent = ({ animal, onClose }) => {
     // Check if there's record data stored in sessionStorage
     const storedRecordData = sessionStorage.getItem("medicalRecordEditData");
@@ -340,7 +304,7 @@ const CriticalAnimalsReport = () => {
         .catch((error) => console.error("Error fetching records:", error));
     }, []);
 
-    // Handle text input changes
+    // New simple handleChange function without any filtering
     const handleChange = (event) => {
       const { name, value } = event.target;
       setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -349,11 +313,6 @@ const CriticalAnimalsReport = () => {
     // Handle dropdown selections
     const handleSelect = (name, value) => {
       setFormData((prevData) => ({ ...prevData, [name]: value }));
-    };
-
-    // Handles only numeric input
-    const handleNumericInput = (event) => {
-      event.target.value = event.target.value.replace(/\D/g, "");
     };
 
     // After successful submission, refresh related data
@@ -367,7 +326,7 @@ const CriticalAnimalsReport = () => {
       }
     };
 
-    // Handle form submission
+    // Handle form submission with validation
     const handleSubmit = async (action) => {
       if (action !== "delete") {
         const requiredFields = [
@@ -386,6 +345,12 @@ const CriticalAnimalsReport = () => {
               ", "
             )}`
           );
+          return;
+        }
+
+        // Validate numeric fields only at submission time
+        if (!/^\d*$/.test(formData.employee_id)) {
+          setSubmissionStatus("Employee ID must contain only numbers.");
           return;
         }
       }
@@ -444,16 +409,16 @@ const CriticalAnimalsReport = () => {
       }
     };
 
-    // Input Field Component
+    // Simplified InputField Component without onInput handler
     const InputField = ({
       label,
       name,
       type,
       value,
       onChange,
-      onInput,
       autoComplete,
       disabled,
+      placeholder,
     }) => {
       return (
         <div className={styles.inputGroup}>
@@ -464,12 +429,12 @@ const CriticalAnimalsReport = () => {
             type={type}
             id={name}
             name={name}
-            value={value}
+            value={value || ""}
             onChange={onChange}
-            onInput={onInput}
             className={styles.input}
-            autoComplete={autoComplete}
+            autoComplete={autoComplete || "off"}
             disabled={disabled}
+            placeholder={placeholder || ""}
           />
         </div>
       );
@@ -486,7 +451,6 @@ const CriticalAnimalsReport = () => {
               type="text"
               value={formData.animal_id}
               onChange={handleChange}
-              onInput={handleNumericInput}
               autoComplete="off"
               disabled={animal ? true : false}
             />
@@ -496,8 +460,8 @@ const CriticalAnimalsReport = () => {
               type="text"
               value={formData.employee_id}
               onChange={handleChange}
-              onInput={handleNumericInput}
               autoComplete="off"
+              placeholder="Enter employee ID"
             />
           </div>
           <div className={styles.formRow}>
@@ -507,7 +471,6 @@ const CriticalAnimalsReport = () => {
               type="text"
               value={formData.enclosure_id}
               onChange={handleChange}
-              onInput={handleNumericInput}
               autoComplete="off"
               disabled={animal ? true : false}
             />
@@ -518,6 +481,7 @@ const CriticalAnimalsReport = () => {
               value={formData.location}
               onChange={handleChange}
               autoComplete="off"
+              placeholder="Enter location"
             />
           </div>
           <div className={styles.formRow}>
@@ -528,7 +492,7 @@ const CriticalAnimalsReport = () => {
               <textarea
                 id="diagnosis"
                 name="diagnosis"
-                value={formData.diagnosis}
+                value={formData.diagnosis || ""}
                 placeholder="Enter diagnosis"
                 onChange={handleChange}
                 rows="5"
@@ -544,7 +508,7 @@ const CriticalAnimalsReport = () => {
               <textarea
                 id="treatment"
                 name="treatment"
-                value={formData.treatment}
+                value={formData.treatment || ""}
                 placeholder="Enter prescription details and treatment plan"
                 onChange={handleChange}
                 rows="5"
@@ -608,7 +572,7 @@ const CriticalAnimalsReport = () => {
               <textarea
                 id="additional"
                 name="additional"
-                value={formData.additional}
+                value={formData.additional || ""}
                 placeholder="Enter any additional notes or observations"
                 onChange={handleChange}
                 rows="5"
@@ -643,7 +607,6 @@ const CriticalAnimalsReport = () => {
       </div>
     );
   };
-
   // Medical History Component with enhanced display
   const MedicalHistoryContent = ({ animal, medicalHistory, onClose }) => {
     return (
@@ -837,7 +800,7 @@ const CriticalAnimalsReport = () => {
       <div className="popup-overlay">
         <div className="popup-statusChange-content">
           <div className="popup-header">
-            <h3>Update Health Status</h3>
+            <h3 className="update-title">Update Health Status</h3>
             <button className="popup-close" onClick={closePopup}>
               ×
             </button>
@@ -896,7 +859,6 @@ const CriticalAnimalsReport = () => {
     );
   };
 
-  // Common style for action buttons
   const actionButtonStyle = {
     marginRight: "8px",
     padding: "6px 12px",
@@ -929,33 +891,62 @@ const CriticalAnimalsReport = () => {
             </thead>
             <tbody>
               {criticalAnimals.map((animal, idx) => (
-                <tr key={animal.animal_id || idx}>
-                  {animalColumnHeaders.map((header, headerIdx) => (
-                    <td key={headerIdx}>{animal[header]}</td>
-                  ))}
-                  <td>
-                    <div className="button-group">
+                <tr
+                  key={animal.animal_id || idx}
+                  style={{ backgroundColor: "#000000" }}
+                >
+                  <td className="animal-name-cell">{animal.animal_name}</td>
+                  <td className="species-cell">{animal.species}</td>
+                  <td className="animal-type-cell">{animal.animal_type}</td>
+                  <td
+                    className="health-status-cell"
+                    data-status={animal.health_status}
+                  >
+                    {animal.health_status}
+                  </td>
+                  <td className="date-cell">
+                    {formatDateYMD(animal.date_of_birth)}
+                  </td>
+                  <td className="enclosure-cell">{animal.enclosure_name}</td>
+                  <td className="actions-cell">
+                    <div className="button-group-actions">
                       <button
                         onClick={() => {
                           setSelectedAnimal(animal);
                           setShowMedicalFormPopup(true);
                         }}
-                        style={actionButtonStyle}
+                        className="add-record-btn"
                       >
                         Add Record
                       </button>
                       <button
                         onClick={() => handleViewMedicalHistory(animal)}
-                        style={actionButtonStyle}
+                        className="medical-history-btn"
                       >
                         Medical History
                       </button>
-                      <button
-                        onClick={() => initiateHealthStatusChange(animal)}
-                        style={getButtonStyleByStatus(animal.health_status)}
-                      >
-                        {getButtonTextByStatus(animal.health_status)}
-                      </button>
+
+                      <div className="form-group">
+                        <select
+                          value={animal.health_status}
+                          onChange={(e) =>
+                            handleHealthStatusSelect(animal, e.target.value)
+                          }
+                        >
+                          <option value="" disabled>
+                            Health Status
+                          </option>
+                          {HEALTH_STATUS_OPTIONS.map((status) => (
+                            <option key={status} value={status}>
+                              {status === "HEALTHY"
+                                ? "Mark as Healthy"
+                                : status === "NEEDS CARE"
+                                ? "Mark as Needs Care"
+                                : "Mark as Critical"}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                   </td>
                 </tr>
