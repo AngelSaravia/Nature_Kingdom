@@ -1,0 +1,276 @@
+/* Basic styling for report page */
+.report-container {
+    font-family: 'Arial', sans-serif;
+    margin: 20px;
+    background-color: #f9f9f9;
+    /* padding: 20px; */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 85%;
+    align-self: center;
+    color: #333;
+  }
+
+  .report-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  h1 {
+    text-align: center;
+    color: #2c3e50;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+  }
+  
+  .filters-section {
+    margin: 30px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .filters-section h3 {
+    margin-bottom: 15px;
+    color: #34495e;
+  }
+  
+  .filters-section label {
+    font-weight: 600;
+    margin: 10px;
+  }
+  
+  .filter-inputs input[type="date"] {
+    width: 180px;
+  }
+
+  .clear-filters-button {
+    background-color: #cc3328;
+    color: white;
+    padding: 8px 16px;
+    margin-top: 20%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.clear-filters-button:hover {
+    background-color: #a91d1d;
+}
+  
+  .summary-and-piechart {
+    display: flex;
+    justify-content: space-between;
+    margin: 30px;
+    gap: 20px;
+  }
+  
+  .summary-section {
+    flex: 0 0 60%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .summary-table th,
+  .summary-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  .summary-table th {
+    background-color: #f4f4f4;
+    color: #2c3e50;
+  }
+  
+  .summary-section ul {
+    margin-top: 20px;
+    padding-left: 20px;
+  }
+  
+  .pie-chart-section {
+    flex: 0 0 35%;
+    background-color: #fff;
+    /* padding: 20px; */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .pie-chart-section h3 {
+    margin-bottom: 20px;
+    color: #34495e;
+  }
+  
+  .detailed-records-section {
+    margin: 40px;
+    color: #333;
+    h3 {
+      margin-left: 15px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  }
+  
+  .detailed-records-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .detailed-records-table th,
+  .detailed-records-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .detailed-records-table th {
+    background-color: #f4f4f4;
+    color: #2c3e50;
+  }
+  
+  .detailed-records-table tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  @media (max-width: 768px) {
+    .summary-and-piechart {
+      flex-direction: column;
+    }
+  
+    .summary-section,
+    .pie-chart-section {
+      width: 100%;
+    }
+  }
+  /* Styling for filter inputs */
+.filter-inputs input,
+.filter-inputs select,
+.filter-inputs .react-select__control {
+  padding: 8px;
+  margin: 10px 15px 0 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 200px;
+}
+
+.filter-inputs{
+    display: flex;
+    /* justify-content: space-between; */
+    /* flex-direction: column; */
+}
+
+.filter-selectors-container {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+}
+
+.filter-selectors-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.filter-selectors {
+  width: 90%
+}
+
+.react-select__control {
+  background-color: white;
+  border-color: #ccc;
+}
+
+/* Add custom styles for the Select dropdown */
+.react-select__menu {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.react-select__multi-value {
+  background-color: #007bff;
+  color: white;
+  border-radius: 12px;
+  padding: 5px;
+  margin-right: 5px;
+}
+
+.react-select__multi-value__label {
+  color: white;
+  font-weight: 500;
+}
+
+.react-select__multi-value__remove {
+  background-color: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.react-select__multi-value__remove:hover {
+  color: #ff0000;
+}
+
+
+.summary-section {
+    background: #f9f9f9;
+    border-radius: 12px;
+    padding: 20px;
+    width: 45%;
+    min-width: 300px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  
+  .summary-table {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .summary-row {
+    display: table-row;
+  }
+  
+  .summary-label, .summary-value {
+    display: table-cell;
+    padding: 10px 12px;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+  }
+  
+  .summary-label {
+    font-weight: 600;
+    color: #2c3e50;
+    width: 60%;
+  }
+  
+  .summary-value {
+    color: #007bff;
+    text-align: right;
+    font-weight: 500;
+    width: 40%;
+  }
+  
+
+  .no-records-message {
+    padding: 1rem;
+    font-style: italic;
+    color: #777;
+}

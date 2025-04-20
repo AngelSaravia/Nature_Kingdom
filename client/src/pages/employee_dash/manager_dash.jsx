@@ -429,12 +429,21 @@ const ManagerDash = () => {
                           </button>
                           <button
                             onClick={() =>
+                              navigate("/medicalRecords")
+                            }
+                            className="dashboard-button"
+                          >
+                            View Medical Records Report
+                          </button>
+                          <button
+                            onClick={() =>
                               navigate("/query_report/medicalRecords")
                             }
                             className="dashboard-button"
                           >
-                            Animal Medical History
+                            Medical History Entry Form
                           </button>
+                          
                           <button
                             onClick={() => navigate("/zookeeper_dash")}
                             className="dashboard-button"
