@@ -56,6 +56,7 @@ import GiftshopPurchases from "./pages/dashboard/giftshop-purchases/giftshop-pur
 import ManagerTimesheets from "./pages/employee_dash/manager_timesheets/manager_timesheets"
 import ManagerEmployeeQueryReport from "./pages/employee_dash/employeeByManager_queryReport";
 import GiftShopSales from "./pages/employee_dash/giftshopSales";
+import GiftshopQueryReport from "./pages/dataQueryReports/giftshop_queryReport";
 
 
 function DebugNavigation() {
@@ -407,6 +408,7 @@ function AppContent() {
               <Route path="/query_report/employees" element={<EmployeeQueryReport />} />
               <Route path="/query_report/tickets" element={<TicketQueryReport />} />
               <Route path="/query_report/visitors" element={<VisitorQueryReport />} />
+              <Route path="/query_report/giftshop" element={<GiftshopQueryReport />} />
                 
               <Route path="/query_report/revenue" element={<RevenueQueryReport />} />
               <Route path="/query_report/feedLogs" element={<FeedLogsQueryReport />} />
