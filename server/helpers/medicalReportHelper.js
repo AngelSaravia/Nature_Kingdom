@@ -2,7 +2,7 @@ const db_connection = require("../database");
 
 async function getMedicalRecordsSummary(req, res) {
     const filters = req.query;
-    console.log("Filters:", filters);
+    // console.log("Filters:", filters);
 
     try {
         let whereClauses = [];
@@ -59,7 +59,7 @@ async function getMedicalRecordsSummary(req, res) {
         }
 
         const sharedWhere = sharedClauses.length > 0 ? "WHERE " + sharedClauses.join(" AND ") : "";
-        console.log("WHERE Clause:",whereClause," ", queryParams);
+        // console.log("WHERE Clause:",whereClause," ", queryParams);
         const [
             [totalMedicalRecordsResult],
             [recordsByTypeResult],
