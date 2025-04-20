@@ -229,7 +229,7 @@ function AppContent() {
                 }
               />
               <Route
-                path="/medicalRecords"
+                path="/medicalReports"
                 element={
                   <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
                     <MedicalRecords />
@@ -237,7 +237,7 @@ function AppContent() {
                 }
               />
               <Route
-                path="/giftshopRecords"
+                path="/giftshopReports"
                 element={
                   <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
                     <GiftshopRecords />
