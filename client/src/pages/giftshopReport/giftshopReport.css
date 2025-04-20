@@ -1,0 +1,38 @@
+/* Toggle button container */
+.toggle-button-container {
+    display: flex;
+    justify-content: center;
+    /* margin-top: 20px; */
+}
+
+/* Toggle button styling */
+.toggle-button {
+    background-color: #0d5934;  /* Blue background */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+/* Button hover effect */
+.toggle-button:hover {
+    background-color: #1a552b;  /* Darker blue on hover */
+}
+
+
+.detailed-records-section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+
+.filter-selectors-row input-container {
+    display: flex;
+    align-items: right;
+}

@@ -415,7 +415,7 @@ const ManagerDash = () => {
                             metrics={salesMetrics}
                             isLoading={isLoading}
                             onViewAllClick={() =>
-                              navigate("/query_report/revenue")
+                              navigate("/giftshopReports")
                             }
                             viewAllButtonText="View Sales Data"
                           />
@@ -469,7 +469,7 @@ const ManagerDash = () => {
                             View Timesheets
                           </button>
                           <button
-                            onClick={() => navigate("/medicalRecords")}
+                            onClick={() => navigate("/medicalReports")}
                             className="dashboard-button"
                           >
                             View Medical Records Report

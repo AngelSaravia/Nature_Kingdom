@@ -45,7 +45,9 @@ const getManagerType = require("./helpers/managerTypeHelper");
 const handleMedicalRecords = require("./helpers/medicalRecordsHelper");
 const handleProfileUpdate = require("./helpers/visitorModifyHelper");
 const { handleDeleteAccount } = require("./helpers/deleteUseraccount");
-const { getMedicalRecordsSummary } = require("./helpers/medicalReportHelper");
+const { getMedicalRecordsSummary } = require('./helpers/medicalReportHelper');
+const { getGiftShopSummary } = require("./helpers/giftshopReportHelper");
+
 const { handleImageUpload } = require("./helpers/imageUpload");
 const serveUploadedFile = require("./helpers/ImageRouteHelper");
 
@@ -125,6 +127,8 @@ const server = http.createServer(async (req, res) => {
     // Query Reports
   } else if (path === "/api/medical-records/summary" && req.method === "GET") {
     getMedicalRecordsSummary(req, res);
+  } else if (path === "/api/giftshop/summary" && req.method === "GET") {
+    getGiftShopSummary(req, res);
   } else if (path === "/delete-account" && req.method === "DELETE") {
     handleDeleteAccount(req, res);
   } else if (path === "/entryForm/animals" && req.method === "POST") {

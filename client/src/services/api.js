@@ -508,8 +508,30 @@ export const uploadProductImage = async (imageFile) => {
   try {
     console.log("Starting image upload for:", imageFile.name);
 
-    const formData = new FormData();
-    formData.append("file", imageFile);
+    export const getGiftshopSummary = async (filters) => {
+      try {
+        const params = new URLSearchParams();
+
+        // Add filters to the query string
+        if (filters.startDate) params.append("startDate", filters.startDate);
+        if (filters.endDate) params.append("endDate", filters.endDate);
+        if (filters.products.length > 0)
+          params.append(
+            "products",
+            JSON.stringify(filters.products.map((p) => p.value))
+          );
+        if (filters.minTotal) params.append("minTotal", filters.minTotal);
+        if (filters.maxTotal) params.append("maxTotal", filters.maxTotal);
+
+        const response = await apiClient.get(
+          `/api/giftshop/summary?${params.toString()}`
+        );
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching gift shop summary:", error);
+        throw error;
+      }
+    };
 
     // Make sure this endpoint matches exactly what your server is expecting
     // If your server uses /api prefix, include it here
