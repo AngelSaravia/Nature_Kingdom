@@ -22,51 +22,53 @@ const EventForm = () => {
     managerID: "",
   });
 
-    const [submissionStatus, setSubmissionStatus] = useState(null);
-    const [events, setEvents] = useState([]);
-    const [isEditMode, setIsEditMode] = useState(false); // New state to track if data is being passed
+  const [submissionStatus, setSubmissionStatus] = useState(null);
+  const [events, setEvents] = useState([]);
+  const [isEditMode, setIsEditMode] = useState(false); // New state to track if data is being passed
 
-    useEffect(() => {
-        console.log("Location object:", location);
-        const tupleData = location.state?.tuple || JSON.parse(sessionStorage.getItem('eventEditData') || null);
-        
-        if (tupleData) {
-            console.log("Loading event data:", tupleData);
-            // Format the eventDate to match the datetime-local input format
-            const formattedEventDate = tupleData.eventDate
-            ? new Date(tupleData.eventDate).toISOString().slice(0, 16) // Extract yyyy-MM-ddThh:mm
-            : "";
-            setFormData({
-                eventID: tupleData.eventID || "",
-                eventName: tupleData.eventName || "",
-                description: tupleData.description || "",
-                eventDate: formattedEventDate,
-                duration: tupleData.duration || "",
-                location: tupleData.location || "",
-                eventType: tupleData.eventType || "",
-                capacity: tupleData.capacity || "",
-                price: tupleData.price || "",
-                managerID: tupleData.managerID || "",
-            });
-            setIsEditMode(true); // Set edit mode to true if data is passed
-            
-            // Clear the sessionStorage after use
-            sessionStorage.removeItem('eventEditData');
+  useEffect(() => {
+    console.log("Location object:", location);
+    const tupleData =
+      location.state?.tuple ||
+      JSON.parse(sessionStorage.getItem("eventEditData") || null);
+
+    if (tupleData) {
+      console.log("Loading event data:", tupleData);
+      // Format the eventDate to match the datetime-local input format
+      const formattedEventDate = tupleData.eventDate
+        ? new Date(tupleData.eventDate).toISOString().slice(0, 16) // Extract yyyy-MM-ddThh:mm
+        : "";
+      setFormData({
+        eventID: tupleData.eventID || "",
+        eventName: tupleData.eventName || "",
+        description: tupleData.description || "",
+        eventDate: formattedEventDate,
+        duration: tupleData.duration || "",
+        location: tupleData.location || "",
+        eventType: tupleData.eventType || "",
+        capacity: tupleData.capacity || "",
+        price: tupleData.price || "",
+        managerID: tupleData.managerID || "",
+      });
+      setIsEditMode(true); // Set edit mode to true if data is passed
+
+      // Clear the sessionStorage after use
+      sessionStorage.removeItem("eventEditData");
+    } else {
+      console.log("No event data found - creating new form");
+      setIsEditMode(false); // Set edit mode to false if no data is passed
+    }
+    fetch(`${API_BASE_URL}/get_events`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          setEvents(data.data);
         } else {
-            console.log("No event data found - creating new form");
-            setIsEditMode(false); // Set edit mode to false if no data is passed
+          console.error("Failed to fetch events:", data.message);
         }
-        fetch(`${API_BASE_URL}/get_events`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    setEvents(data.data);
-                } else {
-                    console.error("Failed to fetch events:", data.message);
-                }
-            })
-            .catch(error => console.error("Error fetching events:", error));
-    }, [location]);
+      })
+      .catch((error) => console.error("Error fetching events:", error));
+  }, [location]);
 
   useEffect(() => {
     return () => {
@@ -171,19 +173,38 @@ const EventForm = () => {
     }
   };
 
-    return (
-        <div className={styles.formContainer}>
-            <div className={styles.queryReportLink}>
-                <Link to="/query_report/events" className={styles.queryReportButton}>
-                    View Event Query Report
-                </Link>
-            </div>
-            <h2 className={styles.formTitle}>EVENT DATA ENTRY FORM</h2>
-            <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
-                <div className={styles.formRow}>
-                    <InputFields label="EVENT NAME *" name="eventName" value={formData.eventName} onChange={handleChange} pattern="[A-Za-z\s\-]+" autoComplete="off"/>
-                    <InputFields label="PRICE *" name="price" type="number" value={formData.price} onChange={handleChange} min="0" max="9999.99" pattern="^\d+(\.\d{1,2})?$" step="0.01" onInput={handleNumericInput} autoComplete="off"/>
-                </div>
+  return (
+    <div className={styles.formContainer}>
+      <div className={styles.queryReportLink}>
+        <Link to="/entryForm/events" className={styles.queryReportButton}>
+          View Event Query Report
+        </Link>
+      </div>
+      <h2 className={styles.formTitle}>EVENT DATA ENTRY FORM</h2>
+      <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
+        <div className={styles.formRow}>
+          <InputFields
+            label="EVENT NAME *"
+            name="eventName"
+            value={formData.eventName}
+            onChange={handleChange}
+            pattern="[A-Za-z\s\-]+"
+            autoComplete="off"
+          />
+          <InputFields
+            label="PRICE *"
+            name="price"
+            type="number"
+            value={formData.price}
+            onChange={handleChange}
+            min="0"
+            max="9999.99"
+            pattern="^\d+(\.\d{1,2})?$"
+            step="0.01"
+            onInput={handleNumericInput}
+            autoComplete="off"
+          />
+        </div>
 
         <div className={styles.formRow}>
           <InputFields
@@ -286,16 +307,22 @@ const EventForm = () => {
           />
         </div>
 
-                <div className={styles.buttonContainer}>
-                    {isEditMode ? (
-                        <>
-                            <button type="button" onClick={() => handleSubmit("update")}>MODIFY</button>
-                            <button type="button" onClick={() => handleSubmit("delete")}>DELETE</button>
-                        </>
-                    ) : (
-                        <button type="button" onClick={() => handleSubmit("add")}>ADD</button>
-                    )}
-                </div>
+        <div className={styles.buttonContainer}>
+          {isEditMode ? (
+            <>
+              <button type="button" onClick={() => handleSubmit("update")}>
+                MODIFY
+              </button>
+              <button type="button" onClick={() => handleSubmit("delete")}>
+                DELETE
+              </button>
+            </>
+          ) : (
+            <button type="button" onClick={() => handleSubmit("add")}>
+              ADD
+            </button>
+          )}
+        </div>
 
         {submissionStatus && (
           <p className={styles.statusMessage}>{submissionStatus}</p>

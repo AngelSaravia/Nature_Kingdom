@@ -89,7 +89,7 @@ const EnclosureQueryReport = () => {
         console.log("Applying zookeeper filter:", queryParams.where_condition);
       }
 
-      const response = await fetch(`${API_BASE_URL}/query_report/enclosures`, {
+      const response = await fetch(`${API_BASE_URL}/entryForm/enclosures`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(queryParams),

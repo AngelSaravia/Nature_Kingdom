@@ -9,7 +9,12 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
 const filterOptions = [
   { label: "First Name", type: "text", name: "first_name" },
   { label: "Last Name", type: "text", name: "last_name" },
-  { label: "Gender", type: "checkbox", name: "gender", options: ["Male", "Female", "Other", "Prefer not to say"] },
+  {
+    label: "Gender",
+    type: "checkbox",
+    name: "gender",
+    options: ["Male", "Female", "Other", "Prefer not to say"],
+  },
   { label: "Minimum Salary", type: "number", name: "salaryMin" },
   { label: "Maximum Salary", type: "number", name: "salaryMax" },
   { label: "Beginning Birth Date", type: "date", name: "date_of_birthMin" },
@@ -81,7 +86,7 @@ const ManagerEmployeeQueryReport = () => {
             prefixedFilters[`employees.${key}`] = filters[key];
           } else if (key === "salaryMin" || key === "salaryMax") {
             prefixedFilters[`employees.${key}`] = filters[key];
-          }else {
+          } else {
             prefixedFilters[`employees.${key}`] = filters[key];
           }
         });
@@ -107,9 +112,12 @@ const ManagerEmployeeQueryReport = () => {
       };
 
       console.log("Sending queryParams:", queryParams); // Debug log
-      console.log("Request body being sent to the backend:", JSON.stringify(queryParams, null, 2));
+      console.log(
+        "Request body being sent to the backend:",
+        JSON.stringify(queryParams, null, 2)
+      );
 
-      const response = await fetch(`${API_BASE_URL}/query_report/employees`, {
+      const response = await fetch(`${API_BASE_URL}/entryForm/employees`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(queryParams),
@@ -135,8 +143,13 @@ const ManagerEmployeeQueryReport = () => {
   const handleEditClick = async (employeeId) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/get_employees/${employeeId}`);
-      console.log("Fetching employee data from:", `${API_BASE_URL}/get_employees/${employeeId}`);
+      const response = await fetch(
+        `${API_BASE_URL}/get_employees/${employeeId}`
+      );
+      console.log(
+        "Fetching employee data from:",
+        `${API_BASE_URL}/get_employees/${employeeId}`
+      );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -146,7 +159,9 @@ const ManagerEmployeeQueryReport = () => {
 
         // Format the date_of_birth field to yyyy-MM-dd
         if (employee.date_of_birth) {
-            employee.date_of_birth = new Date(employee.date_of_birth).toISOString().split("T")[0];
+          employee.date_of_birth = new Date(employee.date_of_birth)
+            .toISOString()
+            .split("T")[0];
         }
         setSelectedEmployee(data.data);
         setIsFormVisible(true);
@@ -163,8 +178,12 @@ const ManagerEmployeeQueryReport = () => {
   const renderEditButton = (tuple) => {
     console.log("Tuple data:", tuple); // Debugging log
     if (!tuple.Employee_id) {
-        console.error("Missing Employee_id for tuple:", tuple); // Debugging log
-        return <button className="edit-tuple-button" disabled>Invalid Data</button>;
+      console.error("Missing Employee_id for tuple:", tuple); // Debugging log
+      return (
+        <button className="edit-tuple-button" disabled>
+          Invalid Data
+        </button>
+      );
     }
     return (
       <button
@@ -184,25 +203,25 @@ const ManagerEmployeeQueryReport = () => {
 
   return (
     <div className="manager-employee-query-report">
-        <h1 className="report-header">Employees By Manager Report</h1>
-        <div className="report-for-employeesByManager-container">
-            <FilterSidebar
-                filters={filters}
-                onFilterChange={handleFilterChange}
-                onRunReport={fetchReport}
-                onClearAll={onClearAll}
-                filterOptions={filterOptions}
-            />
-            <div className="report-table-container">
-                <ReportTable
-                data={reportData}
-                columns={Object.keys(columnHeaders)}
-                columnLabels={columnHeaders}
-                renderActions={(tuple) => renderEditButton(tuple)}
-                />
-            </div>
+      <h1 className="report-header">Employees By Manager Report</h1>
+      <div className="report-for-employeesByManager-container">
+        <FilterSidebar
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          onRunReport={fetchReport}
+          onClearAll={onClearAll}
+          filterOptions={filterOptions}
+        />
+        <div className="report-table-container">
+          <ReportTable
+            data={reportData}
+            columns={Object.keys(columnHeaders)}
+            columnLabels={columnHeaders}
+            renderActions={(tuple) => renderEditButton(tuple)}
+          />
         </div>
-        {isFormVisible && (
+      </div>
+      {isFormVisible && (
         <EmployeeForm
           employeeData={selectedEmployee} // Pass selected tuple data
           source="manager_query_report" // Indicate the source

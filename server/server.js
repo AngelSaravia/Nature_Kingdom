@@ -45,7 +45,7 @@ const getManagerType = require("./helpers/managerTypeHelper");
 const handleMedicalRecords = require("./helpers/medicalRecordsHelper");
 const handleProfileUpdate = require("./helpers/visitorModifyHelper");
 const { handleDeleteAccount } = require("./helpers/deleteUseraccount");
-const { getMedicalRecordsSummary } = require('./helpers/medicalReportHelper');
+const { getMedicalRecordsSummary } = require("./helpers/medicalReportHelper");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -125,10 +125,9 @@ const server = http.createServer(async (req, res) => {
     getMedicalRecordsSummary(req, res);
   } else if (path === "/delete-account" && req.method === "DELETE") {
     handleDeleteAccount(req, res);
-  } else if (path === "/query_report/animals" && req.method === "POST") {
+  } else if (path === "/entryForm/animals" && req.method === "POST") {
     handleQueryReport(req, res);
-  } 
-  else if (path === "/get_enclosure_names" && req.method === "GET") {
+  } else if (path === "/get_enclosure_names" && req.method === "GET") {
     const sql = "SELECT name FROM enclosures"; // Query to fetch all enclosure names
     db_connection.query(sql, (err, results) => {
       if (err) {
@@ -154,9 +153,9 @@ const server = http.createServer(async (req, res) => {
     path === "/get_medical_records"
   ) {
     handleMedicalRecords(req, res);
-  } else if (path === "/query_report/events" && req.method === "POST") {
+  } else if (path === "/entryForm/events" && req.method === "POST") {
     handleQueryReport(req, res);
-  } else if (path === "/query_report/employees" && req.method === "POST") {
+  } else if (path === "/entryForm/employees" && req.method === "POST") {
     handleQueryReport(req, res);
   } else if (path === "/query_report/orders" && req.method === "POST") {
     handleQueryReport(req, res);
@@ -373,17 +372,17 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({ success: false, message: "Server error" }));
       }
     });
-  } else if (path === "/query_report/enclosures" && req.method === "POST") {
+  } else if (path === "/entryForm/enclosures" && req.method === "POST") {
     handleQueryReport(req, res);
-  } else if (path === "/query_report/tickets" && req.method === "POST") {
+  } else if (path === "/entryForm/tickets" && req.method === "POST") {
     handleQueryReport(req, res);
   } else if (path === "/query_report/revenue" && req.method === "POST") {
     handleQueryReport(req, res);
-  } else if (path === "/query_report/feedLogs" && req.method === "POST") {
+  } else if (path === "/entryForm/feedLogs" && req.method === "POST") {
     handleQueryReport(req, res);
-  } else if (path === "/query_report/medicalRecords" && req.method === "POST") {
+  } else if (path === "/entry_form/medicalRecords" && req.method === "POST") {
     handleQueryReport(req, res);
-  } else if (path === "/query_report/visitors" && req.method === "POST") {
+  } else if (path === "/entryForm/visitors" && req.method === "POST") {
     handleQueryReport(req, res);
     // Data Entry Forms
   } else if (path.startsWith("/animals/enclosure/") && req.method === "GET") {

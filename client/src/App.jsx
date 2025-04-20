@@ -52,19 +52,18 @@ import GiftShop from "./pages/giftshop/GiftShop";
 import Exhibits from "./pages/exhibits/Exhibits";
 import EnclosureByExhibit from "./pages/exhibits/EnclosuresByExhibit";
 import AnimalsByEnclosure from "./pages/exhibits/AnimalsByEnclosure";
-import GiftshopPurchases from "./pages/dashboard/giftshop-purchases/giftshop-purchases"
-import ManagerTimesheets from "./pages/employee_dash/manager_timesheets/manager_timesheets"
+import GiftshopPurchases from "./pages/dashboard/giftshop-purchases/giftshop-purchases";
+import ManagerTimesheets from "./pages/employee_dash/manager_timesheets/manager_timesheets";
 import ManagerEmployeeQueryReport from "./pages/employee_dash/employeeByManager_queryReport";
 import GiftShopSales from "./pages/employee_dash/giftshopSales";
 import MedicalRecords from "./pages/medicalRecordsReport/medicalRecordsReport";
-
 
 function DebugNavigation() {
   const location = useLocation();
 
   useEffect(() => {
-      console.log("Navigated to:", location.pathname);
-      console.log("Navigation state:", location.state);
+    console.log("Navigated to:", location.pathname);
+    console.log("Navigation state:", location.state);
   }, [location]);
 
   return null;
@@ -174,7 +173,7 @@ function AppContent() {
                 }
               />
               <Route
-                path="/query_report/employees"
+                path="/entryForm/employees"
                 element={
                   <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
                     <EmployeeQueryReport />
@@ -239,7 +238,9 @@ function AppContent() {
               <Route
                 path="/veterinarian_dash"
                 element={
-                  <RoleProtectedRoute allowedRoles={["veterinarian", "admin", "manager"]}>
+                  <RoleProtectedRoute
+                    allowedRoles={["veterinarian", "admin", "manager"]}
+                  >
                     <VeterinarianDash />
                   </RoleProtectedRoute>
                 }
@@ -247,7 +248,9 @@ function AppContent() {
               <Route
                 path="/zookeeper_dash"
                 element={
-                  <RoleProtectedRoute allowedRoles={["zookeeper", "admin", "manager"]}>
+                  <RoleProtectedRoute
+                    allowedRoles={["zookeeper", "admin", "manager"]}
+                  >
                     <Zookeeper_QueryReport />
                   </RoleProtectedRoute>
                 }
@@ -255,7 +258,9 @@ function AppContent() {
               <Route
                 path="/operator_dash"
                 element={
-                  <RoleProtectedRoute allowedRoles={["operator", "admin", "manager"]}>
+                  <RoleProtectedRoute
+                    allowedRoles={["operator", "admin", "manager"]}
+                  >
                     <OperatorDash />
                   </RoleProtectedRoute>
                 }
@@ -263,7 +268,9 @@ function AppContent() {
               <Route
                 path="/giftshop_dash"
                 element={
-                  <RoleProtectedRoute allowedRoles={["giftshop", "admin", "manager"]}>
+                  <RoleProtectedRoute
+                    allowedRoles={["giftshop", "admin", "manager"]}
+                  >
                     <GiftShopDash />
                   </RoleProtectedRoute>
                 }
@@ -289,7 +296,7 @@ function AppContent() {
                 }
               />
               <Route
-                path="/query_report/enclosures"
+                path="/entryForm/enclosures"
                 element={
                   <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
                     <EnclosureQueryReport />
@@ -310,7 +317,7 @@ function AppContent() {
               />
 
               <Route
-                path="/query_report/animals"
+                path="/entryForm/animals"
                 element={
                   <RoleProtectedRoute
                     allowedRoles={["admin", "manager", "staff"]}
@@ -320,7 +327,7 @@ function AppContent() {
                 }
               />
               <Route
-                path="/query_report/events"
+                path="/entryForm/events"
                 element={
                   <RoleProtectedRoute
                     allowedRoles={["admin", "manager", "staff"]}
@@ -352,29 +359,23 @@ function AppContent() {
               <Route
                 path="/query_report/revenue"
                 element={
-                  <RoleProtectedRoute
-                    allowedRoles={["admin", "manager"]}
-                  >
+                  <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
                     <RevenueQueryReport />
                   </RoleProtectedRoute>
                 }
               />
               <Route
-                path="/query_report/feedlogs"
+                path="/entryForm/feedLogs"
                 element={
-                  <RoleProtectedRoute
-                    allowedRoles={["admin", "manager"]}
-                  >
+                  <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
                     <FeedLogsQueryReport />
                   </RoleProtectedRoute>
                 }
               />
               <Route
-                path="/query_report/medicalRecords"
+                path="/entry_form/medicalRecords"
                 element={
-                  <RoleProtectedRoute
-                    allowedRoles={["admin", "manager"]}
-                  >
+                  <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
                     <MedicalRecordsQueryReport />
                   </RoleProtectedRoute>
                 }
@@ -382,14 +383,11 @@ function AppContent() {
               <Route
                 path="/manager_timesheets"
                 element={
-                  <RoleProtectedRoute
-                    allowedRoles={["admin", "manager"]}
-                  >
+                  <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
                     <ManagerTimesheets />
                   </RoleProtectedRoute>
                 }
               />
-
 
               {/* Public routes */}
               <Route path="/tickets" element={<Tickets />} />
@@ -406,29 +404,54 @@ function AppContent() {
               <Route path="/ticket_form" element={<TicketForm />} />
               <Route path="/visitor_form" element={<VisitorForm />} />
               <Route path="/membership_form" element={<MembershipForm />} />
-                
+
               <Route path="/medical_form" element={<MedicalForm />} />
               <Route path="/feedLog_form" element={<FeedLogsForm />} />
-                
-              <Route path="/query_report/animals" element={<AnimalQueryReport />} />
-              <Route path="/query_report/events" element={<EventQueryReport />} />
-              <Route path="/query_report/enclosures" element={<EnclosureQueryReport />} />
-              <Route path="/query_report/employees" element={<EmployeeQueryReport />} />
-              <Route path="/query_report/tickets" element={<TicketQueryReport />} />
-              <Route path="/query_report/visitors" element={<VisitorQueryReport />} />
-                
-              <Route path="/query_report/revenue" element={<RevenueQueryReport />} />
-              <Route path="/query_report/feedLogs" element={<FeedLogsQueryReport />} />
-              <Route path="/query_report/medicalRecords" element={<MedicalRecordsQueryReport />} />
-              
+
+              <Route
+                path="/entryForm/animals"
+                element={<AnimalQueryReport />}
+              />
+              <Route path="/entryForm/events" element={<EventQueryReport />} />
+              <Route
+                path="/entryForm/enclosures"
+                element={<EnclosureQueryReport />}
+              />
+              <Route
+                path="/entryForm/employees"
+                element={<EmployeeQueryReport />}
+              />
+              <Route
+                path="/entryForm/tickets"
+                element={<TicketQueryReport />}
+              />
+              <Route
+                path="/entryForm/visitors"
+                element={<VisitorQueryReport />}
+              />
+
+              <Route
+                path="/query_report/revenue"
+                element={<RevenueQueryReport />}
+              />
+              <Route
+                path="/entryForm/feedLogs"
+                element={<FeedLogsQueryReport />}
+              />
+              <Route
+                path="/entry_form/medicalRecords"
+                element={<MedicalRecordsQueryReport />}
+              />
 
               <Route path="/exhibits" element={<Exhibits />} />
-              <Route path="/exhibits/:exhibitId/enclosures" element={<EnclosureByExhibit />} />
-              <Route path="/exhibits/:exhibitId/enclosures/:enclosureId/animals/" element={<AnimalsByEnclosure />} /> 
-
-
-
-
+              <Route
+                path="/exhibits/:exhibitId/enclosures"
+                element={<EnclosureByExhibit />}
+              />
+              <Route
+                path="/exhibits/:exhibitId/enclosures/:enclosureId/animals/"
+                element={<AnimalsByEnclosure />}
+              />
 
               <Route path="/:type/checkout" element={<Checkout />} />
               <Route path="/calendar" element={<EventsPage />} />
@@ -442,7 +465,10 @@ function AppContent() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/my-tickets" element={<MyTickets />} />
                 <Route path="/my-membership" element={<MyMembership />} />
-                <Route path="/giftshop-purchases" element={<GiftshopPurchases />} />  
+                <Route
+                  path="/giftshop-purchases"
+                  element={<GiftshopPurchases />}
+                />
                 <Route path="/:type/checkout" element={<Checkout />} />
               </Route>
             </Routes>

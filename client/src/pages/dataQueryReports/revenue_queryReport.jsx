@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
-// import "./revenue_queryReport.css";
+//import "./revenue_queryReport.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -216,7 +216,7 @@ const RevenueQueryReport = () => {
       <div className="report-table-wrapper">
         <div className="filter-sidebar-container">
           <div className="report-header">
-            <h1>Revenue Report</h1>
+            <h1 className="revenue-title">Revenue Report</h1>
             <TotalItemsBox count={totalItems} totals={totals} />
             <TotalSalesBox total={totalSales} totals={totals} />
           </div>

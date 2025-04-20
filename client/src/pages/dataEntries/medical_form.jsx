@@ -162,9 +162,12 @@ const MedicalForm = () => {
   return (
     <div className={styles.formContainer}>
       <div className={styles.queryReportLink}>
-          <Link to="/query_report/medicalRecords" className={styles.queryReportButton}>
-              View Medical Records Query Report
-          </Link>
+        <Link
+          to="/entry_form/medicalRecords"
+          className={styles.queryReportButton}
+        >
+          View Medical Records Query Report
+        </Link>
       </div>
       <h2 className={styles.formTitle}>MEDICAL RECORD DATA ENTRY FORM</h2>
       <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
@@ -310,12 +313,18 @@ const MedicalForm = () => {
         </div>
         <div className={styles.buttonContainer}>
           {isEditMode ? (
-              <>
-                  <button type="button" onClick={() => handleSubmit("update")}>MODIFY</button>
-                  <button type="button" onClick={() => handleSubmit("delete")}>DELETE</button>
-              </>
+            <>
+              <button type="button" onClick={() => handleSubmit("update")}>
+                MODIFY
+              </button>
+              <button type="button" onClick={() => handleSubmit("delete")}>
+                DELETE
+              </button>
+            </>
           ) : (
-              <button type="button" onClick={() => handleSubmit("add")}>ADD</button>
+            <button type="button" onClick={() => handleSubmit("add")}>
+              ADD
+            </button>
           )}
         </div>
       </form>
