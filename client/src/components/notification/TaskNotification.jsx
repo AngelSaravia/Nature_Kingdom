@@ -147,13 +147,14 @@ const VeterinarianNotification = ({ managerId }) => {
                         {new Date(alert.createdAt).toLocaleString()}
                       </p>
                     </div>
-                    <button
+                    {/* <button
                       className="resolve-task-btn"
                       onClick={() => resolveAlert(alert.id)}
                       title="Mark as Resolved"
                     >
                       <IoMdCheckboxOutline />
                     </button>
+                    */}
                   </li>
                 ))}
               </ul>

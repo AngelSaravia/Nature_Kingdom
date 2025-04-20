@@ -42,7 +42,7 @@ const CriticalAnimalsReport = () => {
     try {
       // Fetch all enclosures first
       const enclosureResponse = await fetch(
-        `${API_BASE_URL}/query_report/enclosures`,
+        `${API_BASE_URL}/entryForm/enclosures`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

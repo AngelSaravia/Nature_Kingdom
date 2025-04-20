@@ -19,46 +19,48 @@ const FeedLogsForm = () => {
     summary: "",
   });
 
-    const [submissionStatus, setSubmissionStatus] = useState(null);
-    const [feedLogs, setfeedLogs] = useState([]);
-    const [isEditMode, setIsEditMode] = useState(false); // New state to track if data is being passed
+  const [submissionStatus, setSubmissionStatus] = useState(null);
+  const [feedLogs, setfeedLogs] = useState([]);
+  const [isEditMode, setIsEditMode] = useState(false); // New state to track if data is being passed
 
   const formatDateTime = (dateTime) => {
     if (!dateTime) return null;
     return new Date(dateTime).toISOString().slice(0, 16); // Format as 'YYYY-MM-DDTHH:mm'
   };
 
-    useEffect(() => {
-        console.log("Location object:", location);
-        const tupleData = location.state?.tuple || JSON.parse(sessionStorage.getItem('feedLogEditData') || null);
-        
-        if (tupleData) {
-            console.log("Loading feed log data:", tupleData);
-            
-            setFormData({
-                schedule_id: tupleData.schedule_id || "",
-                animal_id: tupleData.animal_id || "",
-                enclosure_id: tupleData.enclosure_id || "",
-                employee_id: tupleData.employee_id || "",
-                date: formatDateTime(tupleData.date) || "",
-                health_status: tupleData.health_status || "",
-                summary: tupleData.summary || "",
-            });
-            setIsEditMode(true); // Set edit mode to true if data is passed
-            
-            // Clear the sessionStorage after use
-            sessionStorage.removeItem('feedLogEditData');
-        } else {
-            console.log("No feed log data found - creating new form");
-            setIsEditMode(false); // Set edit mode to false if no data is passed
-        }
-        fetch(`${API_BASE_URL}/get_feedLogs`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) setfeedLogs(data.data);
-            })
-            .catch(error => console.error("Error fetching feed logs:", error));
-    }, [location]);
+  useEffect(() => {
+    console.log("Location object:", location);
+    const tupleData =
+      location.state?.tuple ||
+      JSON.parse(sessionStorage.getItem("feedLogEditData") || null);
+
+    if (tupleData) {
+      console.log("Loading feed log data:", tupleData);
+
+      setFormData({
+        schedule_id: tupleData.schedule_id || "",
+        animal_id: tupleData.animal_id || "",
+        enclosure_id: tupleData.enclosure_id || "",
+        employee_id: tupleData.employee_id || "",
+        date: formatDateTime(tupleData.date) || "",
+        health_status: tupleData.health_status || "",
+        summary: tupleData.summary || "",
+      });
+      setIsEditMode(true); // Set edit mode to true if data is passed
+
+      // Clear the sessionStorage after use
+      sessionStorage.removeItem("feedLogEditData");
+    } else {
+      console.log("No feed log data found - creating new form");
+      setIsEditMode(false); // Set edit mode to false if no data is passed
+    }
+    fetch(`${API_BASE_URL}/get_feedLogs`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) setfeedLogs(data.data);
+      })
+      .catch((error) => console.error("Error fetching feed logs:", error));
+  }, [location]);
 
   useEffect(() => {
     return () => {
@@ -159,53 +161,105 @@ const FeedLogsForm = () => {
     }
   };
 
-    return (
-        <div className={styles.formContainer}>
-            <div className={styles.queryReportLink}>
-                <Link to="/query_report/feedLogs" className={styles.queryReportButton}>
-                    View Feed Logs Query Report
-                </Link>
-            </div>
-            <h2 className={styles.formTitle}>FEED LOGS DATA ENTRY FORM</h2>
-            <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
-                <div className={styles.formRow}>
-                    <InputFields label="ANIMAL ID *" name="animal_id" type="text" value={formData.animal_id} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autoComplete="off"/>
-                    <InputFields label="ENCLOSURE ID *" name="enclosure_id" type="text" value={formData.enclosure_id} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autoComplete="off"/>
-                </div>
-                <div className={styles.formRow}>
-                    <InputFields label="EMPLOYEE ID *" name="employee_id" type="text" value={formData.employee_id} onChange={handleChange} pattern="[0-9]+" onInput={handleNumericInput} autoComplete="off"/>
-                    <InputFields label="FEEDING SCHEDULE DATE *" name="date" type="datetime-local" value={formData.date} onChange={handleChange} autoComplete="off"/>
-                </div>
-                <div className={styles.formRow}>
-                <label htmlFor="health_statusDropdown" className={styles.label}>HEALTH STATUS (choose one)</label>
-                    <Dropdown
-                    label="Select health status *"
-                        selectedLabel={formData.health_status || "Select health status *"}
-                        onSelect={(value) => handleSelect("health_status", value)}
-                        id="health_statusDropdown"
-                        value={formData.health_status}
-                    >
-                        {["HEALTHY", "NEEDS CARE", "CRITICAL"].map((option) => (
-                            <DropdownItem key={option} value={option}>
-                                {option}
-                            </DropdownItem>
-                        ))}
-                    </Dropdown>
-                </div>
-                <div className={styles.formRow}>
-                    <textarea name="summary" value={formData.summary} placeholder="Enter feed log summary" onChange={handleChange} rows="10" maxLength="2000" style={{ width: "100%", resize: "vertical" }} required={false} autoComplete="off"/>
-                </div>
+  return (
+    <div className={styles.formContainer}>
+      <div className={styles.queryReportLink}>
+        <Link to="/entryForm/feedLogs" className={styles.queryReportButton}>
+          View Feed Logs Query Report
+        </Link>
+      </div>
+      <h2 className={styles.formTitle}>FEED LOGS DATA ENTRY FORM</h2>
+      <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
+        <div className={styles.formRow}>
+          <InputFields
+            label="ANIMAL ID *"
+            name="animal_id"
+            type="text"
+            value={formData.animal_id}
+            onChange={handleChange}
+            pattern="[0-9]+"
+            onInput={handleNumericInput}
+            autoComplete="off"
+          />
+          <InputFields
+            label="ENCLOSURE ID *"
+            name="enclosure_id"
+            type="text"
+            value={formData.enclosure_id}
+            onChange={handleChange}
+            pattern="[0-9]+"
+            onInput={handleNumericInput}
+            autoComplete="off"
+          />
+        </div>
+        <div className={styles.formRow}>
+          <InputFields
+            label="EMPLOYEE ID *"
+            name="employee_id"
+            type="text"
+            value={formData.employee_id}
+            onChange={handleChange}
+            pattern="[0-9]+"
+            onInput={handleNumericInput}
+            autoComplete="off"
+          />
+          <InputFields
+            label="FEEDING SCHEDULE DATE *"
+            name="date"
+            type="datetime-local"
+            value={formData.date}
+            onChange={handleChange}
+            autoComplete="off"
+          />
+        </div>
+        <div className={styles.formRow}>
+          <label htmlFor="health_statusDropdown" className={styles.label}>
+            HEALTH STATUS (choose one)
+          </label>
+          <Dropdown
+            label="Select health status *"
+            selectedLabel={formData.health_status || "Select health status *"}
+            onSelect={(value) => handleSelect("health_status", value)}
+            id="health_statusDropdown"
+            value={formData.health_status}
+          >
+            {["HEALTHY", "NEEDS CARE", "CRITICAL"].map((option) => (
+              <DropdownItem key={option} value={option}>
+                {option}
+              </DropdownItem>
+            ))}
+          </Dropdown>
+        </div>
+        <div className={styles.formRow}>
+          <textarea
+            name="summary"
+            value={formData.summary}
+            placeholder="Enter feed log summary"
+            onChange={handleChange}
+            rows="10"
+            maxLength="2000"
+            style={{ width: "100%", resize: "vertical" }}
+            required={false}
+            autoComplete="off"
+          />
+        </div>
 
-                <div className={styles.buttonContainer}>
-                    {isEditMode ? (
-                        <>
-                            <button type="button" onClick={() => handleSubmit("update")}>MODIFY</button>
-                            <button type="button" onClick={() => handleSubmit("delete")}>DELETE</button>
-                        </>
-                    ) : (
-                        <button type="button" onClick={() => handleSubmit("add")}>ADD</button>
-                    )}
-                </div>
+        <div className={styles.buttonContainer}>
+          {isEditMode ? (
+            <>
+              <button type="button" onClick={() => handleSubmit("update")}>
+                MODIFY
+              </button>
+              <button type="button" onClick={() => handleSubmit("delete")}>
+                DELETE
+              </button>
+            </>
+          ) : (
+            <button type="button" onClick={() => handleSubmit("add")}>
+              ADD
+            </button>
+          )}
+        </div>
 
         {submissionStatus && (
           <p className={styles.statusMessage}>{submissionStatus}</p>
