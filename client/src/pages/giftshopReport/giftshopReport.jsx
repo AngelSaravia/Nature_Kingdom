@@ -233,8 +233,8 @@ const GiftshopReport = () => {
                         <table className="detailed-records-table">
                             <thead>
                                 <tr>
-                                    <th>Customer ID</th>
                                     <th>Order ID</th>
+                                    <th>Customer ID</th>
                                     <th>Product</th>
                                     <th>Quantity</th>
                                     <th>Total Price</th>
@@ -244,8 +244,8 @@ const GiftshopReport = () => {
                             <tbody>
                                 {orderItemsReportData.length > 0 ? orderItemsReportData.map((record, index) => (
                                     <tr key={index}>
-                                        <td>{record.customer}</td>
                                         <td>{record.orderId}</td>
+                                        <td>{record.customer}</td>
                                         <td>{record.product}</td>
                                         <td>{record.quantity}</td>
                                         <td>${record.totalPrice}</td>

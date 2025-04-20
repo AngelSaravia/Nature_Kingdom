@@ -26,7 +26,7 @@ async function getGiftShopSummary(req, res) {
             queryParams.push(filters.maxTotal);
         }
 
-        const productFilter = filters.products ? JSON.parse(filters.products) : null;
+        const productFilter = filters.products ? JSON.parse(filters.products) : [];
         const whereClauseForOrders = whereClauses.length > 0 ? 'WHERE ' + whereClauses.join(' AND ') : '';
 
         // Queries without product filters
@@ -35,8 +35,7 @@ async function getGiftShopSummary(req, res) {
             [bestGrossing],
             [worstGrossing],
             [highestQty],
-            [lowestQty],
-            ordersTable
+            [lowestQty]
         ] = await Promise.all([
             db_connection.promise().query(`
                 SELECT COUNT(DISTINCT o.order_id) AS total_orders,
@@ -89,24 +88,34 @@ async function getGiftShopSummary(req, res) {
                 GROUP BY p.name
                 ORDER BY qty ASC
                 LIMIT 1
-            `, queryParams),
-
-            db_connection.promise().query(`
-                SELECT o.order_id, o.visitor_id, o.order_date, o.total_amount, SUM(oi.quantity) AS total_items
-                FROM orders o
-                LEFT JOIN order_items oi ON oi.order_id = o.order_id
-                ${whereClauseForOrders}
-                GROUP BY o.order_id
-                ORDER BY o.order_date DESC
             `, queryParams)
         ]);
+
+        // Query for orders that include the selected products
+        let orderWhere = [...queryParams];
+        if (productFilter.length > 0) {
+            whereClauses.push(`oi.product_id IN (${productFilter.map(() => '?').join(', ')})`);
+            orderWhere = [...queryParams, ...productFilter];
+        }
+
+        const whereClauseForOrdersWithProducts = whereClauses.length > 0 ? 'WHERE ' + whereClauses.join(' AND ') : '';
+
+        const [ordersTable] = await db_connection.promise().query(`
+            SELECT o.order_id, o.visitor_id, o.order_date, o.total_amount, SUM(oi.quantity) AS total_items
+            FROM orders o
+            LEFT JOIN order_items oi ON oi.order_id = o.order_id
+            LEFT JOIN products p ON p.product_id = oi.product_id
+            ${whereClauseForOrdersWithProducts}
+            GROUP BY o.order_id
+            ORDER BY o.order_date DESC
+        `, orderWhere);
 
         // Query for order items with proper handling of product + order filters
         let orderItemsTable = [];
         let orderItemsWhere = [];
         let orderItemsParams = [];
 
-        if (productFilter && productFilter.length > 0) {
+        if (productFilter.length > 0) {
             orderItemsWhere.push(`oi.product_id IN (${productFilter.map(() => '?').join(', ')})`);
             orderItemsParams.push(...productFilter);
         }
@@ -118,7 +127,6 @@ async function getGiftShopSummary(req, res) {
             orderItemsWhere.push("o.order_date <= ?");
             orderItemsParams.push(filters.endDate);
         }
-        // NOTE: We no longer include minTotal and maxTotal here for orderItemsTable
 
         const orderItemsWhereClause = orderItemsWhere.length > 0 ? "WHERE " + orderItemsWhere.join(" AND ") : "";
 
