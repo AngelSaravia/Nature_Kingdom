@@ -57,6 +57,7 @@ import ManagerTimesheets from "./pages/employee_dash/manager_timesheets/manager_
 import ManagerEmployeeQueryReport from "./pages/employee_dash/employeeByManager_queryReport";
 import GiftShopSales from "./pages/employee_dash/giftshopSales";
 import GiftshopQueryReport from "./pages/dataQueryReports/giftshop_queryReport";
+import MedicalRecords from "./pages/medicalRecordsReport/medicalRecordsReport";
 
 
 function DebugNavigation() {
@@ -225,6 +226,14 @@ function AppContent() {
                 element={
                   <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
                     <GiftShopSales />
+                  </RoleProtectedRoute>
+                }
+              />
+              <Route
+                path="/medicalRecords"
+                element={
+                  <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
+                    <MedicalRecords />
                   </RoleProtectedRoute>
                 }
               />

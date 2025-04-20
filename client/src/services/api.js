@@ -464,6 +464,31 @@ export const clockOut = async (email) => {
   }
 };
 
+export const getMedicalRecordsSummary = async (filters) => {
+  try {
+    // Build query string with filters
+    const params = new URLSearchParams();
+
+    // Add filters to the query string
+    if (filters.startDate) params.append('startDate', filters.startDate);
+    if (filters.endDate) params.append('endDate', filters.endDate);
+    if (filters.employees.length > 0) params.append('employees', JSON.stringify(filters.employees.map(emp => emp.value)));
+    if (filters.recordTypes.length > 0) params.append('recordTypes', JSON.stringify(filters.recordTypes.map(type => type.label)));
+    if (filters.enclosures.length > 0) params.append('enclosures', JSON.stringify(filters.enclosures.map(enclosure => enclosure.value)));
+    if (filters.animalSpecies.length > 0) params.append('animalSpecies', JSON.stringify(filters.animalSpecies.map(species => species.value)));
+
+    // Make the GET request with query parameters
+    const response = await apiClient.get(`/api/medical-records/summary?${params.toString()}`);
+    return response.data;  // Return response data directly
+  } catch (error) {
+    console.error("Error fetching medical records summary:", error);
+    throw error;
+  }
+};
+
+
+
+
 export const getEmployeeTimesheets = async (email) => {
   try {
     console.log(`Attempting to get timesheets regarding: ${email}`);
