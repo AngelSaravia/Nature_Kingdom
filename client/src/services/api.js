@@ -487,6 +487,26 @@ export const getMedicalRecordsSummary = async (filters) => {
 };
 
 
+export const getGiftshopSummary = async (filters) => {
+  try {
+    const params = new URLSearchParams();
+
+    // Add filters to the query string
+    if (filters.startDate) params.append('startDate', filters.startDate);
+    if (filters.endDate) params.append('endDate', filters.endDate);
+    if (filters.products.length > 0) params.append('products', JSON.stringify(filters.products.map(p => p.value)));
+    if (filters.minTotal) params.append('minTotal', filters.minTotal);
+    if (filters.maxTotal) params.append('maxTotal', filters.maxTotal);
+
+    const response = await apiClient.get(`/api/giftshop/summary?${params.toString()}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching gift shop summary:", error);
+    throw error;
+  }
+};
+
+
 
 
 export const getEmployeeTimesheets = async (email) => {
