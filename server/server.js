@@ -45,6 +45,7 @@ const getManagerType = require("./helpers/managerTypeHelper");
 const handleMedicalRecords = require("./helpers/medicalRecordsHelper");
 const handleProfileUpdate = require("./helpers/visitorModifyHelper");
 const { handleDeleteAccount } = require("./helpers/deleteUseraccount");
+const { getMedicalRecordsSummary } = require('./helpers/medicalReportHelper');
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -120,11 +121,13 @@ const server = http.createServer(async (req, res) => {
     handleEmployeeLogin(req, res);
 
     // Query Reports
+  } else if (path === "/api/medical-records/summary" && req.method === "GET") {
+    getMedicalRecordsSummary(req, res);
   } else if (path === "/delete-account" && req.method === "DELETE") {
     handleDeleteAccount(req, res);
   } else if (path === "/query_report/animals" && req.method === "POST") {
     handleQueryReport(req, res);
-  } // Added route to fetch all enclosure names for animal query report
+  } 
   else if (path === "/get_enclosure_names" && req.method === "GET") {
     const sql = "SELECT name FROM enclosures"; // Query to fetch all enclosure names
     db_connection.query(sql, (err, results) => {
