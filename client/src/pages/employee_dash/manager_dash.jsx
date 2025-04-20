@@ -330,7 +330,7 @@ const ManagerDash = () => {
   return (
     <div className="dashboard-container">
       <div className="dashboard-card">
-        <h1 className="dashboard-title">Manager Dashboard</h1>
+        <h1 className="dashboard-title">ZooKeeper Manager Dashboard</h1>
 
         {/* Dashboard Buttons */}
         <div className="dashboard-single">
@@ -540,6 +540,33 @@ const ManagerDash = () => {
                         >
                           View Revenue Reports
                         </button>
+
+                        <button
+                          onClick={() => navigate("/query_report/revenue")}
+                          className="dashboard-button"
+                        >
+                          Enclosure Entry Form
+                        </button>
+                        <button
+                          onClick={() => navigate("/query_report/revenue")}
+                          className="dashboard-button"
+                        >
+                          Animal Entry Form
+                        </button>
+                        <button
+                          onClick={() => navigate("/query_report/revenue")}
+                          className="dashboard-button"
+                        >
+                          Feed Logs Entry Form
+                        </button>
+
+                        <button
+                          onClick={() => navigate("/query_report/revenue")}
+                          className="dashboard-button"
+                        >
+                          Report for Revenue
+                        </button>
+
                         {/* <button
                         onClick={() => navigate("/general_reports")}
                         className="dashboard-button"

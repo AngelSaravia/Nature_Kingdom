@@ -2,12 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "./veterinarian_dash.css";
 import ZooKeeperReportTable from "../dataQueryReports/veterinarian_animalReport";
-import { useAuth } from "../../context/Authcontext"; // Import useAuth hook
+import { useAuth } from "../../context/Authcontext";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const AdminDash = () => {
   const navigate = useNavigate();
-  const { user } = useAuth(); // Get user data from AuthContext
+  const { user } = useAuth();
   const [criticalStats, setCriticalStats] = useState({
     critical: 0,
     needsCare: 0,
@@ -16,7 +16,6 @@ const AdminDash = () => {
   useEffect(() => {
     console.log("User data from AuthContext:", user);
 
-    // Also check localStorage directly as a fallback
     const employeeId = localStorage.getItem("employeeId");
     console.log("employeeId from localStorage:", employeeId);
   }, [user]);
@@ -31,7 +30,6 @@ const AdminDash = () => {
         const data = await response.json();
         console.log("Received critical stats:", data);
 
-        // Update property names to match what's returned by the API
         setCriticalStats({
           critical: data.critical || 0,
           needsCare: data.needsCare || 0,
@@ -52,7 +50,6 @@ const AdminDash = () => {
     fetchCriticalAnimalsStats();
   }, []);
 
-  // Get employeeId either from context or directly from localStorage
   const employeeId = user?.employeeId || localStorage.getItem("employeeId");
 
   return (
