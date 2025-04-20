@@ -4,7 +4,7 @@ import "./reportStyles.css";
 const ReportTable = ({ data, columns, renderActions, columnLabels }) => {
   return (
     <div className="report-table">
-      <h3>Report</h3>
+      <h3>Data Entry</h3>
       {data.length > 0 ? (
         <table>
           <thead>
@@ -21,12 +21,21 @@ const ReportTable = ({ data, columns, renderActions, columnLabels }) => {
                 {columns.map((col) => (
                   <td key={col}>
                     {/* Format specific date-related columns */}
-                    {["date", "start_date", "end_date", "purchase_date", "eventDate", "date_of_birth", "followup", "order_date"].includes(col) && row[col]
+                    {[
+                      "date",
+                      "start_date",
+                      "end_date",
+                      "purchase_date",
+                      "eventDate",
+                      "date_of_birth",
+                      "followup",
+                      "order_date",
+                    ].includes(col) && row[col]
                       ? new Date(row[col]).toISOString().split("T")[0] // Format to YYYY-MM-DD
                       : row[col]}
                   </td>
                 ))}
-                {renderActions && (<td>{renderActions(row)}</td>)}
+                {renderActions && <td>{renderActions(row)}</td>}
               </tr>
             ))}
           </tbody>

@@ -46,6 +46,8 @@ const handleMedicalRecords = require("./helpers/medicalRecordsHelper");
 const handleProfileUpdate = require("./helpers/visitorModifyHelper");
 const { handleDeleteAccount } = require("./helpers/deleteUseraccount");
 const { getMedicalRecordsSummary } = require("./helpers/medicalReportHelper");
+const { handleImageUpload } = require("./helpers/imageUpload");
+const serveUploadedFile = require("./helpers/ImageRouteHelper");
 
 console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
@@ -372,6 +374,12 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({ success: false, message: "Server error" }));
       }
     });
+  } else if (path === "/api/products/upload-image" && req.method === "POST") {
+    console.log("Image upload request received");
+    handleImageUpload(req, res);
+  } else if (path.startsWith("/uploads/") && req.method === "GET") {
+    console.log("Serving image:", path);
+    serveUploadedFile(req, res);
   } else if (path === "/entryForm/enclosures" && req.method === "POST") {
     handleQueryReport(req, res);
   } else if (path === "/entryForm/tickets" && req.method === "POST") {

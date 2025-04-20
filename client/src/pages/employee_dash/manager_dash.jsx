@@ -8,7 +8,11 @@ import {
   getAnimalHealthStatus,
   getCriticalAnimals,
 } from "../../services/api";
-import StatusMetricsPanel from "../../components/StatusMetric/StatusMetricPanel"; // Make sure path is correct
+import StatusMetricsPanel from "../../components/StatusMetric/StatusMetricPanel";
+
+import backgroundImageVet from "../../zoo_pictures/waterfall.jpg";
+import backgroundImageGiftShop from "../../zoo_pictures/flamingo.jpg";
+import backgroundImageGeneral from "../../zoo_pictures/jellyfish.jpg";
 
 const ManagerDash = () => {
   const navigate = useNavigate();
@@ -327,8 +331,31 @@ const ManagerDash = () => {
     },
   ];
 
+  // Function to get the appropriate background image based on manager type
+  const getBackgroundImage = () => {
+    switch (managerType?.toLowerCase()) {
+      case "veterinarian":
+        return backgroundImageVet;
+      case "giftshop":
+        return backgroundImageGiftShop;
+      case "general":
+        return backgroundImageGeneral;
+      default:
+        return backgroundImageVet; // Default to veterinarian background
+    }
+  };
+
   return (
-    <div className="dashboard-container">
+    <div
+      className="dashboard-container"
+      style={{
+        backgroundImage: `url(${getBackgroundImage()})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
       <div className="dashboard-card">
         {/* Dynamic h1 title based on manager type */}
         <h1 className="dashboard-title">
@@ -468,18 +495,6 @@ const ManagerDash = () => {
                           >
                             View Veterinarian Portal
                           </button>
-                          {/*<button
-                  onClick={() => navigate("/employeeByManager_queryReport")}
-                  className="dashboard-button"
-                >
-                  View Employees by Manager
-                </button>*/}
-                          {/*<button
-                  onClick={() => navigate("/")}
-                  className="dashboard-button"
-                >
-                  View GiftShop Sales Dashboard
-                </button>*/}
                         </div>
 
                         {/* Animal Health Status Section */}
@@ -580,13 +595,6 @@ const ManagerDash = () => {
                           >
                             Feed Logs Entry Form
                           </button>
-
-                          {/* <button
-                            onClick={() => navigate("/general_reports")}
-                            className="dashboard-button"
-                          >
-                            View Reports
-                          </button> */}
                         </div>
                       </>
                     );
@@ -601,4 +609,5 @@ const ManagerDash = () => {
     </div>
   );
 };
+
 export default ManagerDash;
