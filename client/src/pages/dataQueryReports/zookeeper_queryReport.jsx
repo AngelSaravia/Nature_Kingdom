@@ -396,7 +396,6 @@ const EnclosureQueryReport = () => {
       }
     } catch (error) {
       console.error("Failed to update health status:", error);
-      alert("Failed to update health status. Please try again.");
     } finally {
       setUpdateLoading(false);
     }
