@@ -248,7 +248,7 @@ const EmployeeForm = ({ employeeData, source, onClose }) => {
               to="/entryForm/employees"
               className={styles.queryReportButton}
             >
-              View Employee Query Report
+              View Employee Query
             </Link>
           </div>
         )}

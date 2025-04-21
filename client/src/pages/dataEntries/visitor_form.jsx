@@ -196,7 +196,7 @@ const VisitorForm = () => {
     <div className={styles.formContainer}>
       <div className={styles.queryReportLink}>
         <Link to="/entryForm/visitors" className={styles.queryReportButton}>
-          View Visitors Query Report
+          View Visitors Query
         </Link>
       </div>
       <h2 className={styles.formTitle}>VISITOR DATA ENTRY FORM</h2>

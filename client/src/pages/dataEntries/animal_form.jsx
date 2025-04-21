@@ -123,7 +123,7 @@ const AnimalForm = () => {
     <div className={styles.formContainer}>
       <div className={styles.queryReportLink}>
         <Link to="/entryForm/animals" className={styles.queryReportButton}>
-          View Animal Query Report
+          View Animal Query
         </Link>
       </div>
       <h2 className={styles.formTitle}>ANIMAL DATA ENTRY FORM</h2>

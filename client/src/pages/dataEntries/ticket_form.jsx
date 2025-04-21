@@ -169,7 +169,7 @@ const TicketForm = () => {
     <div className={styles.formContainer}>
       <div className={styles.queryReportLink}>
         <Link to="/entryForm/tickets" className={styles.queryReportButton}>
-          View Ticket Query Report
+          View Ticket Query
         </Link>
       </div>
       <h2 className={styles.formTitle}>TICKET DATA ENTRY FORM</h2>
