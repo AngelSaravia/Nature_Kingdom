@@ -31,7 +31,9 @@ function handleGiftShop(req, res) {
     }
 
     if (conditions.length > 0) {
-      query += " WHERE " + conditions.join(" AND ");
+      query += " WHERE is_discontinued = FALSE AND " + conditions.join(" AND ");
+    } else {
+      query += "WHERE is_discontinued = FALSE ";
     }
 
     query += " ORDER BY product_id ASC";
@@ -121,7 +123,6 @@ function updateProduct(req, res, body) {
     values.push(category);
   }
 
-
   // Add product_id to values array (for WHERE clause)
   values.push(product_id);
 
@@ -154,7 +155,7 @@ function updateProduct(req, res, body) {
 
 function deleteProduct(req, res, productId) {
   console.log("productid: ", productId);
-  const query = `DELETE FROM products WHERE product_id = ?`;
+  const query = `UPDATE products SET is_discontinued = TRUE WHERE product_id = ?`;
 
   db_connection.query(query, [productId], (err, result) => {
     if (err) {

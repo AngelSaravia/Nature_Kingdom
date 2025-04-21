@@ -49,4 +49,8 @@ The application should now be running:
 - Frontend: http://localhost:5173
 - Backend http://localhost:5004
 
+<<<<<<< HEAD
 Below is the hosted website: https://black-river-089b82310.6.azurestaticapps.net/
+=======
+The hosted website is: https://black-river-089b82310.6.azurestaticapps.net/
+>>>>>>> 41a0f521cf278034c3cadb8a39356f0c8a9eb1dd
