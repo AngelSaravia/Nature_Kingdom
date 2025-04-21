@@ -177,7 +177,7 @@ const EventForm = () => {
     <div className={styles.formContainer}>
       <div className={styles.queryReportLink}>
         <Link to="/entryForm/events" className={styles.queryReportButton}>
-          View Event Query Report
+          View Event Query
         </Link>
       </div>
       <h2 className={styles.formTitle}>EVENT DATA ENTRY FORM</h2>

@@ -165,7 +165,7 @@ const FeedLogsForm = () => {
     <div className={styles.formContainer}>
       <div className={styles.queryReportLink}>
         <Link to="/entryForm/feedLogs" className={styles.queryReportButton}>
-          View Feed Logs Query Report
+          View Feed Logs Query
         </Link>
       </div>
       <h2 className={styles.formTitle}>FEED LOGS DATA ENTRY FORM</h2>

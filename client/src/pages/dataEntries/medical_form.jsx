@@ -166,7 +166,7 @@ const MedicalForm = () => {
           to="/entry_form/medicalRecords"
           className={styles.queryReportButton}
         >
-          View Medical Records Query Report
+          View Medical Records Query
         </Link>
       </div>
       <h2 className={styles.formTitle}>MEDICAL RECORD DATA ENTRY FORM</h2>

@@ -198,7 +198,7 @@ const EnclosureForm = () => {
     <div className={styles.formContainer}>
       <div className={styles.queryReportLink}>
         <Link to="/entryForm/enclosures" className={styles.queryReportButton}>
-          View Enclosure Query Report
+          View Enclosure Query
         </Link>
       </div>
       <h2 className={styles.formTitle}>ENCLOSURE DATA ENTRY FORM</h2>
