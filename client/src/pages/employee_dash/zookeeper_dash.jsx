@@ -1,11 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import "./zookeeper_dash.css";
+import backgroundImage from "../../zoo_pictures/giraffe.jpg";
 
 const ZookeeperDash = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="dashboard-container">
+    <div
+      className="dashboard-container"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
       <div className="dashboard-card">
         <h1 className="dashboard-title">Zookeeper Dashboard</h1>
 
@@ -16,7 +26,7 @@ const ZookeeperDash = () => {
             <div className="dashboard-grid">
               <div className="dashboard-single">
                 <button
-                  onClick={() => navigate("/query_report/employees")}
+                  onClick={() => navigate("/entryForm/employees")}
                   className="dashboard-button"
                 >
                   {" "}
@@ -25,7 +35,7 @@ const ZookeeperDash = () => {
               </div>
               <div className="dashboard-single">
                 <button
-                  onClick={() => navigate("/query_report/enclosures")}
+                  onClick={() => navigate("/entryForm/enclosures")}
                   className="dashboard-button"
                 >
                   {" "}
@@ -34,7 +44,7 @@ const ZookeeperDash = () => {
               </div>
               <div className="dashboard-single">
                 <button
-                  onClick={() => navigate("/query_report/animals")}
+                  onClick={() => navigate("/entryForm/animals")}
                   className="dashboard-button"
                 >
                   {" "}
@@ -43,7 +53,7 @@ const ZookeeperDash = () => {
               </div>
               <div className="dashboard-single">
                 <button
-                  onClick={() => navigate("/query_report/events")}
+                  onClick={() => navigate("/entryForm/events")}
                   className="dashboard-button"
                 >
                   {" "}
@@ -52,7 +62,7 @@ const ZookeeperDash = () => {
               </div>
               <div className="dashboard-single">
                 <button
-                  onClick={() => navigate("/query_report/tickets")}
+                  onClick={() => navigate("/entryForm/tickets")}
                   className="dashboard-button"
                 >
                   {" "}
@@ -61,7 +71,7 @@ const ZookeeperDash = () => {
               </div>
               <div className="dashboard-single">
                 <button
-                  onClick={() => navigate("/query_report/visitors")}
+                  onClick={() => navigate("/entryForm/visitors")}
                   className="dashboard-button"
                 >
                   {" "}

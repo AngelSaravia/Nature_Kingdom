@@ -81,6 +81,9 @@ h1 {
   align-items: center;
   gap: 5px;
 }
+.employeelogin-title {
+  color: white;
+}
 
 a {
   color: #a8d8f0;

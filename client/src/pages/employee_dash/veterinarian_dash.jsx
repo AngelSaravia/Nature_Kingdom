@@ -4,6 +4,7 @@ import "./veterinarian_dash.css";
 import ZooKeeperReportTable from "../dataQueryReports/veterinarian_animalReport";
 import { useAuth } from "../../context/Authcontext";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
+import backgroundImage from "../../zoo_pictures/zebra2.jpg";
 
 const AdminDash = () => {
   const navigate = useNavigate();
@@ -53,7 +54,16 @@ const AdminDash = () => {
   const employeeId = user?.employeeId || localStorage.getItem("employeeId");
 
   return (
-    <div className="dashboard-container">
+    <div
+      className="dashboard-container"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
       <div className="dashboard-card">
         <h1 className="dashboard-title">Veterinarian Dashboard</h1>
 

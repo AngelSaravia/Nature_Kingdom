@@ -8,7 +8,11 @@ import {
   getAnimalHealthStatus,
   getCriticalAnimals,
 } from "../../services/api";
-import StatusMetricsPanel from "../../components/StatusMetric/StatusMetricPanel"; // Make sure path is correct
+import StatusMetricsPanel from "../../components/StatusMetric/StatusMetricPanel";
+
+import backgroundImageVet from "../../zoo_pictures/waterfall.jpg";
+import backgroundImageGiftShop from "../../zoo_pictures/flamingo.jpg";
+import backgroundImageGeneral from "../../zoo_pictures/jellyfish.jpg";
 
 const ManagerDash = () => {
   const navigate = useNavigate();
@@ -327,10 +331,47 @@ const ManagerDash = () => {
     },
   ];
 
+  // Function to get the appropriate background image based on manager type
+  const getBackgroundImage = () => {
+    switch (managerType?.toLowerCase()) {
+      case "veterinarian":
+        return backgroundImageVet;
+      case "giftshop":
+        return backgroundImageGiftShop;
+      case "general":
+        return backgroundImageGeneral;
+      default:
+        return backgroundImageVet; // Default to veterinarian background
+    }
+  };
+
   return (
-    <div className="dashboard-container">
+    <div
+      className="dashboard-container"
+      style={{
+        backgroundImage: `url(${getBackgroundImage()})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
       <div className="dashboard-card">
-        <h1 className="dashboard-title">ZooKeeper Manager Dashboard</h1>
+        {/* Dynamic h1 title based on manager type */}
+        <h1 className="dashboard-title">
+          {(() => {
+            switch (managerType?.toLowerCase()) {
+              case "giftshop":
+                return "Gift Shop Manager Dashboard";
+              case "veterinarian":
+                return "Veterinarian Manager Dashboard";
+              case "general":
+                return "Zookeeper Manager Dashboard";
+              default:
+                return "Manager Dashboard";
+            }
+          })()}
+        </h1>
 
         {/* Dashboard Buttons */}
         <div className="dashboard-single">
@@ -373,9 +414,7 @@ const ManagerDash = () => {
                             title="Sales Overview"
                             metrics={salesMetrics}
                             isLoading={isLoading}
-                            onViewAllClick={() =>
-                              navigate("/query_report/revenue")
-                            }
+                            onViewAllClick={() => navigate("/giftshopReports")}
                             viewAllButtonText="View Sales Data"
                           />
                         </div>
@@ -428,13 +467,20 @@ const ManagerDash = () => {
                             View Timesheets
                           </button>
                           <button
+                            onClick={() => navigate("/medicalReports")}
+                            className="dashboard-button"
+                          >
+                            View Medical Records Report
+                          </button>
+                          <button
                             onClick={() =>
-                              navigate("/query_report/medicalRecords")
+                              navigate("/entry_form/medicalRecords")
                             }
                             className="dashboard-button"
                           >
-                            Animal Medical History
+                            Medical History Entry Form
                           </button>
+
                           <button
                             onClick={() => navigate("/zookeeper_dash")}
                             className="dashboard-button"
@@ -447,18 +493,6 @@ const ManagerDash = () => {
                           >
                             View Veterinarian Portal
                           </button>
-                          {/*<button
-                onClick={() => navigate("/employeeByManager_queryReport")}
-                className="dashboard-button"
-              >
-                View Employees by Manager
-              </button>*/}
-                          {/*<button
-                onClick={() => navigate("/")}
-                className="dashboard-button"
-              >
-                View GiftShop Sales Dashboard
-              </button>*/}
                         </div>
 
                         {/* Animal Health Status Section */}
@@ -467,7 +501,7 @@ const ManagerDash = () => {
                           metrics={animalHealthMetrics}
                           isLoading={isLoading}
                           onViewAllClick={() =>
-                            navigate("/query_report/medicalRecords")
+                            navigate("/entry_form/medicalRecords")
                           }
                           viewAllButtonText="View All Animal Health Records"
                         >
@@ -527,55 +561,41 @@ const ManagerDash = () => {
 
                   case "general":
                     return (
-                      <div className="short-cut-grid">
-                        <button
-                          onClick={() => navigate("/manager_timesheets")}
-                          className="dashboard-button"
-                        >
-                          View Timesheets
-                        </button>
-                        <button
-                          onClick={() => navigate("/query_report/revenue")}
-                          className="dashboard-button"
-                        >
-                          View Revenue Reports
-                        </button>
-
-                        <button
-                          onClick={() => navigate("/query_report/revenue")}
-                          className="dashboard-button"
-                        >
-                          Enclosure Entry Form
-                        </button>
-                        <button
-                          onClick={() => navigate("/query_report/revenue")}
-                          className="dashboard-button"
-                        >
-                          Animal Entry Form
-                        </button>
-                        <button
-                          onClick={() => navigate("/query_report/revenue")}
-                          className="dashboard-button"
-                        >
-                          Feed Logs Entry Form
-                        </button>
-
-                        <button
-                          onClick={() => navigate("/query_report/revenue")}
-                          className="dashboard-button"
-                        >
-                          Report for Revenue
-                        </button>
-
-                        {/* <button
-                        onClick={() => navigate("/general_reports")}
-                        className="dashboard-button"
-                      >
-                        View Reports
-                      </button> */}
-                      </div>
+                      <>
+                        <div className="short-cut-grid">
+                          <button
+                            onClick={() => navigate("/manager_timesheets")}
+                            className="dashboard-button"
+                          >
+                            View Timesheets
+                          </button>
+                          <button
+                            onClick={() => navigate("/query_report/revenue")}
+                            className="dashboard-button"
+                          >
+                            View Revenue Reports
+                          </button>
+                          <button
+                            onClick={() => navigate("/entryForm/enclosures")}
+                            className="dashboard-button"
+                          >
+                            Enclosure Entry Form
+                          </button>
+                          <button
+                            onClick={() => navigate("/entryForm/animals")}
+                            className="dashboard-button"
+                          >
+                            Animal Entry Form
+                          </button>
+                          <button
+                            onClick={() => navigate("/entryForm/feedLogs")}
+                            className="dashboard-button"
+                          >
+                            Feed Logs Entry Form
+                          </button>
+                        </div>
+                      </>
                     );
-
                   default:
                     return <p>No dashboard available for this manager type.</p>;
                 }

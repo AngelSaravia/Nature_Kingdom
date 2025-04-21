@@ -19,8 +19,9 @@
 .report-header {
   text-shadow: none !important;
 }
-
-/* Sidebar Filters */
+.revenue-title {
+  font-size: 50px;
+}
 
 .filter-sidebar-container {
   display: flex;

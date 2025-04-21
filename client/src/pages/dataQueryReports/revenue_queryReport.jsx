@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import FilterSidebar from "./filterSidebar";
 import ReportTable from "./reportTable";
 import "./reportStyles.css";
-// import "./revenue_queryReport.css";
+//import "./revenue_queryReport.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -11,7 +11,7 @@ const filterOptions = [
     label: "PRODUCT TYPES",
     type: "checkbox",
     name: "product_types",
-    options: ["ticket", "membership", "gift"],
+    options: ["ticket", "membership", "Giftshop Order"],
   },
   { label: "START DATE", type: "date", name: "start_date" },
   { label: "END DATE", type: "date", name: "end_date" },
@@ -19,6 +19,7 @@ const filterOptions = [
 
 const columnHeaders = {
   tuple_id: "Product ID",
+  visitor_id: "Visitor ID",
   type_of_product: "Type of Product",
   price: "Price",
   purchase_date: "Purchase Date",
@@ -35,7 +36,8 @@ const TotalSalesBox = ({ total, totals }) => {
             Tickets: <span>${totals.totalTicketEarnings.toFixed(2)}</span>
           </p>
           <p>
-            Gifts: <span>${totals.totalGiftEarnings.toFixed(2)}</span>
+            Giftshop Orders:{" "}
+            <span>${totals.totalGiftshop_itemEarnings.toFixed(2)}</span>
           </p>
           <p>
             Memberships:{" "}
@@ -61,7 +63,7 @@ const TotalItemsBox = ({ count, totals }) => {
             Tickets: <span>{totals.totalTickets}</span>
           </p>
           <p>
-            Gifts: <span>{totals.totalGifts}</span>
+            Giftshop Orders: <span>{totals.totalGiftshop_items}</span>
           </p>
           <p>
             Memberships: <span>{totals.totalMemberships}</span>
@@ -90,8 +92,8 @@ const RevenueQueryReport = () => {
   const [totals, setTotals] = useState({
     totalTickets: 0,
     totalTicketEarnings: 0,
-    totalGifts: 0,
-    totalGiftEarnings: 0,
+    totalGiftshop_items: 0,
+    totalGiftshop_itemEarnings: 0,
     totalMemberships: 0,
     totalMembershipEarnings: 0,
   });
@@ -178,8 +180,8 @@ const RevenueQueryReport = () => {
     const totals = {
       totalTickets: 0,
       totalTicketEarnings: 0,
-      totalGifts: 0,
-      totalGiftEarnings: 0,
+      totalGiftshop_items: 0,
+      totalGiftshop_itemEarnings: 0,
       totalMemberships: 0,
       totalMembershipEarnings: 0,
     };
@@ -188,9 +190,9 @@ const RevenueQueryReport = () => {
       if (item.type_of_product === "ticket") {
         totals.totalTickets += 1;
         totals.totalTicketEarnings += parseFloat(item.price);
-      } else if (item.type_of_product === "gift") {
-        totals.totalGifts += 1;
-        totals.totalGiftEarnings += parseFloat(item.price);
+      } else if (item.type_of_product === "Giftshop Order") {
+        totals.totalGiftshop_items += 1;
+        totals.totalGiftshop_itemEarnings += parseFloat(item.price);
       } else if (item.type_of_product === "membership") {
         totals.totalMemberships += 1;
         totals.totalMembershipEarnings += parseFloat(item.price);
@@ -214,7 +216,7 @@ const RevenueQueryReport = () => {
       <div className="report-table-wrapper">
         <div className="filter-sidebar-container">
           <div className="report-header">
-            <h1>Revenue Report</h1>
+            <h1 className="revenue-title">Revenue Report</h1>
             <TotalItemsBox count={totalItems} totals={totals} />
             <TotalSalesBox total={totalSales} totals={totals} />
           </div>

@@ -16,7 +16,7 @@ const StaffDash = () => {
             <div className="dashboard-grid">
               <div className="dashboard-single">
                 <button
-                  onClick={() => navigate("/query_report/employees")}
+                  onClick={() => navigate("/entryForm/employees")}
                   className="dashboard-button"
                 >
                   {" "}
@@ -25,7 +25,7 @@ const StaffDash = () => {
               </div>
               <div className="dashboard-single">
                 <button
-                  onClick={() => navigate("/query_report/enclosures")}
+                  onClick={() => navigate("/entryForm/enclosures")}
                   className="dashboard-button"
                 >
                   {" "}
@@ -34,7 +34,7 @@ const StaffDash = () => {
               </div>
               <div className="dashboard-single">
                 <button
-                  onClick={() => navigate("/query_report/animals")}
+                  onClick={() => navigate("/entryForm/animals")}
                   className="dashboard-button"
                 >
                   {" "}
@@ -43,7 +43,7 @@ const StaffDash = () => {
               </div>
               <div className="dashboard-single">
                 <button
-                  onClick={() => navigate("/query_report/events")}
+                  onClick={() => navigate("/entryForm/events")}
                   className="dashboard-button"
                 >
                   {" "}

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import  './admin_dash.css';
+import "./admin_dash.css";
 
 const AdminDash = () => {
   const navigate = useNavigate();
@@ -12,38 +12,46 @@ const AdminDash = () => {
         {/* Dashboard Buttons */}
         <div className="dashboard-grid">
           <div className="dashboard-box">
-            <h2 className="dashboard-heading">Query for Data</h2>
+            <h2 className="dashboard-heading">Data Entry Forms</h2>
             <div className="dashboard-grid">
-                <div className="dashboard-single">
-                    <button onClick={() => navigate("/query_report/employees")} className="dashboard-button"> Employees</button>
-                </div>
-                <div className="dashboard-single">
-                    <button onClick={() => navigate("/query_report/enclosures")} className="dashboard-button"> Enclosures</button>
-                </div>
-                <div className="dashboard-single">
-                    <button onClick={() => navigate("/query_report/animals")} className="dashboard-button"> Animals</button>
-                </div>
-                <div className="dashboard-single">
-                    <button onClick={() => navigate("/query_report/events")} className="dashboard-button"> Events</button>
-                </div>
-                <div className="dashboard-single">
-                    <button onClick={() => navigate("/query_report/tickets")} className="dashboard-button"> Tickets</button>
-                </div>
-                <div className="dashboard-single">
-                    <button onClick={() => navigate("/query_report/visitors")} className="dashboard-button"> Visitors</button>
-                </div>
-                <div className="dashboard-single">
-                    <button onClick={() => navigate("/query_report/revenue")} className="dashboard-button"> Revenue</button>
-                </div>
-                <div className="dashboard-single">
-                    <button onClick={() => navigate("/query_report/feedlogs")} className="dashboard-button"> Feed Logs</button>
-                </div>
-                <div className="dashboard-single">
-                    <button onClick={() => navigate("/query_report/medicalRecords")} className="dashboard-button"> Medical Records</button>
-                </div>
+              <div className="dashboard-single">
+                <button
+                  onClick={() => navigate("/entryForm/employees")}
+                  className="dashboard-button"
+                >
+                  {" "}
+                  Employees
+                </button>
+              </div>
+              <div className="dashboard-single">
+                <button
+                  onClick={() => navigate("/entryForm/events")}
+                  className="dashboard-button"
+                >
+                  {" "}
+                  Events
+                </button>
+              </div>
+              <div className="dashboard-single">
+                <button
+                  onClick={() => navigate("/entryForm/tickets")}
+                  className="dashboard-button"
+                >
+                  {" "}
+                  Tickets
+                </button>
+              </div>
+              <div className="dashboard-single">
+                <button
+                  onClick={() => navigate("/entryForm/visitors")}
+                  className="dashboard-button"
+                >
+                  {" "}
+                  Visitors
+                </button>
+              </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>

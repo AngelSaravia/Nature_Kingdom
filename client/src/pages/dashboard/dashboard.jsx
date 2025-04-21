@@ -339,6 +339,7 @@ const Dashboard = () => {
         alert("Your account has been successfully deleted.");
         localStorage.removeItem("token");
         navigate("/login");
+        window.location.reload();
       } catch (error) {
         console.error("Error during account deletion:", error);
         setPasswordError(error.message || "Failed to delete account");

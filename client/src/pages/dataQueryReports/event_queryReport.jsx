@@ -130,7 +130,7 @@ const EventQueryReport = () => {
         ...prefixedFilters,
       };
 
-      const response = await fetch(`${API_BASE_URL}/query_report/events`, {
+      const response = await fetch(`${API_BASE_URL}/entryForm/events`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(queryParams),
@@ -177,9 +177,16 @@ const EventQueryReport = () => {
         filterOptions={filterOptions}
       />
       <div className="report-table-container">
-        <ReportTable data={reportData} columns={Object.keys(columnHeaders)} renderActions={(tuple) => renderEditButton(tuple)} columnLabels={columnHeaders}/>
+        <ReportTable
+          data={reportData}
+          columns={Object.keys(columnHeaders)}
+          renderActions={(tuple) => renderEditButton(tuple)}
+          columnLabels={columnHeaders}
+        />
         <div className="edit-event-button-container">
-          <a href="/event_form" className="edit-event-button">Edit Event</a>
+          <a href="/event_form" className="edit-event-button">
+            Edit Event
+          </a>
         </div>
       </div>
     </div>
