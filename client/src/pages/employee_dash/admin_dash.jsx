@@ -25,24 +25,6 @@ const AdminDash = () => {
               </div>
               <div className="dashboard-single">
                 <button
-                  onClick={() => navigate("/entryForm/enclosures")}
-                  className="dashboard-button"
-                >
-                  {" "}
-                  Enclosures
-                </button>
-              </div>
-              <div className="dashboard-single">
-                <button
-                  onClick={() => navigate("/entryForm/animals")}
-                  className="dashboard-button"
-                >
-                  {" "}
-                  Animals
-                </button>
-              </div>
-              <div className="dashboard-single">
-                <button
                   onClick={() => navigate("/entryForm/events")}
                   className="dashboard-button"
                 >
@@ -66,33 +48,6 @@ const AdminDash = () => {
                 >
                   {" "}
                   Visitors
-                </button>
-              </div>
-              <div className="dashboard-single">
-                <button
-                  onClick={() => navigate("/query_report/revenue")}
-                  className="dashboard-button"
-                >
-                  {" "}
-                  Revenue
-                </button>
-              </div>
-              <div className="dashboard-single">
-                <button
-                  onClick={() => navigate("/entryForm/feedLogs")}
-                  className="dashboard-button"
-                >
-                  {" "}
-                  Feed Logs
-                </button>
-              </div>
-              <div className="dashboard-single">
-                <button
-                  onClick={() => navigate("/entry_form/medicalRecords")}
-                  className="dashboard-button"
-                >
-                  {" "}
-                  Medical Records
                 </button>
               </div>
             </div>
