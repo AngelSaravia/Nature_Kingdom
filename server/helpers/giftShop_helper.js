@@ -14,7 +14,6 @@ function handleGiftShop(req, res) {
           price, 
           amount_stock, 
           category,
-          image_url,
           buy_limit
         FROM products
       `;
@@ -94,7 +93,7 @@ function addProduct(req, res, body) {
 
 function updateProduct(req, res, body) {
   const { product_id, name, price, amount_stock, buy_limit, category } = body;
-  const image_url = body.imageUrl || body.image_url; // Handle both naming conventions
+
 
   console.log("Updating product:", body);
 
@@ -122,10 +121,7 @@ function updateProduct(req, res, body) {
     updateFields.push("category = ?");
     values.push(category);
   }
-  if (image_url !== undefined) {
-    updateFields.push("image_url = ?");
-    values.push(image_url);
-  }
+
 
   // Add product_id to values array (for WHERE clause)
   values.push(product_id);
