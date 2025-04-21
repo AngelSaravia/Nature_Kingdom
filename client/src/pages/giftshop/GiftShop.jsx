@@ -127,8 +127,8 @@ const GiftShop = () => {
     <div className="gift-shop-page">
       <header className="gift-shop-header">
         <div className="header-content">
-          <h1>
-            Wild Treasures <span>Zoo Gift Shop</span>
+          <h1 className="gift-shop-t1">
+            Wild Treasures <span className="gift-shop-t2">Zoo Gift Shop</span>
           </h1>
           <p>Take home a piece of your zoo adventure</p>
         </div>
