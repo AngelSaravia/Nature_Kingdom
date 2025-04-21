@@ -474,7 +474,7 @@ function handleTicketFilters(key, value, conditions, values) {
 function handleRevenueFilters(key, value, conditions, values) {
   console.log("Processing revenue filter:", key, value); // Debug line
   if (key === "product type") {
-    const allowedTypes = ["ticket", "membership", "Giftshop Items"];
+    const allowedTypes = ["ticket", "membership", "Giftshop Order"];
     const validTypes = Array.isArray(value)
       ? value.filter((type) => allowedTypes.includes(type))
       : [];
@@ -519,7 +519,7 @@ function constructRevenueQuery(conditions) {
               UNION ALL
               SELECT 
                   order_id AS tuple_id, 
-                  'Giftshop Items' AS type_of_product, 
+                  'Giftshop Order' AS type_of_product, 
                   total_amount AS price,
                   visitor_id,
                   DATE(order_date) AS purchase_date 
@@ -537,7 +537,7 @@ function constructRevenueQuery(conditions) {
                 CASE 
                     WHEN type_of_product = 'ticket' THEN 1
                     WHEN type_of_product = 'membership' THEN 2
-                    WHEN type_of_product = 'Giftshop Items' THEN 3
+                    WHEN type_of_product = 'Giftshop Order' THEN 3
                     ELSE 4
                 END,
                 purchase_date DESC

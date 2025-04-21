@@ -11,7 +11,7 @@ const filterOptions = [
     label: "PRODUCT TYPES",
     type: "checkbox",
     name: "product_types",
-    options: ["ticket", "membership", "Giftshop Items"],
+    options: ["ticket", "membership", "Giftshop Order"],
   },
   { label: "START DATE", type: "date", name: "start_date" },
   { label: "END DATE", type: "date", name: "end_date" },
@@ -36,7 +36,7 @@ const TotalSalesBox = ({ total, totals }) => {
             Tickets: <span>${totals.totalTicketEarnings.toFixed(2)}</span>
           </p>
           <p>
-            Giftshop Items:{" "}
+            Giftshop Orders:{" "}
             <span>${totals.totalGiftshop_itemEarnings.toFixed(2)}</span>
           </p>
           <p>
@@ -63,7 +63,7 @@ const TotalItemsBox = ({ count, totals }) => {
             Tickets: <span>{totals.totalTickets}</span>
           </p>
           <p>
-            Giftshop Items: <span>{totals.totalGiftshop_items}</span>
+            Giftshop Orders: <span>{totals.totalGiftshop_items}</span>
           </p>
           <p>
             Memberships: <span>{totals.totalMemberships}</span>
@@ -190,7 +190,7 @@ const RevenueQueryReport = () => {
       if (item.type_of_product === "ticket") {
         totals.totalTickets += 1;
         totals.totalTicketEarnings += parseFloat(item.price);
-      } else if (item.type_of_product === "giftshop_item") {
+      } else if (item.type_of_product === "Giftshop Order") {
         totals.totalGiftshop_items += 1;
         totals.totalGiftshop_itemEarnings += parseFloat(item.price);
       } else if (item.type_of_product === "membership") {
