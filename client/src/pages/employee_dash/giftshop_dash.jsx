@@ -37,6 +37,9 @@ const GiftDash = () => {
       const fetchedProducts = await getProducts("", "");
       const fetchedProductHistory = await getProductHistory("");
 
+      console.log(fetchedProductHistory)
+      console.log(fetchedProducts)
+
       const productHistoryMap = fetchedProductHistory.products.reduce(
         (acc, productHistory) => {
           const { name, last_stocked_on, total_sold } = productHistory;
@@ -75,6 +78,12 @@ const GiftDash = () => {
     }
     setIsLoading(false);
   };
+
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return isNaN(date) ? '' : date.toISOString().split('T')[0];
+  }
 
   const handleStockChange = (productId, value) => {
     setStockInputs((prev) => ({ ...prev, [productId]: value }));
@@ -234,7 +243,7 @@ const GiftDash = () => {
                   <td>{item.name}</td>
                   <td>{item.stock}</td>
                   <td>{item.totalPurchased}</td>
-                  <td>{item.lastStocked}</td>
+                  <td>{(item.lastStocked != "N/A")? formatDate(item.lastStocked): item.lastStocked}</td>
                   <td>
                     <div className="status-container">
                       <span

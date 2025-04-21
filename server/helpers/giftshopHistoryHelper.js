@@ -34,6 +34,7 @@ function handleProductHistory(req, res) {
             LEFT JOIN order_items o ON o.product_id = p.product_id
             LEFT JOIN gift_shop g ON p.shop_id = g.shop_id
             LEFT JOIN alerts_with_product a ON a.product_name = p.name AND a.rn = 1
+            WHERE is_discontinued = FALSE
             GROUP BY p.name, a.created_at
             ORDER BY p.product_id ASC;
         `;
