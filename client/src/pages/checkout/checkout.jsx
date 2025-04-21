@@ -279,8 +279,6 @@ const Checkout = () => {
             const response = await createGiftOrder(orderData);
             
             if (response.success) {
-              localStorage.removeItem('cartItems');
-              localStorage.removeItem('cartTotal');
               setTimeout(() => {
                 setShowProcessing(false);
                 setShowConfirmation(true);
@@ -299,6 +297,10 @@ const Checkout = () => {
 
       const handleConfirmationClose = () => {
         setShowConfirmation(false);
+        if(purchaseType === 'gift'){
+          localStorage.removeItem('cartItems');
+          localStorage.removeItem('cartTotal');
+        }
         navigate('/dashboard'); // Optional: navigate only when they click "Done"
       };
 
