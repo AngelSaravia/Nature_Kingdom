@@ -166,7 +166,7 @@ const EventForm = () => {
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      setSubmissionStatus("Server error. Please try again.");
+      // setSubmissionStatus("Server error. Please try again.");
     }
   };
 

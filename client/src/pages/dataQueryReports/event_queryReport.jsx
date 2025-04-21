@@ -185,7 +185,7 @@ const EventQueryReport = () => {
         />
         <div className="edit-event-button-container">
           <a href="/event_form" className="edit-event-button">
-            Edit Event
+            Add Event
           </a>
         </div>
       </div>
