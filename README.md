@@ -48,3 +48,5 @@ npm run dev
 The application should now be running:
 - Frontend: http://localhost:5173
 - Backend http://localhost:5004
+
+Below is the hosted website: https://black-river-089b82310.6.azurestaticapps.net/
