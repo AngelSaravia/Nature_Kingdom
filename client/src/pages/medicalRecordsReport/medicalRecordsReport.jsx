@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import PieChart from "./PieChart";
 import { getMedicalRecordsSummary } from "../../services/api";
-import "./MedicalRecordsReport.css";
+import "./medicalRecordsReport.css";
 import backgroundImage from "../../zoo_pictures/cave.jpg";
 
 const MedicalRecordsReport = () => {
