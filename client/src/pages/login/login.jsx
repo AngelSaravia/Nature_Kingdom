@@ -64,7 +64,7 @@ function Login() {
       <div className="login">
         <div className="wrapper">
           <form onSubmit={handleLogin}>
-            <h1>Login</h1>
+            <h1 className="login-title">Login</h1>
             <div className="input_container">
               <div className="input-box">
                 <input

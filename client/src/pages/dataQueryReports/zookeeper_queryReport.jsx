@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ZooKeeperReportTable from "./zookeeper_reportTable";
 import "./zookeeperStyle.css";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
+import backgroundImage from "../../zoo_pictures/giraffe.jpg";
 
 const columnHeaders = [
   "name",
@@ -89,7 +90,7 @@ const EnclosureQueryReport = () => {
         console.log("Applying zookeeper filter:", queryParams.where_condition);
       }
 
-      const response = await fetch(`${API_BASE_URL}/query_report/enclosures`, {
+      const response = await fetch(`${API_BASE_URL}/entryForm/enclosures`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(queryParams),
@@ -1097,38 +1098,49 @@ const EnclosureQueryReport = () => {
   };
 
   return (
-    <div className="enclosure-query-report">
-      <div className="report-title">
-        <h2>Enclosure Report</h2>
-      </div>
-      <div className="report-table-container">
-        {loading ? (
-          <div className="loading-message">Loading data...</div>
-        ) : reportData.length === 0 ? (
-          <div className="no-data-message">
-            No enclosures found for your account.
-          </div>
-        ) : (
-          <table className="enclosure-table">
-            <thead>
-              <tr>
-                <th>ACTIONS</th>
-                {columnHeaders.map((header, idx) => (
-                  <th key={idx}>{header.replace(/_/g, " ").toUpperCase()}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {reportData.map((enclosure, idx) =>
-                renderEnclosureRow(enclosure, idx)
-              )}
-            </tbody>
-          </table>
-        )}
-      </div>
+    <div
+      className="dashboard-container"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
+      <div className="enclosure-query-report">
+        <div className="report-title">
+          <h2>Enclosure Report</h2>
+        </div>
+        <div className="report-table-container">
+          {loading ? (
+            <div className="loading-message">Loading data...</div>
+          ) : reportData.length === 0 ? (
+            <div className="no-data-message">
+              No enclosures found for your account.
+            </div>
+          ) : (
+            <table className="enclosure-table">
+              <thead>
+                <tr>
+                  <th>ACTIONS</th>
+                  {columnHeaders.map((header, idx) => (
+                    <th key={idx}>{header.replace(/_/g, " ").toUpperCase()}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {reportData.map((enclosure, idx) =>
+                  renderEnclosureRow(enclosure, idx)
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
 
-      {renderStatusChangePopup()}
-      {renderFeedPopup()}
+        {renderStatusChangePopup()}
+        {renderFeedPopup()}
+      </div>
     </div>
   );
 };

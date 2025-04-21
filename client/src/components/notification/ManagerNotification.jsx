@@ -145,14 +145,15 @@ const ManagerNotification = ({ employeeId }) => {
                       <p className="task-time">
                         {new Date(alert.createdAt).toLocaleString()}
                       </p>
-                    </div>
-                    <button
+                    </div>{" "}
+                    {/* <button
                       className="resolve-task-btn"
                       onClick={() => resolveAlert(alert.id)}
                       title="Mark as Resolved"
                     >
                       <IoMdCheckboxOutline />
                     </button>
+                    */}
                   </li>
                 ))}
               </ul>

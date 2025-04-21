@@ -85,7 +85,7 @@ function EmployeeLogin() {
       <div className="login">
         <div className="employee-wrapper">
           <form onSubmit={handleLogin}>
-            <h1>Employee Login</h1>
+            <h1 className="employeelogin-title">Employee Login</h1>
             <div className="employee_input_container">
               <div className="input-box">
                 <input

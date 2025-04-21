@@ -6,6 +6,9 @@
   justify-content: center;
   align-items: center;
 }
+.login-title {
+  color: white;
+}
 
 .wrapper {
   position: relative;

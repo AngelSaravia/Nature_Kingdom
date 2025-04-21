@@ -234,7 +234,7 @@ export const deleteProduct = async (product_id) => {
   try {
     console.log("Sending DELETE request to remove product");
     const response = await apiClient.delete(`/api/giftshop`, {
-      params: { product_id }
+      params: { product_id },
     });
     return response.data; // Return the response data
   } catch (error) {
@@ -470,24 +470,108 @@ export const getMedicalRecordsSummary = async (filters) => {
     const params = new URLSearchParams();
 
     // Add filters to the query string
-    if (filters.startDate) params.append('startDate', filters.startDate);
-    if (filters.endDate) params.append('endDate', filters.endDate);
-    if (filters.employees.length > 0) params.append('employees', JSON.stringify(filters.employees.map(emp => emp.value)));
-    if (filters.recordTypes.length > 0) params.append('recordTypes', JSON.stringify(filters.recordTypes.map(type => type.label)));
-    if (filters.enclosures.length > 0) params.append('enclosures', JSON.stringify(filters.enclosures.map(enclosure => enclosure.value)));
-    if (filters.animalSpecies.length > 0) params.append('animalSpecies', JSON.stringify(filters.animalSpecies.map(species => species.value)));
+    if (filters.startDate) params.append("startDate", filters.startDate);
+    if (filters.endDate) params.append("endDate", filters.endDate);
+    if (filters.employees.length > 0)
+      params.append(
+        "employees",
+        JSON.stringify(filters.employees.map((emp) => emp.value))
+      );
+    if (filters.recordTypes.length > 0)
+      params.append(
+        "recordTypes",
+        JSON.stringify(filters.recordTypes.map((type) => type.label))
+      );
+    if (filters.enclosures.length > 0)
+      params.append(
+        "enclosures",
+        JSON.stringify(filters.enclosures.map((enclosure) => enclosure.value))
+      );
+    if (filters.animalSpecies.length > 0)
+      params.append(
+        "animalSpecies",
+        JSON.stringify(filters.animalSpecies.map((species) => species.value))
+      );
 
     // Make the GET request with query parameters
-    const response = await apiClient.get(`/api/medical-records/summary?${params.toString()}`);
-    return response.data;  // Return response data directly
+    const response = await apiClient.get(
+      `/api/medical-records/summary?${params.toString()}`
+    );
+    return response.data; // Return response data directly
   } catch (error) {
     console.error("Error fetching medical records summary:", error);
     throw error;
   }
 };
 
+export const getGiftshopSummary = async (filters) => {
+  try {
+    const params = new URLSearchParams();
 
+    // Add filters to the query string
+    if (filters.startDate) params.append("startDate", filters.startDate);
+    if (filters.endDate) params.append("endDate", filters.endDate);
+    if (filters.products.length > 0)
+      params.append(
+        "products",
+        JSON.stringify(filters.products.map((p) => p.value))
+      );
+    if (filters.minTotal) params.append("minTotal", filters.minTotal);
+    if (filters.maxTotal) params.append("maxTotal", filters.maxTotal);
 
+    const response = await apiClient.get(
+      `/api/giftshop/summary?${params.toString()}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching gift shop summary:", error);
+    throw error;
+  }
+};
+
+export const uploadProductImage = async (imageFile) => {
+  try {
+    console.log("Starting image upload for:", imageFile.name);
+
+    // Create FormData and append the image file
+    const formData = new FormData();
+    formData.append("image", imageFile);
+
+    // Make sure this endpoint matches exactly what your server is expecting
+    // If your server uses /api prefix, include it here
+    const uploadUrl = `${API_BASE_URL}/api/products/upload-image`;
+    console.log("Uploading to:", uploadUrl);
+
+    const response = await fetch(uploadUrl, {
+      method: "POST",
+      body: formData,
+    });
+
+    console.log("Upload response status:", response.status);
+
+    if (!response.ok) {
+      throw new Error(`Upload failed with status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Upload response data:", data);
+
+    // Make sure the URL is properly formatted with your API_BASE_URL if needed
+    if (data.success && data.imageUrl) {
+      const imageUrl = data.imageUrl.startsWith("http")
+        ? data.imageUrl
+        : `${API_BASE_URL}${data.imageUrl}`;
+
+      console.log("Final image URL:", imageUrl);
+      return imageUrl;
+    } else {
+      throw new Error(data.message || "Failed to get upload URL");
+    }
+  } catch (error) {
+    console.error("Error in uploadProductImage:", error);
+    throw error;
+  }
+};
 
 export const getEmployeeTimesheets = async (email) => {
   try {

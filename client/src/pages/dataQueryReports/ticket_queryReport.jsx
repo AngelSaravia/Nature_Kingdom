@@ -97,7 +97,7 @@ const TicketQueryReport = () => {
             ...prefixedFilters,
             };
 
-            const response = await fetch(`${API_BASE_URL}/query_report/tickets`, {
+            const response = await fetch(`${API_BASE_URL}/entryForm/tickets`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(queryParams),
