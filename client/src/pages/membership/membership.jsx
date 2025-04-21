@@ -133,7 +133,7 @@ const Membership = () => {
               onClick={handleMembershipSelection}
               className="become-member-button"
             >
-              BECOMER A MEMBER
+              BECOME A MEMBER
             </button>
           </div>
         </div>
