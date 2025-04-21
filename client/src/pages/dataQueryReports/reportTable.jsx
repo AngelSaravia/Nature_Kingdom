@@ -4,7 +4,6 @@ import "./reportStyles.css";
 const ReportTable = ({ data, columns, renderActions, columnLabels }) => {
   return (
     <div className="report-table">
-      <h3>Data Entry</h3>
       {data.length > 0 ? (
         <table>
           <thead>
