@@ -340,9 +340,6 @@ const ProductCard = ({ product, addToCart }) => {
       </div>
       <div className="product-info">
         <h3>{product.name}</h3>
-        <p className="product-description">
-          {product.description || "No description available"}
-        </p>
         <div className="product-footer">
           <span className="price">
             ${(parseFloat(product.price) || 0).toFixed(2)}
