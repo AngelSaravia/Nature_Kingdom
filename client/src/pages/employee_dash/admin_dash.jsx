@@ -12,7 +12,7 @@ const AdminDash = () => {
         {/* Dashboard Buttons */}
         <div className="dashboard-grid">
           <div className="dashboard-box">
-            <h2 className="dashboard-heading">Query for Data</h2>
+            <h2 className="dashboard-heading">Data Entry Forms</h2>
             <div className="dashboard-grid">
               <div className="dashboard-single">
                 <button
