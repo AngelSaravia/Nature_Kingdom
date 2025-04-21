@@ -4,6 +4,8 @@ Team 15 Zoo Database Project
 
 A full-stack application using React, Node.js, MySQL and Azure for web hosting.
 
+Final Submission Files Folder contains the project documentation and sql dump
+
 ## Prerequisites
 - Node.js
 - npm or yarn
