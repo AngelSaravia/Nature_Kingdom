@@ -1,6 +1,8 @@
 # Nature Kingdom
 
-A full-stack application usig React Node.js, and MySQL for the Team 15 Zoo Database project.
+Team 15 Zoo Database Project
+
+A full-stack application using React, Node.js, MySQL and Azure for web hosting.
 
 ## Prerequisites
 - Node.js
